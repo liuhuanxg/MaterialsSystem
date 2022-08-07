@@ -8,3 +8,4 @@ logs
 *.zip
 media/
 tmp/
+db.sqlite3
