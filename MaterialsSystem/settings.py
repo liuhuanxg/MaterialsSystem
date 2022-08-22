@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'ckeditor',
     'apps.local_library.apps.LocalLibraryConfig',
+    'apps.center_library.apps.CenterLibraryConfig',
     'apps.home.apps.HomeConfig',
+    'apps.material_application.apps.MaterialApplicationConfig',
 ]
 
 MIDDLEWARE = [
@@ -91,17 +93,23 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "OPTIONS": {
+            "min_length": 12
+        }
     },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'home.backends.MyNumericPasswordValidator',
     },
 ]
 
@@ -134,3 +142,16 @@ base_url = "http://127.0.0.1:8000/"
 
 SIMPLEUI_HOME_INFO = False
 SIMPLEUI_ANALYSIS = False
+
+base_path = "upload/"
+
+status_choices_dict = {
+    "1": "分管领导审核中",
+    "2": "局长审核中",
+    "3": "主管科室研判中",
+    "4": "待出库",
+    "5": "已出库",
+}
+status_choices = []
+for _k, _v in status_choices_dict.items():
+    status_choices.append((_k, _v))

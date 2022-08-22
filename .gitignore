@@ -9,3 +9,5 @@ logs
 media/
 tmp/
 db.sqlite3
+docs
+test_library
