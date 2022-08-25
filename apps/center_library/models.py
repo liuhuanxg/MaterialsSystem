@@ -3,6 +3,7 @@ from django.db import models
 
 from utils.date_utils import upload_path_handler
 
+
 # 中央库基本信息
 class CenterLibrary(models.Model):
     class Meta:
@@ -87,7 +88,7 @@ class CenterLabraryQuantity(models.Model):
     out_price = models.FloatField("该物资出库总金额(元)", default=0, blank=True)
 
     def __str__(self):
-        return str(self.id)
+        return self.type_name.materials_name + "剩余：" + str(self.balance_num)
 
 
 class CenterWarehousingFile(models.Model):

@@ -1,11 +1,16 @@
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
+from django.http import HttpResponse
 from django.shortcuts import redirect
+from local_library.models import SupplierMessage
+from openpyxl import Workbook
+
 from .models import *
 
-admin.site.site_header = '任丘市防疫物资管理'
-admin.site.site_title = '任丘市防疫物资管理'
+# 任丘市
+admin.site.site_header = '防疫物资管理'
+admin.site.site_title = '防疫物资管理'
 
 # 指定导航顺序
 apps_indexes = {
@@ -61,14 +66,36 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
     date_hierarchy = "add_date"
     fields = ["materials_name", "specifications", "unit", "warning_quantity"]
 
-    # def save_model(self, request, obj, form, change):
-    #     obj.create_user = request.user
-    #     super(LocalMaterialsTypeAdmin, self).save_model(request, obj, form, change)
+    actions = ['make_published']
 
-
-# @admin.register(CodeNumber)
-# class CodeNumberAdmin(admin.ModelAdmin):
-#     list_display = ["number", "db_name", "date_str"]
+    # @admin.action(description='下载模板')
+    def make_published(self, request, queryset):
+        # tmp_path = os.path.join(BASE_DIR, "tmp")
+        # if not os.path.exists(tmp_path):
+        #     os.makedirs(tmp_path)
+        records = list(queryset.values())
+        #  数据库的英文字段和中文字段的映射字典
+        zh_en = {
+            '物料名称': 'materials_name',
+            '规格': 'specifications',
+            '单位': 'unit',
+        }
+        zh = list(zh_en.keys())
+        zh.extend(["数量", "单价"])
+        #  转换数据格式，以方便openpyxl批量写入
+        records_list = [zh]
+        for r in records:
+            data = [r[zh_en[k]] for k in zh if k in zh_en]
+            records_list.append(data)
+        #  开始批量写入数据
+        wb = Workbook()
+        ws = wb.active
+        for row in records_list:
+            ws.append(row)
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="物料模板.xlsx"'
+        wb.save(response)
+        return response
 
 
 admin.site.unregister(User)
@@ -86,7 +113,6 @@ class UserAdmin(auth_admin.UserAdmin):
         if "_addanother" not in request.POST and auth_admin.IS_POPUP_VAR not in request.POST:
             request.POST = request.POST.copy()
             request.POST["_continue"] = 1
-        print("post_url_continue", post_url_continue)
         return super().response_add(request, obj, post_url_continue)
 
     def save_model(self, request, obj, form, change):
@@ -97,11 +123,25 @@ class UserAdmin(auth_admin.UserAdmin):
         if "_addanother" not in request.POST and auth_admin.IS_POPUP_VAR not in request.POST:
             request.POST = request.POST.copy()
             request.POST["_continue"] = 1
-        super().response_change(request, obj)
-        return redirect("/local_library/suppliermessage/1/change/")
+        ret = super().response_change(request, obj)
+
+        # 添加的角色属于供应商时添加或者修改供应商信息
+        user_id = obj.id
+        user = User.objects.filter(id=user_id)
+        if user.exists():
+            user = user[0]
+            groups = user.groups.filter(name="供应商")
+            if groups.exists():
+                supplier_message = SupplierMessage.objects.filter(user=obj)
+                if supplier_message.exists():
+                    supplier_message = supplier_message[0]
+                else:
+                    supplier_message = SupplierMessage()
+                    supplier_message.user = obj
+                    supplier_message.save()
+                ret = redirect("/local_library/suppliermessage/{}/change/".format(supplier_message.id))
+        return ret
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if object_id:
             return super(UserAdmin, self).change_view(request, object_id, form_url, extra_context)
-
-    # return redirect("/local_library/suppliermessage/1/change/")

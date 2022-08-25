@@ -38,7 +38,6 @@ class CodeNumber(models.Model):
 
         if ware_app:
             number = ware_app.number
-            print("number", number)
             new_number = int(number) + 1
             if new_number < 10:
                 code = "00{}".format(new_number)

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.center_library.apps.CenterLibraryConfig',
     'apps.home.apps.HomeConfig',
     'apps.material_application.apps.MaterialApplicationConfig',
+    "easy_pdf"
 ]
 
 MIDDLEWARE = [
@@ -146,8 +147,8 @@ SIMPLEUI_ANALYSIS = False
 base_path = "upload/"
 
 status_choices_dict = {
-    "1": "分管领导审核中",
-    "2": "局长审核中",
+    "1": "分管领导审批中",
+    "2": "局长审批中",
     "3": "主管科室研判中",
     "4": "待出库",
     "5": "已出库",

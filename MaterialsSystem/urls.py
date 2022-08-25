@@ -21,6 +21,7 @@ from MaterialsSystem.settings import MEDIA_ROOT
 urlpatterns = [
     path('local_library/', include("local_library.urls", namespace="local_library")),
     path('home/', include("home.urls", namespace="home")),
+    path('material_application/', include("material_application.urls", namespace="material_application")),
     re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
     path('', admin.site.urls),
 
