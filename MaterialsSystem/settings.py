@@ -42,12 +42,15 @@ INSTALLED_APPS = [
     'apps.center_library.apps.CenterLibraryConfig',
     'apps.home.apps.HomeConfig',
     'apps.material_application.apps.MaterialApplicationConfig',
-    "easy_pdf"
+    'corsheaders',
+    # "easy_pdf"
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'home.middleware.MyMiddle',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -156,3 +159,73 @@ status_choices_dict = {
 status_choices = []
 for _k, _v in status_choices_dict.items():
     status_choices.append((_k, _v))
+
+CORS_ORIGIN_ALLOW_ALL = True
+# 跨域增加忽略
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ()
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    "x-ajax",
+    "Access-Control-Allow-Headers",
+)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_logger': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s \"%(pathname)s：%(module)s:%(funcName)s:%(lineno)d\" [%(levelname)s]-%(message)s]'
+        },
+    },
+    # 处理器
+    'handlers': {
+        # 输出控制台
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        # 输出文件
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': 'logs/latest.log',
+            'formatter': 'verbose',
+            # 每分钟切割一次日志
+            'when': 'M',
+            # 时间间隔
+            'interval': 5,
+            # 保留5份日志
+            'backupCount': 5,
+            'encoding': 'utf-8'
+        },
+    },
+    # 记录器
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagete': True,
+        },
+    }
+}

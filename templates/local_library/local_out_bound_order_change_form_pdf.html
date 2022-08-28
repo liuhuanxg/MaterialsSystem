@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>任丘市防疫物资出库单</title>
+    <style>
+        table {
+
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        tr td, th {
+            border: 1px solid black;
+            padding: 5px 15px;
+        }
+
+        th {
+            font-size: 16px;
+        }
+
+        td {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 0 auto; width: 1000px">
+    <table>
+        <tr>
+            <th colspan="4" style="font-size: 25px">任丘市防疫物资出库单</th>
+        </tr>
+        <tr>
+            <td>供应商</td>
+            <td colspan="3">{{ order.user }}</td>
+        </tr>
+        <tr>
+            <td>出库单号</td>
+            <td>{{ order.app_code }}</td>
+            <td>总金额</td>
+            <td>{{ order.total_price }}</td>
+
+        </tr>
+        <tr>
+            <td>申请单位</td>
+            <td>{{ order.applicant }}</td>
+            <td>领用人</td>
+            <td>{{ order.applicant_user }}</td>
+        </tr>
+        <tr>
+            <td>申请日期</td>
+            <td colspan="3">{{ order.add_date }}</td>
+        </tr>
+        <tr>
+            <td>申请原因</td>
+            <td colspan="3">{{ order.des }}</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th colspan="3">物资明细</th>
+        </tr>
+        <tr>
+            <td>物资种类</td>
+            <td>数量</td>
+            <td>金额</td>
+        </tr>
+        {% for order_detail in order_details %}
+            <tr>
+                <td>{{ order_detail.library_name }}</td>
+                <td>{{ order_detail.number }}</td>
+                <td>{{ order_detail.total_price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <table>
+        <tr>
+            <th colspan="4">审批意见</th>
+        </tr>
+        <tr>
+            <td>操作人</td>
+            <td>审批意见</td>
+            <td>审批日期</td>
+            <td>签字</td>
+        </tr>
+        {% for historys_detail in historys_details %}
+            <tr>
+                <td>局长</td>
+                <td>通过</td>
+                <td>{{ historys_detail.add_time }}</td>
+                <td>{{ historys_detail.font }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+</body>
+</html>

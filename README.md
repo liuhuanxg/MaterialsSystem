@@ -48,3 +48,4 @@ python manage.py createsuperuser
 种类不存在时创建种类、管理员审批种类之后才能入库
 
 
+python manage.py runserver --noreload 

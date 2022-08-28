@@ -61,7 +61,7 @@ admin.site.app_index = index_decorator(admin.site.app_index)
 
 @admin.register(MaterialsType)
 class LocalMaterialsTypeAdmin(admin.ModelAdmin):
-    list_display = ["materials_name", "unit", "specifications", "add_time", "add_date", "modify_time"]
+    list_display = ["id", "materials_name", "unit", "specifications", "add_time", "add_date", "modify_time"]
     list_filter = ["materials_name"]
     date_hierarchy = "add_date"
     fields = ["materials_name", "specifications", "unit", "warning_quantity"]
@@ -70,9 +70,6 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
 
     # @admin.action(description='下载模板')
     def make_published(self, request, queryset):
-        # tmp_path = os.path.join(BASE_DIR, "tmp")
-        # if not os.path.exists(tmp_path):
-        #     os.makedirs(tmp_path)
         records = list(queryset.values())
         #  数据库的英文字段和中文字段的映射字典
         zh_en = {
@@ -81,7 +78,7 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
             '单位': 'unit',
         }
         zh = list(zh_en.keys())
-        zh.extend(["数量", "单价"])
+        zh.extend(["单价(元)"])
         #  转换数据格式，以方便openpyxl批量写入
         records_list = [zh]
         for r in records:
@@ -96,6 +93,8 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
         response['Content-Disposition'] = f'attachment; filename="物料模板.xlsx"'
         wb.save(response)
         return response
+
+    make_published.short_description = u'下载模板'
 
 
 admin.site.unregister(User)
@@ -116,8 +115,23 @@ class UserAdmin(auth_admin.UserAdmin):
         return super().response_add(request, obj, post_url_continue)
 
     def save_model(self, request, obj, form, change):
-        super(UserAdmin, self).save_model(request, obj, form, change)
-        return redirect("/local_library/suppliermessage/1/change/")
+        ret = super(UserAdmin, self).save_model(request, obj, form, change)
+        # 添加的角色属于供应商时添加或者修改供应商信息
+        user_id = obj.id
+        user = User.objects.filter(id=user_id)
+        if user.exists():
+            user = user[0]
+            groups = user.groups.filter(name="供应商")
+            if groups.exists():
+                supplier_message = SupplierMessage.objects.filter(user=obj)
+                if supplier_message.exists():
+                    supplier_message = supplier_message[0]
+                else:
+                    supplier_message = SupplierMessage()
+                    supplier_message.user = obj
+                    supplier_message.save()
+                ret = redirect("/local_library/suppliermessage/{}/change/".format(supplier_message.id))
+        return ret
 
     def response_change(self, request, obj):
         if "_addanother" not in request.POST and auth_admin.IS_POPUP_VAR not in request.POST:
