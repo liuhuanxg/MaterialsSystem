@@ -90,7 +90,7 @@ def get_ex_applications(request):
 def do_approval(request):
     resp = {"status": 0, "data": [], "msg": ""}
     try:
-        params = request.GET
+        params = request.POST
         _id = params.get("_id")
         user_id = params.get("user_id", "")
         if not _id or not params:
