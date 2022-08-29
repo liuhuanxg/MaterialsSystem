@@ -56,8 +56,8 @@ def get_ex_applications(request):
     resp = {"status": 0, "data": [], "msg": ""}
     try:
         params = request.POST
-        username = params.get("username")
-        applications = ExWarehousingApplication.objects.filter(next_node=username)
+        user_id = params.get("user_id")
+        applications = ExWarehousingApplication.objects.filter(next_node=user_id)
         for application in applications:
             ret_application_details = []
             application_details = ApplicationDetail.objects.filter(application=application.id)
@@ -92,33 +92,35 @@ def do_approval(request):
     try:
         params = request.GET
         _id = params.get("_id")
-        application_user = params.get("username", "")
+        user_id = params.get("user_id", "")
         if not _id or not params:
             resp["msg"] = "请先登录。"
             return JsonResponse(resp)
         action = "通过"
+        user = None
         applications = ExWarehousingApplication.objects.filter(id=_id)
         if applications.exists():
             application = applications[0]
             print(application.status)
             if application.status == "1":
                 application.status = "2"
-                user = User.objects.filter(groups__name__contains="局长").first()
+                user = User.objects.filter(groups__name__contains="局长", id=user_id).first()
                 if user:
                     application.next_node = user.id
             elif application.status == "2":
                 application.status = "3"
-                user = User.objects.filter(groups__name__contains="主管科室").first()
+                user = User.objects.filter(groups__name__contains="主管科室", id=user_id).first()
                 if user:
                     application.next_node = user.id
             application.save()
-        resp["status"] = 1
-        resp["msg"] = "审批成功"
-        ApplicationHistory.objects.create(
-            application_id=_id,
-            application_user=application_user,
-            action=action
-        )
+        if user:
+            resp["status"] = 1
+            resp["msg"] = "审批成功"
+            ApplicationHistory.objects.create(
+                application_id=_id,
+                application_user=user.first_name,
+                action=action
+            )
     except:
         print("login error:", traceback.format_exc())
     return JsonResponse(resp)

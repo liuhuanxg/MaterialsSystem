@@ -13,8 +13,7 @@ from openpyxl import Workbook
 from MaterialsSystem.settings import status_choices_dict
 from utils.date_utils import get_date_str
 from .models import *
-
-
+from django.contrib.admin import DateFieldListFilter
 # 审批记录，不允许新增、修改、删除
 class ApplicationHistoryInline(admin.TabularInline):
     model = ApplicationHistory
@@ -161,13 +160,16 @@ class CenterAssessmentDetailInline(admin.TabularInline):
             return False
         return super().has_delete_permission(request, obj)
 
-
 @admin.register(ExWarehousingApplication)
 class ExWarehousingApplicationAdmin(admin.ModelAdmin):
+
     list_display = ["app_code", "title", "applicant", "applicant_user", "add_time",
                     "status_short", "next_node"]
-    list_filter = ["title", "create_user", "applicant_user"]
-    date_hierarchy = "add_time"
+    list_filter = [
+        "title", "create_user", "applicant_user",
+        ("add_date", DateFieldListFilter)
+    ]
+    # date_hierarchy = "add_date"
     readonly_fields = ["create_user"]
     inlines = [ApplicationFileInline, ApplicationDetailInline]
     fields = [("title", "des"), ("applicant", "applicant_user"), ("add_time")]
@@ -458,8 +460,11 @@ class MyChangeList(ChangeList):
 
 @admin.register(Accounts)
 class AccountsaAdmin(admin.ModelAdmin):
-    list_filter = ["db_type", "action", "type_name"]
-    date_hierarchy = "add_date"
+    list_filter = [
+        "db_type", "action", "type_name",
+        ("add_date", DateFieldListFilter)
+    ]
+
     list_display = ["app_code", "db_type", "entry_name", "action", "type_name", "specifications", "unit", "number",
                     "price",
                     "unit_price", "add_date"]
@@ -467,6 +472,7 @@ class AccountsaAdmin(admin.ModelAdmin):
 
     actions = ['download_accounts']
     list_per_page = 50
+    date_hierarchy = "add_date"
 
     def download_accounts(self, request, queryset):
         records = list(queryset.values())

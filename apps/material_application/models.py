@@ -66,9 +66,10 @@ class ApplicationDetail(models.Model):
 
     def clean(self):
         app = ApplicationDetail.objects.filter(id=self.id).first()
-        print("clean ApplicationDetail obj_id:{}, obj_status:{}, new_status:{}, obj_number:{}, new_number:{}".format(
-            self.id, app.application.status, self.application.status, app.number, self.number,
-        ))
+        if app:
+            print("clean ApplicationDetail obj_id:{}, obj_status:{}, new_status:{}, obj_number:{}, new_number:{}".format(
+                self.id, app.application.status, self.application.status, app.number, self.number,
+            ))
         # TODO(发起人也不能修改数量，有bug)
         if app and int(self.application.status) != 1 and self.number > app.number:
             raise ValidationError("领用数量不能增大")

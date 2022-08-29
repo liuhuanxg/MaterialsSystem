@@ -63,7 +63,7 @@ class LocalLabraryMaterials(models.Model):
         unique_together = ("library_name", "type_name")
         ordering = ["-add_time"]
 
-    library_name = models.ForeignKey("LocalLibrary", on_delete=models.DO_NOTHING, verbose_name="库名")
+    library_name = models.ForeignKey("LocalLibrary", on_delete=models.DO_NOTHING, verbose_name="项目名称")
     type_name = models.ForeignKey("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="物资类型")
     push_num = models.IntegerField("出库数量", default=0)
     unit_price = models.FloatField("单价(元)", default=0)

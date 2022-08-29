@@ -81,12 +81,10 @@
             </p>
             {{ cl.formset.non_form_errors }}
         {% endif %}
-        {#        <div>#}
-        {#            <a class="el-button el-button--primary el-button--primary-small">导入预算</a>#}
-        {#            <a class="el-button el-button--primary el-button--primary-small">导出模板</a>#}
-        {#        </div>#}
         <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
             {% block search %}{% search_form cl %}{% endblock %}
+            {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+
             <form id="changelist-form" method="post" {% if cl.formset.is_multipart %}
                   enctype="multipart/form-data" {% endif %} novalidate>{% csrf_token %}
                 <!--Compatible with django 3.2 x-->

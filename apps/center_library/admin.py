@@ -106,13 +106,15 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
             else:
                 number = 1
                 CodeNumber.objects.create(date_str=date_str, db_name=self.db_name, number=number)
-            obj.create_user = request.user
+            obj.create_u = request.user
             obj.app_code = CodeNumber.get_app_code(self.db_name)
         super().save_model(request, obj, form, change)
 
         # 解析上传的文件
-        file_path = obj.file.path
-        if file_path:
+
+        print("file_path:{}".format(obj.file))
+        if obj.file:
+            file_path = obj.file.path
             # 解析上传的附件
             for row_data in parse_center_excel_data(file_path):
                 try:

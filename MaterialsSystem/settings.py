@@ -187,6 +187,8 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     "x-ajax",
     "Access-Control-Allow-Headers",
+    "CORS",
+    "*"
 )
 
 LOGGING = {
