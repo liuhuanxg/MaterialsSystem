@@ -57,7 +57,7 @@ def get_ex_applications(request):
     try:
         params = request.POST
         user_id = params.get("user_id")
-        applications = ExWarehousingApplication.objects.filter(next_node=user_id)
+        applications = ExWarehousingApplication.objects.filter(next_node=user_id).exclude(status="3")
         for application in applications:
             ret_application_details = []
             ret_application_files = []
@@ -92,7 +92,7 @@ def get_ex_applications(request):
             resp["data"].append(data)
         resp["status"] = 1
     except:
-        print("login error:", traceback.format_exc())
+        print("login error:{}".format(traceback.format_exc()))
     return JsonResponse(resp)
 
 
@@ -103,34 +103,31 @@ def do_approval(request):
         params = request.POST
         _id = params.get("_id")
         user_id = params.get("user_id", "")
-        if not _id or not params:
-            resp["msg"] = "请先登录。"
+        application = ExWarehousingApplication.objects.filter(id=_id, next_node=str(user_id)).first()
+        now_user = User.objects.filter(id=user_id).first()
+        if not application or not now_user:
+            resp["msg"] = "未查到审批信息"
             return JsonResponse(resp)
         action = "通过"
-        user = None
-        applications = ExWarehousingApplication.objects.filter(id=_id)
-        if applications.exists():
-            application = applications[0]
-            print(application.status)
-            if application.status == "1":
-                application.status = "2"
-                user = User.objects.filter(groups__name__contains="局长", id=user_id).first()
-                if user:
-                    application.next_node = user.id
-            elif application.status == "2":
-                application.status = "3"
-                user = User.objects.filter(groups__name__contains="主管科室", id=user_id).first()
-                if user:
-                    application.next_node = user.id
-            application.save()
-        if user:
-            resp["status"] = 1
-            resp["msg"] = "审批成功"
-            ApplicationHistory.objects.create(
-                application_id=_id,
-                application_user=user.first_name,
-                action=action
-            )
+        print(application.status)
+        if application.status == "1":
+            application.status = "2"
+            user = User.objects.filter(groups__name__contains="局长").first()
+            if user:
+                application.next_node = user.id
+        elif application.status == "2":
+            application.status = "3"
+            user = User.objects.filter(groups__name__contains="主管科室").first()
+            if user:
+                application.next_node = user.id
+        application.save()
+        resp["status"] = 1
+        resp["msg"] = "审批成功"
+        ApplicationHistory.objects.create(
+            application_id=_id,
+            application_user=now_user.first_name,
+            action=action
+        )
     except:
         print("login error:", traceback.format_exc())
     return JsonResponse(resp)
