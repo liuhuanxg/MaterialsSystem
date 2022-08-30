@@ -87,9 +87,14 @@ class CenterLabraryQuantity(models.Model):
     balance_num = models.IntegerField("结余数量", default=0)
     total_price = models.FloatField("该物资入库总金额(元)", default=0, blank=True)
     out_price = models.FloatField("该物资出库总金额(元)", default=0, blank=True)
+    unit_price = models.FloatField(verbose_name="单价(元)", default=0, blank=True)
 
     def __str__(self):
-        return self.type_name.materials_name + "剩余：" + str(self.balance_num)
+        return (self.type_name.materials_name + "_" +
+                self.type_name.specifications + "_" +
+                self.type_name.unit + "剩余：" + str(self.balance_num)+
+                "单价(元):"+str(self.unit_price)
+                )
 
 
 class CenterWarehousingFile(models.Model):
@@ -132,7 +137,7 @@ class CenterOutboundOrderDetail(models.Model):
     total_price = models.FloatField(verbose_name="金额", default=0)
 
     def __str__(self):
-        return self.app_code.app_code
+        return str(self.app_code.app_code.app_code)
 
 
 class CenterOutboundOrderHistory(models.Model):
@@ -143,7 +148,7 @@ class CenterOutboundOrderHistory(models.Model):
 
     application = models.ForeignKey("CenterOutboundOrder", on_delete=models.DO_NOTHING, verbose_name="申请单")
     history_detail = models.OneToOneField("material_application.ApplicationHistory", on_delete=models.DO_NOTHING,
-                                                verbose_name="申请单")
+                                          verbose_name="申请单")
     application_user = models.CharField(max_length=20, blank=True, verbose_name="操作人")
     action = models.CharField(max_length=20, default="通过", verbose_name="审批动作")
     add_time = models.DateTimeField(verbose_name="审批时间", default=timezone.now)

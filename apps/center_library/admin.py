@@ -51,6 +51,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
     readonly_fields = ["app_code", "create_u"]
 
     def save_formset(self, request, form, formset, change):
+        all_total_price = 0
         for inline_form in formset.forms:
             if inline_form._meta.model == CenterLabraryMaterials and inline_form.has_changed():
                 type_name = inline_form.instance.type_name
@@ -63,15 +64,18 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                 if datas.exists():
                     data = datas[0]
                     data.put_num = data.put_num + put_num
+                    data.balance_num = data.balance_num + put_num
                     data.total_price = total_price
                     data.save()
                 else:
                     CenterLabraryQuantity.objects.create(
                         type_name=type_name,
                         put_num=put_num,
+                        unit_price=unit_price,
+                        balance_num=put_num,
                         total_price=total_price
                     )
-                # 增加台账记录
+                # 入库增加台账记录
                 Accounts.save_one(
                     inline_form.instance.ware_app.app_code,
                     "",
@@ -84,14 +88,10 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                     total_price,
                     "2"
                 )
+                all_total_price += total_price
 
-                center_labrary_quantidy, err = CenterLabraryQuantity.objects.get_or_create(
-                    type_name=type_name
-                )
-                center_labrary_quantidy.put_num = put_num + center_labrary_quantidy.put_num
-                center_labrary_quantidy.balance_num = center_labrary_quantidy.put_num - center_labrary_quantidy.push_num
-                center_labrary_quantidy.total_price = center_labrary_quantidy.total_price + total_price
-                center_labrary_quantidy.save()
+        # 转换为万元
+        form.instance.total_price = all_total_price / 10000
         super().save_formset(request, form, formset, change)
 
     def save_model(self, request, obj, form, change):
@@ -111,7 +111,6 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         # 解析上传的文件
-
         print("file_path:{}".format(obj.file))
         if obj.file:
             file_path = obj.file.path
@@ -153,33 +152,41 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                 except:
                     print("save data error:{}, error:{}".format(row_data, traceback.format_exc()))
 
+
     def has_change_permission(self, request, obj=None):
         return False
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 
 # 物资总库存
 @admin.register(CenterLabraryQuantity)
 class CenterLabraryQuantityAdmin(admin.ModelAdmin):
-    list_display = ["type_name", "put_num", "push_num", "colored_balance_quantity", "total_price"]
-    list_filter = ["type_name__materials_name"]
-    search_fields = ["balance_quantity"]
+    list_display = ["type_name", "put_num", "push_num", "colored_balance_num", "unit_price", "total_price", "out_price"]
+    list_filter = [
+        "type_name__materials_name",
+    ]
+    search_fields = ["balance_num"]
 
-    def colored_balance_quantity(self, obj):
-        mater_type = MaterialsType.objects.filter(type_name=obj.type_name)
+    def colored_balance_num(self, obj):
+        mater_type = MaterialsType.objects.filter(materials_name=obj.type_name)
         if mater_type.exists():
             ratio = mater_type[0].warning_quantity
 
         else:
             ratio = 10
-        if obj.balance_quantity <= obj.put_num * ratio / 100:
+        if obj.balance_num <= obj.put_num * ratio / 100:
             color_code = 'red'
+            msg = "(库存预警)"
         else:
             color_code = 'green'
+            msg = ""
         return format_html(
-            '<span style="color:{};">{}</span>', color_code, str(obj.balance_quantity) + "(库存预警)",
+            '<span style="color:{};">{}</span>', color_code, str(obj.balance_num) + msg,
         )
 
-    colored_balance_quantity.short_description = u'结余数量'
+    colored_balance_num.short_description = u'结余数量'
 
     def get_search_results(self, request, queryset, search_term):
         searchs = search_term.split('-')
@@ -197,19 +204,19 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
             request, queryset, search_term
         )
         if number1 and number2:
-            queryset = self.model.objects.filter(balance_quantity__gte=number1, balance_quantity__lte=number2)
+            queryset = self.model.objects.filter(balance_num__gte=number1, balance_num__lte=number2)
         return queryset, use_distinct
 
     def save_model(self, request, obj, form, change):
         put_num = obj.put_num
         push_num = obj.push_num
         unit_price = obj.unit_price
-        obj.balance_quantity = put_num - push_num
+        obj.balance_num = put_num - push_num
         obj.total_price = put_num * unit_price
         super().save_formset(request, form, form, change)
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -219,7 +226,7 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
 
 
 class CenterOutboundOrderDetailInline(admin.TabularInline):
-    fields = ["assessment_detail"]
+    fields = ["assessment_detail", "number", "total_price"]
     model = CenterOutboundOrderDetail
 
     def has_change_permission(self, request, obj=None):
@@ -290,6 +297,8 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                 unit_price = order_detail.assessment_detail.library_name.unit_price
                 number = order_detail.number
                 price = order_detail.total_price
+                # 申请单位
+                applicant = obj.applicant
                 action = "2"
                 print("app_code:{},type_name:{},specifications:{},unit:{},unit_price:{},number:{},price:{}".format(
                     app_code, type_name, specifications, unit, unit_price, number, price,
@@ -305,7 +314,8 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                     unit_price,
                     number=number,
                     price=price,
-                    db_type="2"
+                    db_type="2",
+                    applicant=applicant
                 )
                 # 该商品的出库数量+number
                 center_labrary_quantity = CenterLabraryQuantity.objects.filter(

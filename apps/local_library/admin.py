@@ -1,6 +1,3 @@
-import traceback
-
-import xlrd
 from django.contrib import admin
 from django.utils.html import format_html
 from home.models import CodeNumber, MaterialsType
@@ -154,6 +151,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
                 app_code = obj.app_code
                 unit_price = inline_form.unit_price
                 print(type_name, unit_price)
+                # 入库，增加台账记录
                 Accounts.save_one(
                     app_code,
                     obj.entry_name,
@@ -336,6 +334,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
                 unit_price = order_detail.assessment_detail.library_name.unit_price
                 number = order_detail.number
                 price = order_detail.total_price
+                applicant = obj.applicant
                 action = "2"
                 print("app_code:{},type_name:{},specifications:{},unit:{},unit_price:{},number:{},price:{}".format(
                     app_code, type_name, specifications, unit, unit_price, number, price,
@@ -351,7 +350,8 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
                     unit_price,
                     number=number,
                     price=price,
-                    db_type="1"
+                    db_type="1",
+                    applicant=applicant
                 )
                 # 该商品的出库数量+number
                 local_labrary_material = LocalLabraryMaterials.objects.filter(
@@ -370,6 +370,3 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
                     less_budget = local_library.less_budget
                     local_library.less_budget = (less_budget * 10000 - price) / 10000
                     local_library.save()
-
-
-

@@ -217,8 +217,8 @@ LOGGING = {
             'when': 'M',
             # 时间间隔
             'interval': 5,
-            # 保留5份日志
-            'backupCount': 5,
+            # 保留15份日志
+            'backupCount': 15,
             'encoding': 'utf-8'
         },
     },
@@ -231,3 +231,5 @@ LOGGING = {
         },
     }
 }
+
+# LOGIN_REDIRECT_URL = '/material_application/exwarehousingapplication/'

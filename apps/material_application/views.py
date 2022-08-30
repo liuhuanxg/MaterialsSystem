@@ -60,6 +60,7 @@ def get_ex_applications(request):
         applications = ExWarehousingApplication.objects.filter(next_node=user_id)
         for application in applications:
             ret_application_details = []
+            ret_application_files = []
             application_details = ApplicationDetail.objects.filter(application=application.id)
 
             for application_detail in application_details:
@@ -69,6 +70,14 @@ def get_ex_applications(request):
                         "type_name": application_detail.type_name.materials_name,
                     }
                 )
+            application_files = ExApplicationFile.objects.filter(application=application.id)
+            for application_file in application_files:
+                ret_application_files.append(
+                    {
+                        "path": application_file.file.path
+                    }
+                )
+
             data = {
                 "_id": application.id,
                 "title": application.title,
@@ -78,6 +87,7 @@ def get_ex_applications(request):
                 "add_time": application.add_time,
                 "add_date": application.add_date,
                 "application_details": ret_application_details,
+                "application_files": ret_application_files,
             }
             resp["data"].append(data)
         resp["status"] = 1

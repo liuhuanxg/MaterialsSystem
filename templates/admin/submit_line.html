@@ -5,13 +5,16 @@
         <el-button size="small" type="primary"
                    @click="formSubmit('_saveasnew','{% trans 'Save as new' %}',$event)">{% trans 'Save as new' %}</el-button>
     {% endif %}
-    {% if can_approve %}
+    {% if add_application %}
+        <button type="submit" class="el-button el-button--primary el-button--small" name="_save">
+            发起申请
+        </button>
+    {% elif can_approve %}
         <button type="submit" class="el-button el-button--primary el-button--small" name="_save">
             审批通过
         </button>
     {% else %}
         {% if show_save_and_continue %}
-
             <button type="submit" class="el-button el-button--primary el-button--small" name="_continue">
                 保存
             </button>

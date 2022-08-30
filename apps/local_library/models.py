@@ -72,8 +72,8 @@ class LocalLabraryMaterials(models.Model):
     modify_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
     def __str__(self):
-        return (self.library_name.entry_name + "_" + self.type_name.materials_name
-                + "_" + self.type_name.specifications + "_" + self.type_name.unit + "(单价(元):"
+        return ("【" +self.library_name.entry_name + "_" + self.type_name.materials_name
+                + "_" + self.type_name.specifications + "_" + self.type_name.unit+"】" + "(单价(元):"
                 + str(self.unit_price) + ")" + "剩余预算(万元):" + str(self.library_name.less_budget)
                 )
 
