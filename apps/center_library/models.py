@@ -33,12 +33,14 @@ class CenterLibraryFile(models.Model):
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     library_name = models.ForeignKey("CenterLibrary", on_delete=models.DO_NOTHING, verbose_name="库名")
 
+    def __str__(self):
+        return ""
 
 # 入库单信息
 class CenterWarehousingApplication(models.Model):
     class Meta:
-        verbose_name = "入库单"
-        verbose_name_plural = "入库单"
+        verbose_name = "中央库入库单"
+        verbose_name_plural = "中央库入库单"
         ordering = ["-add_date"]
 
     app_code = models.CharField("入库单号", unique=True, max_length=15)
@@ -72,7 +74,7 @@ class CenterLabraryMaterials(models.Model):
     modify_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)
 
     def __str__(self):
-        return str(self.id)
+        return ""
 
     def clean(self):
         super(CenterLabraryMaterials, self).clean()
@@ -81,8 +83,8 @@ class CenterLabraryMaterials(models.Model):
 
 class CenterLabraryQuantity(models.Model):
     class Meta:
-        verbose_name = "物料库存"
-        verbose_name_plural = "物料库存"
+        verbose_name = "中央库物料库存"
+        verbose_name_plural = "中央库物料库存"
 
     type_name = models.OneToOneField("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="类型名称")
     put_num = models.IntegerField("入库数量", default=0)
@@ -145,7 +147,7 @@ class CenterOutboundOrderDetail(models.Model):
     total_price = models.FloatField(verbose_name="金额", default=0)
 
     def __str__(self):
-        return str(self.app_code.app_code.app_code)
+        return ""
 
 
 class CenterOutboundOrderHistory(models.Model):
@@ -162,4 +164,4 @@ class CenterOutboundOrderHistory(models.Model):
     add_time = models.DateTimeField(verbose_name="审批时间", default=timezone.now)
 
     def __str__(self):
-        return str(self.id)
+        return ""

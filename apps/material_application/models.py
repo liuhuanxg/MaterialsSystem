@@ -1,14 +1,17 @@
+import logging
+
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
-from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail
 
 from MaterialsSystem.settings import status_choices
 from utils.date_utils import upload_path_handler
-import logging
+
 logger = logging.getLogger("django")
+
 
 class ExWarehousingApplication(models.Model):
     class Meta:
@@ -58,6 +61,8 @@ class ExApplicationFile(models.Model):
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单编号")
 
+    def __str__(self):
+        return ""
 
 class ApplicationDetail(models.Model):
     class Meta:
@@ -82,7 +87,7 @@ class ApplicationDetail(models.Model):
             raise ValidationError("领用数量不能小于1")
 
     def __str__(self):
-        return self.type_name.materials_name + "_" + str(self.number)
+        return ""
 
 
 class ApplicationHistory(models.Model):
@@ -97,7 +102,7 @@ class ApplicationHistory(models.Model):
     add_time = models.DateField(verbose_name="操作日期", default=timezone.now)
 
     def __str__(self):
-        return str(self.id)
+        return ""
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
@@ -118,9 +123,10 @@ class LocalAssessmentDetail(models.Model):
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
 
     def __str__(self):
-        return (self.library_name.library_name.entry_name + "_" + self.library_name.type_name.materials_name
-                + "_" + self.library_name.type_name.specifications + "_" + self.library_name.type_name.unit
-                )
+        # return (self.library_name.library_name.entry_name + "_" + self.library_name.type_name.materials_name
+        #         + "_" + self.library_name.type_name.specifications + "_" + self.library_name.type_name.unit
+        #         )
+        return ""
 
     def clean(self):
         if self.number <= 0:
@@ -128,7 +134,14 @@ class LocalAssessmentDetail(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        logger.info("LocalOutboundOrder self:{}, force_insert:{}, force_insert:{}, using:{}, update_fields:{}".format(self.id, force_insert, force_insert, using, update_fields))
+        logger.info(
+            "LocalOutboundOrder self:{}, force_insert:{}, force_insert:{}, using:{}, update_fields:{}".format(
+            self.id,
+            force_insert,
+            force_insert,
+            using,
+            update_fields)
+        )
         super().save(force_insert, force_update, using, update_fields)
         # 生成地方出库单
         local_outbound_order, err = LocalOutboundOrder.objects.get_or_create(
@@ -154,7 +167,6 @@ class LocalAssessmentDetail(models.Model):
         local_outbound_order.total_price = local_outbound_oerder_detail.total_price + local_outbound_oerder_detail.total_price
         local_outbound_order.user = self.library_name.library_name.supplier_name.user
         local_outbound_oerder_detail.save()
-
         local_outbound_order.save()
 
 
@@ -171,7 +183,7 @@ class CenterAssessmentDetail(models.Model):
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
 
     def __str__(self):
-        return str(self.id)
+        return ""
 
     def clean(self):
         if self.number <= 0:
@@ -210,7 +222,7 @@ class Accounts(models.Model):
     class Meta:
         verbose_name = "台账"
         verbose_name_plural = "台账"
-        unique_together = ("app_code", "entry_name", "type_name", "specifications", "unit", "db_type")
+        unique_together = ("app_code", "supplier_name", "entry_name", "type_name", "specifications", "unit", "db_type")
         ordering = ("-add_date", "app_code")
 
     type_choice = (
@@ -237,20 +249,27 @@ class Accounts(models.Model):
     add_date = models.DateField(verbose_name="日期", default=timezone.now)
 
     @staticmethod
-    def save_one(app_code, entry_name, type_name, specifications, unit, action, unit_price, number=0, price=0,
+    def save_one(app_code, supplier_name, entry_name, type_name, specifications, unit, action, unit_price, number=0,
+                 price=0,
                  db_type="1", applicant=""):
         """
-        :param app_code: 单号
-        :param db_name: 项目名称
-        :param type_name: 种类名称
-        :param action: 动作
+        :param app_code: 出库单韩
+        :param supplier_name: 供应商名称
+        :param entry_name: 项目名称
+        :param type_name: 物料类型
+        :param specifications: 物料规格
+        :param unit: 物料单位
+        :param action: 动作：入库、出库
+        :param unit_price: 单价
         :param number: 数量
         :param price: 价格
-        :param db_type: 数据库类型
+        :param db_type: 库类型：中央库 or 地方库
+        :param applicant: 申请人
         :return:
         """
         accounts = Accounts.objects.filter(
             app_code=app_code,
+            supplier_name=supplier_name,
             entry_name=entry_name,
             type_name=type_name,
             specifications=specifications,
@@ -258,10 +277,11 @@ class Accounts(models.Model):
             db_type=db_type,
         )
         if accounts.exists():
-            accounts.update(number=number, price=price, unit_price=unit_price,applicant=applicant)
+            accounts.update(number=number, price=price, unit_price=unit_price, applicant=applicant)
         else:
             a = Accounts()
             a.app_code = app_code
+            a.supplier_name = supplier_name
             a.entry_name = entry_name
             a.type_name = type_name
             a.specifications = specifications

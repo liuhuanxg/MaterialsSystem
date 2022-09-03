@@ -8,8 +8,8 @@ from utils.date_utils import upload_path_handler
 # 地方库信息
 class LocalLibrary(models.Model):
     class Meta:
-        verbose_name = "入库单"
-        verbose_name_plural = "入库单"
+        verbose_name = "地方库入库单"
+        verbose_name_plural = "地方库入库单"
         permissions = [("can_approve", "是否可以审核入库单")]
         ordering = ["-add_time"]
 
@@ -33,8 +33,8 @@ class LocalLibrary(models.Model):
 
 class SupplierMessage(models.Model):
     class Meta:
-        verbose_name = "地方库"
-        verbose_name_plural = "地方库"
+        verbose_name = "地方库信息"
+        verbose_name_plural = "地方库信息"
         ordering = ["-add_time"]
 
     company_name = models.CharField(verbose_name="公司名称", max_length=100, default="")
@@ -57,7 +57,8 @@ class SupplierFile(models.Model):
     file = models.FileField(verbose_name="(供应商附件)", upload_to=upload_path_handler("local_library"))
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     library_name = models.ForeignKey("SupplierMessage", on_delete=models.DO_NOTHING, verbose_name="供应商")
-
+    def __str__(self):
+        return ""
 
 class LocalLabraryMaterials(models.Model):
     class Meta:
@@ -97,8 +98,8 @@ class LocalWarehousingFile(models.Model):
 
 class LocalOutboundOrder(models.Model):
     class Meta:
-        verbose_name = "地方库库出库单"
-        verbose_name_plural = "地方库库出库单"
+        verbose_name = "地方库出库单"
+        verbose_name_plural = "地方库出库单"
         unique_together = ["app_code", "user"]
         permissions = [
             ("chaneg_is_ex", "是否可以出库"),
@@ -133,7 +134,7 @@ class LocalOutboundOrderDetail(models.Model):
     number = models.IntegerField(default=0, verbose_name="数量")
     total_price = models.FloatField(default=0, verbose_name="金额(元)")
     def __str__(self):
-        return str(self.app_code.app_code)
+        return ""
 
 
 class LocalOutboundOrderHistory(models.Model):

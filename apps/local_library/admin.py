@@ -153,6 +153,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
                 # 入库，增加台账记录
                 Accounts.save_one(
                     app_code,
+                    obj.supplier_name.company_name,
                     obj.entry_name,
                     type_name,
                     specifications,
@@ -319,6 +320,8 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
             order_details = LocalOutboundOrderDetail.objects.filter(app_code_id=obj.id)
             for order_detail in order_details:
                 app_code = order_detail.app_code.app_code.app_code
+                # 出库选择的供应商名称
+                supplier_name = order_detail.assessment_detail.library_name.library_name.supplier_name.company_name
                 type_name = order_detail.assessment_detail.library_name.type_name.materials_name
                 specifications = order_detail.assessment_detail.library_name.type_name.specifications
                 unit = order_detail.assessment_detail.library_name.type_name.unit
@@ -333,6 +336,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
                 # 出库记录+1
                 Accounts.save_one(
                     app_code,
+                    supplier_name,
                     "",
                     type_name,
                     specifications,

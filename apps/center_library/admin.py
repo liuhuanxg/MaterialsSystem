@@ -44,7 +44,7 @@ class CenterWarehousingFileInline(admin.TabularInline):
 # 入库单
 @admin.register(CenterWarehousingApplication)
 class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "total_price", "create_u", "add_time", "add_date", "modify_time"]
+    list_display = ["app_code", "total_price", "create_u", "add_date"]
     search_fields = ["app_code", "create_u"]
     date_hierarchy = "add_time"
     inlines = [CenterWarehousingFileInline, MaterialsDetailInline]
@@ -82,6 +82,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                 # 入库增加台账记录
                 Accounts.save_one(
                     inline_form.instance.ware_app.app_code,
+                    "",
                     "",
                     inline_form.instance.type_name.materials_name,
                     inline_form.instance.type_name.specifications,
@@ -134,6 +135,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                     # 增加台账记录
                     Accounts.save_one(
                         obj.app_code,
+                        "",
                         "",
                         materials_type.materials_name,
                         materials_type.specifications,
@@ -310,6 +312,7 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                 # 出库记录+1
                 Accounts.save_one(
                     app_code,
+                    "",
                     "",
                     type_name,
                     specifications,

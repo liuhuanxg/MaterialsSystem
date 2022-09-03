@@ -9,17 +9,32 @@ from openpyxl import Workbook
 from .models import *
 
 # 任丘市
-admin.site.site_header = '防疫物资管理'
-admin.site.site_title = '防疫物资管理'
+admin.site.site_header = '任丘市防疫物资管理'
+admin.site.site_title = '任丘市防疫物资管理'
 
-# 指定导航顺序
+# 指定首页导航顺序
 apps_indexes = {
-    "local_library": ["LocalLibrary",
-                      "LocalLibraryBudget",
-                      "WarehousingApplication",
-                      "LocalLabraryMaterials",
-                      # "LocalLibraryFile"
-                      ]
+    "local_library": [
+        "SupplierMessage",
+        "LocalLibrary",
+        "LocalLabraryMaterials",
+        "LocalOutboundOrder",
+    ],
+
+    "center_library": [
+        "CenterLibrary",
+        "CenterWarehousingApplication",
+        "CenterLabraryQuantity",
+        "CenterOutboundOrder",
+    ],
+
+    "home": [
+        "MaterialsType",
+    ],
+    "material_application": [
+        "ExWarehousingApplication",
+        "Accounts",
+    ]
 }
 
 

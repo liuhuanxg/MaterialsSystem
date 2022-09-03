@@ -138,7 +138,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         "title", "create_user", "applicant_user",
         ("add_date", DateFieldListFilter)
     ]
-    # date_hierarchy = "add_date"
+    date_hierarchy = "add_date"
     readonly_fields = ["create_user"]
     inlines = [ApplicationFileInline, ApplicationDetailInline]
     fields = [("title", "des"), ("applicant", "applicant_user"), ("add_time")]
@@ -149,26 +149,30 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         user = request.user
         inlines = self.inlines
         if obj:
-            if str(obj.status) == "3" and user.groups.filter(name__contains="主管科室").exists():
+            if str(obj.status) and (
+                    int(obj.status) == 3 and user.groups.filter(name__contains="主管科室").exists() or int(obj.status) > 3):
                 if LocalAssessmentDetailInline not in inlines:
                     inlines.append(LocalAssessmentDetailInline)
                 if CenterAssessmentDetailInline not in inlines:
                     inlines.append(CenterAssessmentDetailInline)
+            elif not obj.status or int(obj.status) < 3:
+                if LocalAssessmentDetailInline in inlines:
+                    inlines.remove(LocalAssessmentDetailInline)
+                if CenterAssessmentDetailInline in inlines:
+                    inlines.remove(CenterAssessmentDetailInline)
             if obj.next_node != "" and ApplicationHistoryInline not in inlines:
                 inlines.append(ApplicationHistoryInline)
             logger.info("obj:{}, obj.status:{}, obj.next_node:{}, inlines:{}".format(
                 obj, obj.status, obj.next_node, inlines
             ))
-        new_lines = []
-
-        if ApplicationHistoryInline in inlines:
-            for line in inlines:
-                if line != ApplicationHistoryInline:
-                    new_lines.append(line)
-            new_lines.append(ApplicationHistoryInline)
-            return new_lines
         else:
-            return inlines
+            if ApplicationHistoryInline in inlines:
+                inlines.remove(ApplicationHistoryInline)
+            if LocalAssessmentDetailInline in inlines:
+                inlines.remove(LocalAssessmentDetailInline)
+            if CenterAssessmentDetailInline in inlines:
+                inlines.remove(CenterAssessmentDetailInline)
+        return inlines
 
     def status_short(self, obj):
         return status_choices_dict.get(obj.status)
@@ -429,7 +433,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
             # logger.info("has_change_permission obj:{}, next_node:{}. user_id:{}, opts:{}".format(
             #     obj, obj.next_node, user.id, self.opts
             # ))
-            if obj.next_node == str(user.id) or obj.create_user == user:
+            if (obj.next_node == str(user.id) or obj.create_user == user) and obj.status and int(obj.status) <= 3:
                 return True
             return False
         return super(ExWarehousingApplicationAdmin, self).has_change_permission(request, obj)
@@ -457,7 +461,7 @@ class AccountsaAdmin(admin.ModelAdmin):
     def unit_des(self, obj):
         return obj.unit[0:10]
 
-    unit_des.short_description = u'规格'
+    unit_des.short_description = u'物料规格'
 
     def download_accounts(self, request, queryset):
         # TODO 中央库和地方库在一起时要分开导出，或者导出一个压缩包？直接只允许导出一种，多种时就只导出地方库。
