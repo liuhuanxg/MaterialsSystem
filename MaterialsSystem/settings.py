@@ -146,7 +146,7 @@ base_url = "http://127.0.0.1:8000/"
 
 SIMPLEUI_HOME_INFO = False
 SIMPLEUI_ANALYSIS = False
-
+SIMPLEUI_HOME_ACTION = False # 不显示最近动作
 base_path = "upload/"
 
 status_choices_dict = {
@@ -231,5 +231,6 @@ LOGGING = {
         },
     }
 }
+LOGIN_URL = '/login/'
+# LOGIN_REDIRECT_URL = '/home/my_index/'
 
-# LOGIN_REDIRECT_URL = '/material_application/exwarehousingapplication/'

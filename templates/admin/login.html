@@ -102,8 +102,10 @@
                 <el-button :icon="loading?'el-icon-loading':''" @click="login()"
                            type="primary">{% trans 'Log in' %}</el-button>
             </div>
+            {% if next != "/" %}
+                <input type="hidden" name="next" value="{{ next }}"/>
+            {% endif %}
 
-            <input type="hidden" name="next" value="{{ next }}"/>
         </form>
     {% endblock %}
 </div>

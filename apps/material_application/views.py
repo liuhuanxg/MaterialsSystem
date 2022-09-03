@@ -1,7 +1,7 @@
 import logging
 import os
 import traceback
-
+from django.contrib.auth.decorators import login_required
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib.auth import login as Auth_Login, authenticate, logout as Auth_Logout
 from django.http import HttpResponse
@@ -24,6 +24,7 @@ logger = logging.getLogger("django")
 # logger.error("This is an error msg")
 
 # 用于手机端登录
+@login_required
 @csrf_exempt
 def login(request):
     resp = {"status": 0, "data": {}, "msg": ""}

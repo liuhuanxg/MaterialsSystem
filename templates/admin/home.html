@@ -1,5 +1,5 @@
 {% load i18n static simpletags %}
-
+<script type="text/javascript" src="{% static 'admin/simpleui-x/js/axios.min.js' %}"></script>
 <div id="home">
 
     <el-row class="info-card">
@@ -11,23 +11,18 @@
             {% else %}
             <el-col :span="24">
                 {% endif %}
-
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <i class="fas fa-link"></i>
-                        <span v-text="getLanuage('Quick navigation')"></span>
+                        <span>我的待办 {{ request.user }}</span>
                     </div>
                     <div class="clearfix">
                         {% if "SIMPLEUI_HOME_QUICK"|get_config != False %}
-
-
                         <div v-for="(c,j) in models" :key="c.name" class="quick-wrap">
                             <a href="javascript:;" @click="openTab(c,(j+1)+'')">
                                 <span class="icon" :class="c.icon"></span>
                                 <span class="card-name" v-text="c.name"></span>
                             </a>
                         </div>
-
                         {% endif %}
                     </div>
                 </el-card>
@@ -38,8 +33,7 @@
             <el-col :span="6">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-
-                        <span><i class="fab fa-stripe-s"></i>Simpleui <span
+                        <span><i class="fab fa-stripe-s"></i> <span
                                 v-text="getLanuage('Home page')"></span></span>
                         <el-button style="float: right; padding: 3px 0" type="text" @click="report()"><span
                                 v-text="getLanuage('Report issue')"></span></el-button>
@@ -93,27 +87,9 @@
     </el-card>
     {% endif %}
 </div>
-
-<el-dialog
-        title="Upgrade Simpleui"
-        :visible.sync="upgrade.dialogVisible"
-        width="50%">
-    <el-alert
-            :title="'You can upgrade to '+upgrade.version"
-            type="success">
-    </el-alert>
-    <div style="padding: 10px">
-        <div>
-            <h3>
-            Run Command:
-            </h3>
-            <el-alert
-                title="pip install django-simpleui -U"
-                type="info">
-              </el-alert>
-
-        </div>
-        <div><h3>Change logs:</h3></div>
-        <div v-text="upgrade.body"></div>
-    </div>
+    <script>
+        axios.post('').then(res => {
+          res.data
+        })
+    </script>
 </el-dialog>

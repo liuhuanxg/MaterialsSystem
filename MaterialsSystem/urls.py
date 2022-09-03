@@ -17,12 +17,14 @@ from django.contrib import admin
 from django.views.static import serve
 from django.urls import path, include, re_path
 from MaterialsSystem.settings import MEDIA_ROOT
+from apps import home
 
 urlpatterns = [
     path('local_library/', include("local_library.urls", namespace="local_library")),
     path('home/', include("home.urls", namespace="home")),
     path('material_application/', include("material_application.urls", namespace="material_application")),
     re_path(r'^media/(?P<path>.*)', serve, {"document_root": MEDIA_ROOT}),
+    # path('', home.views.MySite().urls),
     path('', admin.site.urls),
 
 ]
