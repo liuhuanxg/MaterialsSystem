@@ -82,10 +82,9 @@ class LocalLibraryAdmin(admin.ModelAdmin):
     inlines = [LocalWarehousingFileInline, MaterialsDetailInline]
     db_name = "LocalWarehousingApplication"
     readonly_fields = ["app_code", "create_user", "less_budget"]
-
     fields = [("entry_name", "supplier_name"), ("budget", "less_budget"), ("add_date", "file"), "des"]
 
-    # save_on_top = True
+
     def get_fields(self, request, obj=None):
         fields = self.fields
         is_approve = "is_approve"
@@ -94,14 +93,16 @@ class LocalLibraryAdmin(admin.ModelAdmin):
                 fields.append(is_approve)
         elif obj and not obj.is_approve and is_approve not in fields:
             fields.append(is_approve)
-
         return fields
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.is_approve:
             return False
-        if obj and not request.user.has_perm('can_approve'):
-            self.readonly_fields.append("is_approve")
+        if obj:
+            if not request.user.has_perm('can_approve') and "is_approve" not in self.readonly_fields:
+                self.readonly_fields.append("is_approve")
+            elif request.user.has_perm('can_approve') and "is_approve" in self.readonly_fields:
+                self.readonly_fields.remove("can_approve")
         self.readonly_fields = list(set(self.readonly_fields))
         return super(LocalLibraryAdmin, self).has_change_permission(request, obj)
 
@@ -109,19 +110,9 @@ class LocalLibraryAdmin(admin.ModelAdmin):
         if not obj.app_code:
             obj.create_user = request.user
             obj.app_code = CodeNumber.get_app_code(self.db_name)
-            date_str = get_date_str()
-            code_number = CodeNumber.objects.filter(date_str=date_str, db_name=self.db_name).first()
-            if code_number:
-                number = code_number.number + 1
-                code_number.number = number
-                code_number.save()
-            else:
-                number = 1
-                CodeNumber.objects.create(date_str=date_str, db_name=self.db_name, number=number)
         is_approve = obj.is_approve
-        file_path = obj.file.path
-
-        if file_path:
+        if obj.file:
+            file_path = obj.file.path
             # 解析上传的附件
             for row_data in parse_excel_data(file_path):
                 materials_type, err = MaterialsType.objects.get_or_create(
@@ -163,17 +154,10 @@ class LocalLibraryAdmin(admin.ModelAdmin):
                     0,
                     0
                 )
-
         super(LocalLibraryAdmin, self).save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
         super().save_formset(request, form, formset, change)
-
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super(LocalLibraryAdmin, self).formfield_for_dbfield(db_field, **kwargs)
-        if db_field.name == 'app_code':
-            field.initial = CodeNumber.get_app_code(db_name=self.db_name)
-        return field
 
     # 获取只读字段
     def get_readonly_fields(self, request, obj=None):
@@ -182,7 +166,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
             if not request.user.has_perm('can_approve'):
                 readonly_fields.append("is_approve")
         elif obj and obj.is_approve:
-            readonly_fields = ["app_code", "entry_name", "library_name", "create_user", "is_approve"]
+            readonly_fields = ["app_code", "entry_name", "library_name", "create_user"]
         return readonly_fields
 
     def add_view(self, request, form_url="", extra_context=None):
@@ -218,7 +202,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
             if local_library.exists():
                 local_library = local_library[0]
                 if local_library.is_approve:
-                    self.readonly_fields = ["app_code", "entry_name", "supplier_name", "is_approve", "add_time"]
+                    self.readonly_fields = ["app_code", "entry_name", "supplier_name", "add_time"]
         return super(LocalLibraryAdmin, self).changeform_view(request, object_id, form_url, extra_context)
 
     def get_inline_formsets(self, request, formsets, inline_instances, obj=None):
@@ -262,31 +246,31 @@ class LocalOutboundOrderDetailInline(admin.TabularInline):
         return False
 
 
-class LocalOutboundOrderHistorylInline(admin.TabularInline):
-    model = LocalOutboundOrderHistory
-    extra = 0
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-    def has_add_permission(self, request, obj):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
+# class LocalOutboundOrderHistorylInline(admin.TabularInline):
+#     model = LocalOutboundOrderHistory
+#     extra = 0
+#
+#     def has_change_permission(self, request, obj=None):
+#         return False
+#
+#     def has_add_permission(self, request, obj):
+#         return False
+#
+#     def has_delete_permission(self, request, obj=None):
+#         return False
 
 
 # 出库单
 @admin.register(LocalOutboundOrder)
 class LocalOutboundOrderAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "user", "title", "applicant", "is_ex", "pdf_short"]
+    list_display = ["app_code", "user", "title", "applicant", "is_ex", "is_check", "pdf_short"]
     readonly_fields = ["app_code", "user", "title", "applicant", "applicant_user",
                        "des", "total_price", "add_date", "add_time"
                        ]
 
     fieldsets = [
         ("基本信息", {"fields": (("app_code", "user", "total_price"),)}),
-        ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex")}),
+        ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex", "is_check")}),
     ]
 
     def pdf_short(self, obj):
@@ -295,7 +279,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
         )
 
     pdf_short.short_description = u'电子单'
-    inlines = [LocalOutboundOrderDetailInline, LocalOutboundOrderHistorylInline]
+    inlines = [LocalOutboundOrderDetailInline]
 
     # 供应商只能看到自己的出库单
     def get_queryset(self, request):
@@ -313,7 +297,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         # 出库之后不允许再修改
-        if obj and obj.is_ex:
+        if obj and obj.is_check:
             return None
         return super(LocalOutboundOrderAdmin, self).has_change_permission(request, obj)
 
@@ -324,7 +308,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         super(LocalOutboundOrderAdmin, self).save_model(request, obj, form, change)
 
-        if change and obj and obj.is_ex:
+        if change and obj and obj.is_check:
             order_details = LocalOutboundOrderDetail.objects.filter(app_code_id=obj.id)
             for order_detail in order_details:
                 app_code = order_detail.app_code.app_code.app_code
@@ -370,3 +354,18 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
                     less_budget = local_library.less_budget
                     local_library.less_budget = (less_budget * 10000 - price) / 10000
                     local_library.save()
+
+    def get_readonly_fields(self, request, obj=None):
+        user = request.user
+        # 没有出库权限，则修改出库为只读
+        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+            self.readonly_fields.append("is_ex")
+        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+            self.readonly_fields.remove("is_ex")
+        # 没有核销权限，则修改核销为只读
+        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+            self.readonly_fields.append("is_ex")
+        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+            self.readonly_fields.remove("is_ex")
+
+        return self.readonly_fields

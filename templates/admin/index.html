@@ -2,11 +2,7 @@
 {% load i18n static %}
 {% load simpletags %}
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
-<!--
-   The project use: django-simpleui
-   source code：
-   https://github.com/newpanjing/simpleui
--->
+
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
     <meta charset="UTF-8">
@@ -203,7 +199,6 @@
 
                     <el-tab-pane v-for="(item,index) in tabs" :closable="index!=0" :label="item.name" :name="item.id"
                                  :key="item.id" lazy="true">
-
                         {% home_page %}
                         {% if home %}
                             <span v-if="index==0" slot="label"><i
@@ -242,8 +237,6 @@
 
                         </div>
                     </el-tab-pane>
-
-
                 </el-tabs>
             </el-main>
         </el-container>
@@ -328,9 +321,6 @@
         var lanuageCode = '{% get_language %}';
 
         function localeError(e) {
-            console.warn("Please add the {% get_language %}.js language file to the '/simpleui-x/theme' directory.")
-            console.log("See simpleui i18n:https://github.com/newpanjing/simpleui/blob/master/i18n.md")
-            console.log("或者加入QQ群:786576510 (Join QQ Group.)")
 
         }
     </script>

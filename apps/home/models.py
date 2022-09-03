@@ -45,7 +45,11 @@ class CodeNumber(models.Model):
                 code = "0{}".format(new_number)
             else:
                 code = number
+            ware_app.number = new_number
+            ware_app.save()
         else:
             code = "001"
+            number = 1
+            CodeNumber.objects.create(date_str=date_str, db_name=db_name, number=number)
         app_code = date_str + str(code)
         return app_code

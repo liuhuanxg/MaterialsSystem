@@ -96,16 +96,21 @@ class LocalOutboundOrder(models.Model):
         verbose_name = "地方库库出库单"
         verbose_name_plural = "地方库库出库单"
         unique_together = ["app_code", "user"]
+        permissions = [
+            ("chaneg_is_ex", "是否可以出库"),
+            ("chaneg_is_check", "是否可以核销"),
+        ]
 
     app_code = models.OneToOneField("material_application.ExWarehousingApplication", on_delete=models.DO_NOTHING,
                                     verbose_name="出库单")
-    user = models.ForeignKey(User, verbose_name="供应商", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, verbose_name="供应商", on_delete=models.CASCADE, null=True)
     title = models.CharField("申请主题", max_length=100, default="")
     applicant = models.CharField("申请单位", max_length=100, default="")
     applicant_user = models.CharField("领用人", unique=True, max_length=100, default="")
     des = models.CharField("申请说明", blank=True, max_length=100, default="")
     total_price = models.FloatField("总金额(元)", blank=True, default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=False, blank=True)
+    is_check = models.BooleanField(verbose_name="是否核销", default=False, blank=True)
     add_time = models.DateTimeField(verbose_name="申请时间", default=timezone.now)
     add_date = models.DateField(verbose_name="申请日期", auto_now_add=True)
 

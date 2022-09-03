@@ -5,7 +5,6 @@ from django.utils.html import format_html
 from home.models import CodeNumber, MaterialsType
 from material_application.models import Accounts
 
-from utils.date_utils import get_date_str
 from utils.utils import parse_center_excel_data
 from .models import *
 
@@ -48,7 +47,8 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
     save_as_continue = False
     save_as = False
     db_name = "CenterWarehousingApplication"
-    readonly_fields = ["app_code", "create_u"]
+    readonly_fields = []
+    fields = [("total_price", "file"), "des", "add_time"]
 
     def save_formset(self, request, form, formset, change):
         all_total_price = 0
@@ -97,15 +97,6 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         # 创建时生成单号
         if not obj.app_code:
-            date_str = get_date_str()
-            code_number = CodeNumber.objects.filter(date_str=date_str, db_name=self.db_name).first()
-            if code_number:
-                number = code_number.number + 1
-                code_number.number = number
-                code_number.save()
-            else:
-                number = 1
-                CodeNumber.objects.create(date_str=date_str, db_name=self.db_name, number=number)
             obj.create_u = request.user
             obj.app_code = CodeNumber.get_app_code(self.db_name)
         super().save_model(request, obj, form, change)
@@ -152,12 +143,21 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                 except:
                     print("save data error:{}, error:{}".format(row_data, traceback.format_exc()))
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            self.readonly_fields = ["app_code", "create_u"]
+        return self.readonly_fields
+
+    def get_fields(self, request, obj=None):
+        if obj:
+            self.fields = [("app_code", "create_u"), ("total_price", "file"), "des", "add_time"]
+        return self.fields
 
     def has_change_permission(self, request, obj=None):
         return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 # 物资总库存
@@ -215,8 +215,8 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
         obj.total_price = put_num * unit_price
         super().save_formset(request, form, form, change)
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -256,14 +256,13 @@ class CenterOutboundOrderHistoryInline(admin.TabularInline):
 # 中央库出库单
 @admin.register(CenterOutboundOrder)
 class CenterOutboundOrderAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "title", "applicant", "is_ex", "pdf_short"]
-    inlines = [CenterOutboundOrderDetailInline, CenterOutboundOrderHistoryInline]
+    list_display = ["app_code", "title", "applicant", "is_ex", "is_check", "pdf_short"]
+    inlines = [CenterOutboundOrderDetailInline]
     readonly_fields = ["app_code", "title", "applicant", "applicant_user",
-                       "des", "total_price", "add_date", "add_time"
-                       ]
+                       "des", "total_price", "add_date", "add_time"]
     fieldsets = [
         ("基本信息", {"fields": (("app_code", "total_price"),)}),
-        ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex")}),
+        ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex", "is_check")}),
     ]
 
     def pdf_short(self, obj):
@@ -275,7 +274,7 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         # 出库之后不允许再修改
-        if obj and obj.is_ex:
+        if obj and obj.is_check:
             return None
         return super().has_change_permission(request, obj)
 
@@ -287,7 +286,7 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
-        if change and obj and obj.is_ex:
+        if change and obj and obj.is_check:
             order_details = CenterOutboundOrderDetail.objects.filter(app_code_id=obj.id)
             for order_detail in order_details:
                 app_code = order_detail.app_code.app_code.app_code
@@ -328,3 +327,18 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                     center_labrary_quantity.out_price = center_labrary_quantity.out_price + price
                     center_labrary_quantity.balance_num = center_labrary_quantity.put_num - center_labrary_quantity.push_num
                     center_labrary_quantity.save()
+
+    def get_readonly_fields(self, request, obj=None):
+        user = request.user
+        # 没有出库权限，则修改出库为只读
+        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+            self.readonly_fields.append("is_ex")
+        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+            self.readonly_fields.remove("is_ex")
+        # 没有核销权限，则修改核销为只读
+        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+            self.readonly_fields.append("is_ex")
+        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+            self.readonly_fields.remove("is_ex")
+
+        return self.readonly_fields

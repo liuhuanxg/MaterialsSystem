@@ -1,4 +1,5 @@
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
+from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -17,7 +18,7 @@ class ExWarehousingApplication(models.Model):
     app_code = models.CharField("申请单号", unique=True, max_length=100)
     title = models.CharField("申请主题", unique=True, max_length=100)
     applicant = models.CharField("申请单位", max_length=100)
-    applicant_user = models.CharField("领用人", unique=True, max_length=100)
+    applicant_user = models.CharField("领用人", max_length=100)
     des = models.CharField("原因描述", blank=True, max_length=100)
     add_time = models.DateTimeField(verbose_name="申请时间", default=timezone.now)
     add_date = models.DateField(verbose_name="申请日期", auto_now_add=True)
@@ -61,6 +62,7 @@ class ApplicationDetail(models.Model):
     class Meta:
         verbose_name = "领用详情"
         verbose_name_plural = "领用详情"
+        unique_together = ["type_name", "application"]
 
     type_name = models.ForeignKey("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
@@ -100,9 +102,6 @@ class ApplicationHistory(models.Model):
              update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
         # 待出库时表示审批完成，则同步出库单到对应的审批记录中
-        # （TODO：有没有必要？没有也不影响，因为这个时候已经审批完了，只是一张出库单子，不需要展示数据）
-        if self.application.status == "3":
-            pass
 
 
 class LocalAssessmentDetail(models.Model):
@@ -126,6 +125,37 @@ class LocalAssessmentDetail(models.Model):
     def clean(self):
         if self.number <= 0:
             raise ValidationError("领用数量不能小于1")
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        print("LocalOutboundOrder self:", self.id, force_insert, force_insert, using, update_fields)
+        super().save(force_insert, force_update, using, update_fields)
+        # 生成地方出库单
+        local_outbound_order, err = LocalOutboundOrder.objects.get_or_create(
+            app_code_id=self.application_id
+        )
+        if err:
+            obj = self.application
+            local_outbound_order.title = obj.title
+            local_outbound_order.applicant = obj.applicant
+            local_outbound_order.applicant_user = obj.applicant_user
+            local_outbound_order.des = obj.des
+            local_outbound_order.add_time = obj.add_time
+            local_outbound_order.add_date = obj.add_date
+            local_outbound_order.save()
+        # 生成地方库出库单详情
+        local_outbound_oerder_detail, err = LocalOutboundOrderDetail.objects.get_or_create(
+            app_code_id=local_outbound_order.id,
+            assessment_detail_id=self.id,
+        )
+        local_outbound_oerder_detail.number = self.number
+        local_outbound_oerder_detail.total_price = self.number * self.library_name.unit_price
+        local_outbound_oerder_detail.save()
+        local_outbound_order.total_price = local_outbound_oerder_detail.total_price + local_outbound_oerder_detail.total_price
+        local_outbound_order.user = self.library_name.library_name.supplier_name.user
+        local_outbound_oerder_detail.save()
+
+        local_outbound_order.save()
 
 
 class CenterAssessmentDetail(models.Model):
@@ -174,7 +204,6 @@ class CenterAssessmentDetail(models.Model):
         center_outbound_oerder_detail.save()
         center_outbound_order.total_price = center_outbound_order.total_price + center_outbound_oerder_detail.total_price
         center_outbound_order.save()
-        # 生成审批记录
 
 
 class Accounts(models.Model):
@@ -182,6 +211,7 @@ class Accounts(models.Model):
         verbose_name = "台账"
         verbose_name_plural = "台账"
         unique_together = ("app_code", "entry_name", "type_name", "specifications", "unit", "db_type")
+        ordering = ("-add_date", "app_code")
 
     type_choice = (
         ("1", "地方库"),

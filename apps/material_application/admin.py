@@ -1,5 +1,6 @@
-# from local_library.models import LocalOutboundOrder
-from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail, CenterOutboundOrderHistory
+import logging
+
+from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter
 from django.shortcuts import HttpResponse
@@ -10,10 +11,14 @@ from home.models import CodeNumber
 from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail, LocalOutboundOrderHistory, \
     LocalLabraryMaterials
 from openpyxl import Workbook
+from openpyxl.styles import Alignment
+from openpyxl.styles import Font
 
 from MaterialsSystem.settings import status_choices_dict
 from utils.date_utils import get_date_str
 from .models import *
+
+logger = logging.getLogger("django")
 
 
 # 审批记录，不允许新增、修改、删除
@@ -108,9 +113,9 @@ class LocalAssessmentDetailInline(admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def has_change_permission(self, request, obj=None):
-        print("has_change_permission self:{},obj:{},obj.status:{}".format(
-            self, obj, obj.status
-        ))
+        # print("has_change_permission self:{},obj:{},obj.status:{}".format(
+        #     self, obj, obj.status
+        # ))
         if obj and obj.status == "4":
             return False
         return super().has_change_permission(request, obj)
@@ -166,7 +171,7 @@ class CenterAssessmentDetailInline(admin.TabularInline):
 @admin.register(ExWarehousingApplication)
 class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     list_display = ["app_code", "title", "applicant", "applicant_user", "add_time",
-                    "status_short", "next_node"]
+                    "status_short", "next_node_short"]
     list_filter = [
         "title", "create_user", "applicant_user",
         ("add_date", DateFieldListFilter)
@@ -208,6 +213,13 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
 
     status_short.short_description = u'申请状态'
 
+    def next_node_short(self, obj):
+        next_user = User.objects.filter(id=obj.next_node).first()
+        if next_user:
+            return next_user.username
+        return ""
+
+    next_node_short.short_description = u'待审批人'
     def app_status_short(self, obj):
         return format_html(
             '<a href="{}?_id={}">{}</a>'.format("/material_application/do_approval/", obj.id, "点击审批", )
@@ -277,15 +289,6 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
             if obj.app_code == "":
                 obj.create_user = request.user
                 obj.app_code = CodeNumber.get_app_code(self.db_name)
-                date_str = get_date_str()
-                code_number = CodeNumber.objects.filter(date_str=date_str, db_name=self.db_name).first()
-                if code_number:
-                    number = code_number.number + 1
-                    code_number.number = number
-                    code_number.save()
-                else:
-                    number = 1
-                    CodeNumber.objects.create(date_str=date_str, db_name=self.db_name, number=number)
             if obj.create_user == request.user:
                 next_user = User.objects.filter(groups__name__icontains="分管领导").first()
                 if next_user:
@@ -363,18 +366,18 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         center_outbound_order.total_price = center_outbound_order.total_price + center_outbound_oerder_detail.total_price
                     center_outbound_order.save()
                     # (3) 同步审批记录
-                    application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
-                    for application_history in application_historys:
-                        center_outbound_order_detail, err = CenterOutboundOrderHistory.objects.get_or_create(
-                            application_id=center_outbound_order.id,
-                            history_detail_id=application_history.id,
-                        )
-                        center_outbound_order_detail.action = application_history.action
-                        center_outbound_order_detail.add_time = application_history.add_time
-                        center_outbound_order_detail.application_user = application_history.application_user
-                        # TODO(保存对应的签字)
-                        # center_outbound_order_detail.application_user = application_history.application_user
-                        center_outbound_order_detail.save()
+                    # application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
+                    # for application_history in application_historys:
+                    #     center_outbound_order_detail, err = CenterOutboundOrderHistory.objects.get_or_create(
+                    #         application_id=center_outbound_order.id,
+                    #         history_detail_id=application_history.id,
+                    #     )
+                    #     center_outbound_order_detail.action = application_history.action
+                    #     center_outbound_order_detail.add_time = application_history.add_time
+                    #     center_outbound_order_detail.application_user = application_history.application_user
+                    #     # TODO(保存对应的签字)
+                    #     # center_outbound_order_detail.application_user = application_history.application_user
+                    #     center_outbound_order_detail.save()
                 # 2.生成地方库出库单
                 local_assement_details = LocalAssessmentDetail.objects.filter(application_id=obj.id)
                 if local_assement_details.exists():
@@ -406,18 +409,18 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         local_outbound_order.save()
 
                         # (3) 同步审批记录
-                        application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
-                        for application_history in application_historys:
-                            local_outbound_order_history_detail, err = LocalOutboundOrderHistory.objects.get_or_create(
-                                application_id=local_outbound_order.id,
-                                history_detail_id=application_history.id,
-                            )
-                            local_outbound_order_history_detail.action = application_history.action
-                            local_outbound_order_history_detail.application_user = application_history.application_user
-                            local_outbound_order_history_detail.add_time = application_history.add_time
-                            # TODO(保存对应的签字)
-                            # local_outbound_order_history_detail.add_time = application_history.add_time
-                            local_outbound_order_history_detail.save()
+                        # application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
+                        # for application_history in application_historys:
+                        #     local_outbound_order_history_detail, err = LocalOutboundOrderHistory.objects.get_or_create(
+                        #         application_id=local_outbound_order.id,
+                        #         history_detail_id=application_history.id,
+                        #     )
+                        #     local_outbound_order_history_detail.action = application_history.action
+                        #     local_outbound_order_history_detail.application_user = application_history.application_user
+                        #     local_outbound_order_history_detail.add_time = application_history.add_time
+                        #     # TODO(保存对应的签字)
+                        #     # local_outbound_order_history_detail.add_time = application_history.add_time
+                        #     local_outbound_order_history_detail.save()
 
         super(ExWarehousingApplicationAdmin, self).save_model(request, obj, form, change)
 
@@ -431,6 +434,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         return super(ExWarehousingApplicationAdmin, self).response_change(request, obj)
 
     def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        self.inlines = [ApplicationFileInline, ApplicationDetailInline]
         extra_context = extra_context if extra_context else {}
         if object_id:
             user = request.user
@@ -476,8 +480,8 @@ class AccountsaAdmin(admin.ModelAdmin):
         ("add_date", DateFieldListFilter)
     ]
 
-    list_display = ["app_code", "db_type", "entry_name", "action", "type_name", "specifications", "unit", "number",
-                    "price","applicant",
+    list_display = ["app_code", "db_type", "entry_name", "action", "type_name",
+                    "specifications", "unit", "number", "price", "applicant",
                     "unit_price", "add_date"]
     change_list_template = "material_application/accounts_change_list.html"
 
@@ -486,25 +490,153 @@ class AccountsaAdmin(admin.ModelAdmin):
     date_hierarchy = "add_date"
 
     def download_accounts(self, request, queryset):
-        records = list(queryset.values())
-        #  数据库的英文字段和中文字段的映射字典
-        zh_en = {
-            '物料名称': 'materials_name',
-            '规格': 'specifications',
-            '单位': 'unit',
-        }
-        zh = list(zh_en.keys())
-        zh.extend(["单价(元)"])
-        #  转换数据格式，以方便openpyxl批量写入
-        records_list = [zh]
-        print()
-        for r in records:
-            print(r)
+
+        # TODO 中央库和地方库在一起时要分开导出，或者导出一个压缩包？直接只允许导出一种，多种时就只导出地方库。
+
         #  开始批量写入数据
         wb = Workbook()
-        ws = wb.active
-        for row in records_list:
-            ws.append(row)
+
+        # 删除自带的sheet
+        sheet1 = wb.active
+        wb.remove(sheet1)
+
+        all_datas = {}
+        sheet1_titles = ["日期", "单号", "性质", "单位"]
+        total_type_datas = {}
+        material_sum_count = {}
+        col_index = 4
+        for record in queryset.values():
+            _key = record["type_name"] + "_" + record["specifications"] + "_" + record["unit"]
+            _key = _key.replace("/", "")
+            date_key = str(record["add_date"]) + "_" + str(record["app_code"])
+            action = record["action"]
+            number = record["number"]
+            if action not in all_datas:
+                all_datas[action] = {}
+            if date_key not in all_datas[action]:
+                all_datas[action][date_key] = {}
+
+            all_datas[action][date_key][_key] = all_datas[action][date_key].get(_key, 0) + number
+
+            if _key not in sheet1_titles:
+                sheet1_titles.append(_key)
+
+            if _key not in total_type_datas:
+                total_type_datas[_key] = {}
+            if date_key not in total_type_datas[_key]:
+                total_type_datas[_key][date_key] = {}
+            if action not in total_type_datas[_key][date_key]:
+                total_type_datas[_key][date_key][action] = record
+
+            if _key not in material_sum_count:
+                material_sum_count[_key] = {}
+            material_sum_count[_key][action] = material_sum_count[_key].get(action, 0) + number
+
+        # 组装入库单sheet，前三个固定，后边的一些按照typename生成
+        insert = "物资入库"
+        out = "物资出库"
+        insert_and_out = "物资结存汇总表"
+        wb.create_sheet(insert)
+        wb.create_sheet(out)
+        wb.create_sheet(insert_and_out)
+        insert_sheet = wb[insert]
+        out_sheet = wb[out]
+        out_and_insert = wb[insert_and_out]
+
+        insert_sheet_data = [sheet1_titles]
+        out_sheet_data = [sheet1_titles]
+        # 创建总的入库和出库台账
+        for action, items in all_datas.items():
+            for _key, data in items.items():
+                date, app_code = _key.split("_")
+                row = [date, app_code]
+                for title in sheet1_titles[col_index:]:
+                    row.append(data.get(title, ""))
+                if action == "1":
+                    insert_sheet_data.append(row)
+                else:
+                    out_sheet_data.append(row)
+
+        # 修改表头
+        insert_sheet.merge_cells("A1:F1")
+        insert_sheet.cell(row=1, column=1, value='入库记录').alignment = Alignment(
+            horizontal='center', vertical='center'
+        )
+        insert_sheet["A1"].font = Font(bold=True, size=16)
+
+        for insert_data in insert_sheet_data:
+            insert_sheet.append(insert_data)
+        insert_sheet.merge_cells('A{}:D{}'.format(len(insert_sheet_data) + 5, len(insert_sheet_data) + 5))
+        # 入库总计数量
+        for title in sheet1_titles[col_index:]:
+            insert_sheet.cell(row=len(insert_sheet_data) + 5, column=col_index + 1,
+                              value=material_sum_count.get(title, {}).get("1", ""))
+
+        out_sheet.merge_cells("A1:F1")
+        out_sheet.cell(row=1, column=1, value='出库记录').alignment = Alignment(
+            horizontal='center', vertical='center'
+        )
+        out_sheet["A1"].font = Font(bold=True, size=16)
+        for out_data in out_sheet_data:
+            out_sheet.append(out_data)
+        out_sheet.merge_cells('A{}:D{}'.format(len(out_sheet_data) + 5, len(out_sheet_data) + 5))
+        # 补充出库总计数量
+        for title in sheet1_titles[col_index:]:
+            out_sheet.cell(row=len(out_sheet_data) + 5, column=col_index + 1,
+                           value=material_sum_count.get(title, {}).get("2", ""))
+
+        # 创建物资汇总sheet
+        total_titles = ["序号", "物资名称", "规格", "单位", "入库数量", "出库数量", "结存数量"]
+        insert_and_out_datas = []
+        insert_and_out_datas.append(total_titles)
+        logger.info("insert_and_out_datas:{}".format(insert_and_out_datas))
+        material_id = 1
+        for materials, counts in material_sum_count.items():
+            logger.info("materials:{}".format(materials))
+            type_name, specifications, unit = materials.split("_")
+            insert_and_out_datas.append(
+                [material_id, type_name, specifications, unit, counts.get("1", ""), counts.get("2", ""),
+                 counts.get("1", 0) - counts.get("2", 0)]
+            )
+            material_id += 1
+        out_and_insert.merge_cells("A1:F1")
+        out_and_insert.cell(row=1, column=1, value='汇总记录').alignment = Alignment(
+            horizontal='center', vertical='center'
+        )
+        out_and_insert["A1"].font = Font(bold=True, size=16)
+
+        for insert_and_out_data in insert_and_out_datas:
+            out_and_insert.append(insert_and_out_data)
+
+        # 创建各个类型的分类台账
+        for type_name, items in total_type_datas.items():
+            # print(type_name)
+            wb.create_sheet(type_name)
+            ws = wb[type_name]
+            ws.merge_cells("A1:F1")
+            ws.cell(row=1, column=1, value=type_name).alignment = Alignment(
+                horizontal='center', vertical='center'
+            )
+            ws["A1"].font = Font(bold=True, size=16)
+            titles = ["日期", "单号", "领用单位", "规格型号", "采购数量", "单价(元)", "金额(元)", "领用数量", "结存"]
+            type_names = type_name.split("_")
+            ws.append(titles)
+            for date_key, data in items.items():
+                date, app_code = date_key.split("_")
+                row = [date, app_code]
+                for action, record in data.items():
+                    if action == "2":
+                        row.extend(
+                            [record["applicant"], type_names[1], "", record["unit_price"], "", record["number"], ""])
+                    else:
+                        row.extend(["", type_names[1], record["number"], record["unit_price"], record["price"], "", ""])
+                ws.append(row)
+            ws.append([
+                "", "", "本期累计",
+                material_sum_count.get(type_name, {}).get("1", ""),
+                material_sum_count.get(type_name, {}).get("2", ""),
+                material_sum_count.get(type_name, {}).get("1", 0) - material_sum_count.get(type_name, {}).get("2", 0),
+            ])
         response = HttpResponse(content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = f'attachment; filename="台账记录.xlsx"'
         wb.save(response)
@@ -533,8 +665,8 @@ class AccountsaAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def has_change_permission(self, request, obj=None):
         return False

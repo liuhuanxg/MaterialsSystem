@@ -80,19 +80,16 @@
             <th colspan="4">审批意见</th>
         </tr>
         <tr>
-            <td>操作人</td>
-            <td>审批意见</td>
-            <td>审批日期</td>
-            <td>签字</td>
+            <td>
+                申报人：{{ approval_historys.user1.first_name }}
+{#                <img src="Users/liuhuan/workspace/PythonSpace/py3projects/MaterialsSystem/media/user_font/申报人手签.jpg" alt="">#}
+{#                <img src="" alt="">#}
+                日期：{{ approval_historys.user1.date }}
+            </td>
+            <td>分管领导：</td>
+            <td>局长：</td>
+            <td>出库员：</td>
         </tr>
-        {% for historys_detail in historys_details %}
-            <tr>
-                <td>局长</td>
-                <td>通过</td>
-                <td>{{ historys_detail.add_time }}</td>
-                <td>{{ historys_detail.font }}</td>
-            </tr>
-        {% endfor %}
     </table>
 </div>
 

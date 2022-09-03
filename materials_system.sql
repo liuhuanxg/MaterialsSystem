@@ -11,7 +11,7 @@
  Target Server Version : 80025
  File Encoding         : 65001
 
- Date: 29/08/2022 09:55:34
+ Date: 01/09/2022 22:41:31
 */
 
 SET NAMES utf8mb4;
@@ -52,7 +52,7 @@ CREATE TABLE `auth_group_permissions` (
   KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of auth_group_permissions
@@ -99,6 +99,11 @@ INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES 
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (70, 2, 115);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (24, 2, 117);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (25, 2, 121);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (173, 3, 27);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (174, 3, 29);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (163, 3, 33);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (165, 3, 37);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (169, 3, 49);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (30, 3, 57);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (161, 3, 65);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (26, 3, 69);
@@ -111,6 +116,13 @@ INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES 
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (32, 3, 91);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (33, 3, 92);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (34, 3, 93);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (164, 3, 97);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (166, 3, 101);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (167, 3, 105);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (168, 3, 109);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (170, 3, 113);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (171, 3, 117);
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (172, 3, 121);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (51, 4, 17);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (52, 4, 18);
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES (53, 4, 19);
@@ -388,18 +400,20 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of auth_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (1, 'pbkdf2_sha256$390000$hEzGAdVGGngMgvEGc6wFb4$PHVoerzuXRDf3bfOSSxxphbRIwvwqmSXQh++hBMc83A=', '2022-08-28 22:55:14.440379', 1, 'admin', 'admin', '', 'admin@qq.com', 1, 1, '2022-08-27 17:45:50.513497');
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (2, 'pbkdf2_sha256$390000$x1pRHJ4dhpma7F0izNvILP$/MCLTOSFP+IRu3ESOZhauCO/ci2pHD6c3i91y+l85Sg=', '2022-08-27 18:43:10.512844', 0, 'ybkb', 'ybkb', '', 'ybkb@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (3, 'pbkdf2_sha256$390000$pXMH6fcIQOhKyW1qWdn6Y8$5oS23kuUIR3UP/PbvIiK8deGHE5lmKdeeaTBpn4OYvM=', '2022-08-27 19:43:04.067440', 0, 'ybkb1', 'ybkb1', '', 'ybkb1@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (4, 'pbkdf2_sha256$390000$IbL4R6OogKpGC23LZMwwo7$hI0dSH6GqYY1i45Sy5vJjvWMQ2ASxcLVH8KiuYf5dJM=', '2022-08-27 20:28:41.378775', 0, 'ybkb2', 'ybkb2', '', 'ybkb2@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (5, 'pbkdf2_sha256$390000$uLx8gN9wu9uaDlrhMy6NTN$qM0kMd8oTGNCufvWus4iHU8IlDU8aGv5mSdVR389ikc=', '2022-08-28 18:01:31.960757', 0, 'ybkb3', 'ybkb3', '', 'ybkb3@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (6, 'pbkdf2_sha256$390000$vjvbm7Jsk56JyAglLQ5l1R$Snqry4BZrH3x80t7k7MHNq4N2Kk5bJ1gCwD+bF9r644=', '2022-08-27 17:45:00.000000', 0, 'ybkb4', 'ybkb4', '', 'ybkb4@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (1, 'pbkdf2_sha256$260000$1rySwHl7pONOxGNOtuNgJb$146tEXhpnAtdJTxzQ9X9EjkdrZU43DA6kGZGJBJRhJk=', '2022-09-01 22:32:10.897451', 1, 'admin', 'admin', '', 'admin@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (2, 'pbkdf2_sha256$260000$itwSijzIRzltXPlX5LHN6I$Hn6XlCMQL5YuaX5oO8k2JHZDR7ECrZG88PyK20FPglY=', '2022-09-01 21:24:57.873513', 0, 'ybkb', 'ybkb', '', 'ybkb@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (3, 'pbkdf2_sha256$260000$d53NSNr6zfihCy0GZCfRcM$QiilUFGE0E0yuVpen5y2IltMQ+mRQCfto003oqKN7js=', '2022-09-01 22:28:56.980538', 0, 'ybkb1', 'ybkb1', '', 'ybkb1@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (4, 'pbkdf2_sha256$260000$hfcvo4dq3nJePaExGwSG6a$06bZqE6/eREXUnXCYbQYszBUd5dJzcN3tE8U9Tawvz0=', '2022-09-01 22:29:21.252443', 0, 'ybkb2', 'ybkb2', '', 'ybkb2@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (5, 'pbkdf2_sha256$260000$BHgSVWf7zDcaNBEjEmEVEF$t1GftjJ439q9sz8TQxSzpZCzkrbpe5dVpmHXjGKBMGY=', '2022-09-01 22:29:53.124717', 0, 'ybkb3', 'ybkb3', '', 'ybkb3@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (6, 'pbkdf2_sha256$260000$h4pO30tnajVnEfvJECLOY8$rYh4udMiOLKKx1IJFBfeqGAnCQrAgAFQIVzeMVKuBCI=', '2022-09-01 22:13:30.865174', 0, 'ybkb4', 'ybkb4', '', 'ybkb4@qq.com', 1, 1, '2022-08-27 17:45:00.000000');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (8, 'pbkdf2_sha256$260000$HTYPJKEsUZ2MCZtsKvCVji$AW8HaThjqXBsh43vvw/Hu54ULQmTHJS5GnLrwl5+7g0=', NULL, 0, 'jj', '', '', '', 0, 1, '2022-08-31 22:06:43.688318');
+INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES (9, 'pbkdf2_sha256$260000$9citbGtMxEzE0Xc7Taiuxi$bMYbu2YYKevuOAKP6Eg7dcFFUkGauCAEF5fEf/OjPWs=', '2022-09-01 21:17:09.391554', 0, 'gongyingshang1', '', '', '', 1, 1, '2022-09-01 21:13:00.000000');
 COMMIT;
 
 -- ----------------------------
@@ -415,7 +429,7 @@ CREATE TABLE `auth_user_groups` (
   KEY `auth_user_groups_group_id_97559544_fk_auth_group_id` (`group_id`),
   CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of auth_user_groups
@@ -426,6 +440,7 @@ INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES (2, 3, 1);
 INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES (3, 4, 2);
 INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES (4, 5, 5);
 INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES (5, 6, 3);
+INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES (6, 9, 4);
 COMMIT;
 
 -- ----------------------------
@@ -441,12 +456,13 @@ CREATE TABLE `auth_user_user_permissions` (
   KEY `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of auth_user_user_permissions
 -- ----------------------------
 BEGIN;
+INSERT INTO `auth_user_user_permissions` (`id`, `user_id`, `permission_id`) VALUES (1, 1, 25);
 COMMIT;
 
 -- ----------------------------
@@ -468,12 +484,22 @@ CREATE TABLE `center_library_centerlabrarymaterials` (
   KEY `center_library_cente_type_name_id_65c570bc_fk_home_mate` (`type_name_id`),
   CONSTRAINT `center_library_cente_type_name_id_65c570bc_fk_home_mate` FOREIGN KEY (`type_name_id`) REFERENCES `home_materialstype` (`id`),
   CONSTRAINT `center_library_cente_ware_app_id_b0763954_fk_center_li` FOREIGN KEY (`ware_app_id`) REFERENCES `center_library_centerwarehousingapplication` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centerlabrarymaterials
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (1, 10000, 10, 100000, '2022-08-29 18:40:46.524655', '2022-08-29', '2022-08-29 18:40:46.524686', 4, 4);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (2, 20000, 5, 100000, '2022-08-29 18:40:46.526601', '2022-08-29', '2022-08-29 18:40:46.526651', 3, 4);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (3, 10000, 100, 1000000, '2022-08-29 19:27:21.014245', '2022-08-29', '2022-08-29 19:27:21.014274', 3, 5);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (4, 20000, 5, 100000, '2022-08-29 19:39:35.470789', '2022-08-29', '2022-08-29 19:39:35.470818', 1, 6);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (5, 1000, 10, 10000, '2022-08-29 19:49:31.397008', '2022-08-29', '2022-08-29 19:49:31.397034', 25, 7);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (6, 100, 24, 2400, '2022-09-01 20:19:00.934223', '2022-09-01', '2022-09-01 20:19:00.934249', 1, 8);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (7, 2000, 34, 68000, '2022-09-01 20:19:00.944772', '2022-09-01', '2022-09-01 20:19:00.944804', 2, 8);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (8, 200, 40, 8000, '2022-09-01 20:25:46.991140', '2022-09-01', '2022-09-01 20:25:46.991210', 3, 9);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (9, 500, 2, 1000, '2022-09-01 20:25:46.996116', '2022-09-01', '2022-09-01 20:25:46.996163', 4, 9);
+INSERT INTO `center_library_centerlabrarymaterials` (`id`, `put_num`, `unit_price`, `total_price`, `add_time`, `add_date`, `modify_time`, `type_name_id`, `ware_app_id`) VALUES (10, 300, 5, 1500, '2022-09-01 20:26:35.800146', '2022-09-01', '2022-09-01 20:26:35.800172', 9, 10);
 COMMIT;
 
 -- ----------------------------
@@ -488,15 +514,22 @@ CREATE TABLE `center_library_centerlabraryquantity` (
   `total_price` double NOT NULL,
   `out_price` double NOT NULL,
   `type_name_id` int NOT NULL,
+  `unit_price` double NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `type_name_id` (`type_name_id`),
   CONSTRAINT `center_library_cente_type_name_id_45f74ba3_fk_home_mate` FOREIGN KEY (`type_name_id`) REFERENCES `home_materialstype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centerlabraryquantity
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (3, 10200, 0, 10200, 8000, 0, 3, 0);
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (4, 20100, 0, 20100, 2400, 0, 1, 0);
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (5, 1000, 0, 1000, 10000, 0, 25, 0);
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (6, 2000, 0, 2000, 68000, 0, 2, 34);
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (7, 500, 0, 500, 1000, 0, 4, 2);
+INSERT INTO `center_library_centerlabraryquantity` (`id`, `put_num`, `push_num`, `balance_num`, `total_price`, `out_price`, `type_name_id`, `unit_price`) VALUES (8, 300, 0, 300, 1500, 0, 9, 5);
 COMMIT;
 
 -- ----------------------------
@@ -516,12 +549,13 @@ CREATE TABLE `center_library_centerlibrary` (
   UNIQUE KEY `library_name` (`library_name`),
   KEY `center_library_cente_create_user_id_44bd51b4_fk_auth_user` (`create_user_id`),
   CONSTRAINT `center_library_cente_create_user_id_44bd51b4_fk_auth_user` FOREIGN KEY (`create_user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centerlibrary
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centerlibrary` (`id`, `library_name`, `total_budget`, `des`, `add_time`, `add_date`, `modify_time`, `create_user_id`) VALUES (1, '中央库1', 10000, '', '2022-08-29 18:38:18.652818', '2022-08-29', '2022-08-29 18:38:18.652860', 1);
 COMMIT;
 
 -- ----------------------------
@@ -563,12 +597,15 @@ CREATE TABLE `center_library_centeroutboundorder` (
   UNIQUE KEY `applicant_user` (`applicant_user`),
   UNIQUE KEY `app_code_id` (`app_code_id`),
   CONSTRAINT `center_library_cente_app_code_id_de5cf767_fk_material_` FOREIGN KEY (`app_code_id`) REFERENCES `material_application_exwarehousingapplication` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centeroutboundorder
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centeroutboundorder` (`id`, `title`, `total_price`, `applicant`, `applicant_user`, `des`, `is_ex`, `add_time`, `add_date`, `app_code_id`) VALUES (1, '测试申请1', 0, '申请单位1', '领用人1', '', 0, '2022-08-29 20:38:00.000000', '2022-08-29', 6);
+INSERT INTO `center_library_centeroutboundorder` (`id`, `title`, `total_price`, `applicant`, `applicant_user`, `des`, `is_ex`, `add_time`, `add_date`, `app_code_id`) VALUES (2, '消防局申请', 0, '消防局', '消防局局长', '', 0, '2022-08-29 19:55:00.000000', '2022-08-29', 5);
+INSERT INTO `center_library_centeroutboundorder` (`id`, `title`, `total_price`, `applicant`, `applicant_user`, `des`, `is_ex`, `add_time`, `add_date`, `app_code_id`) VALUES (3, 'ceshi1', 0, '申请单位1', '1', '', 0, '2022-09-01 22:23:00.000000', '2022-09-01', 10);
 COMMIT;
 
 -- ----------------------------
@@ -586,12 +623,15 @@ CREATE TABLE `center_library_centeroutboundorderdetail` (
   UNIQUE KEY `center_library_centerout_app_code_id_assessment_d_67d7081e_uniq` (`app_code_id`,`assessment_detail_id`),
   CONSTRAINT `center_library_cente_app_code_id_9a35628b_fk_center_li` FOREIGN KEY (`app_code_id`) REFERENCES `center_library_centeroutboundorder` (`id`),
   CONSTRAINT `center_library_cente_assessment_detail_id_b673fff3_fk_material_` FOREIGN KEY (`assessment_detail_id`) REFERENCES `material_application_centerassessmentdetail` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centeroutboundorderdetail
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centeroutboundorderdetail` (`id`, `number`, `app_code_id`, `assessment_detail_id`, `total_price`) VALUES (1, 10, 1, 1, 0);
+INSERT INTO `center_library_centeroutboundorderdetail` (`id`, `number`, `app_code_id`, `assessment_detail_id`, `total_price`) VALUES (2, 30, 2, 2, 0);
+INSERT INTO `center_library_centeroutboundorderdetail` (`id`, `number`, `app_code_id`, `assessment_detail_id`, `total_price`) VALUES (3, 10, 3, 3, 0);
 COMMIT;
 
 -- ----------------------------
@@ -610,12 +650,21 @@ CREATE TABLE `center_library_centeroutboundorderhistory` (
   UNIQUE KEY `center_library_centerout_application_id_history_d_a2db8b07_uniq` (`application_id`,`history_detail_id`),
   CONSTRAINT `center_library_cente_application_id_b08d13c2_fk_center_li` FOREIGN KEY (`application_id`) REFERENCES `center_library_centeroutboundorder` (`id`),
   CONSTRAINT `center_library_cente_history_detail_id_ca4c442b_fk_material_` FOREIGN KEY (`history_detail_id`) REFERENCES `material_application_applicationhistory` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centeroutboundorderhistory
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (1, 'ybkb3', '研判完成', '2022-08-29 00:00:00.000000', 1, 51);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (2, 'ybkb2', '通过', '2022-08-29 00:00:00.000000', 1, 50);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (3, 'ybkb1', '通过', '2022-08-29 00:00:00.000000', 1, 49);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (4, 'admin', '发起申请', '2022-08-29 00:00:00.000000', 1, 48);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (5, 'ybkb3', '研判完成', '2022-08-29 00:00:00.000000', 1, 47);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (6, 'ybkb3', '研判完成', '2022-08-29 00:00:00.000000', 1, 45);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (7, 'ybkb2', '通过', '2022-08-29 00:00:00.000000', 1, 44);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (8, 'ybkb1', '通过', '2022-08-29 00:00:00.000000', 1, 38);
+INSERT INTO `center_library_centeroutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (9, 'admin', '发起申请', '2022-08-29 00:00:00.000000', 1, 37);
 COMMIT;
 
 -- ----------------------------
@@ -636,12 +685,20 @@ CREATE TABLE `center_library_centerwarehousingapplication` (
   UNIQUE KEY `app_code` (`app_code`),
   KEY `center_library_cente_create_u_id_63bcf811_fk_auth_user` (`create_u_id`),
   CONSTRAINT `center_library_cente_create_u_id_63bcf811_fk_auth_user` FOREIGN KEY (`create_u_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centerwarehousingapplication
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (3, '20220829002', 13, '100', '2022-08-29 13:14:54.494255', '2022-08-29', '2022-08-29 13:14:54.494289', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (4, '20220829003', 20, '', '2022-08-29 18:40:46.505207', '2022-08-29', '2022-08-29 18:40:46.505242', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (5, '20220829004', 0, '', '2022-08-29 19:27:21.004316', '2022-08-29', '2022-08-29 19:27:21.004357', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (6, '20220829005', 0, '', '2022-08-29 19:39:35.464048', '2022-08-29', '2022-08-29 19:39:35.464085', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (7, '20220829006', 1, '', '2022-08-29 19:49:31.386501', '2022-08-29', '2022-08-29 19:49:31.386538', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (8, '2022091002', 9000, '', '2022-09-01 20:19:00.901557', '2022-09-01', '2022-09-01 20:19:00.901591', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (9, '20220901002', 200, '', '2022-09-01 20:25:46.934984', '2022-09-01', '2022-09-01 20:25:46.935021', 1, '');
+INSERT INTO `center_library_centerwarehousingapplication` (`id`, `app_code`, `total_price`, `des`, `add_time`, `add_date`, `modify_time`, `create_u_id`, `file`) VALUES (10, '20220901003', 10, '', '2022-09-01 20:26:35.789484', '2022-09-01', '2022-09-01 20:26:35.789513', 1, '');
 COMMIT;
 
 -- ----------------------------
@@ -656,12 +713,14 @@ CREATE TABLE `center_library_centerwarehousingfile` (
   PRIMARY KEY (`id`),
   KEY `center_library_cente_library_name_id_b2665684_fk_center_li` (`library_name_id`),
   CONSTRAINT `center_library_cente_library_name_id_b2665684_fk_center_li` FOREIGN KEY (`library_name_id`) REFERENCES `center_library_centerwarehousingapplication` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of center_library_centerwarehousingfile
 -- ----------------------------
 BEGIN;
+INSERT INTO `center_library_centerwarehousingfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (1, 'upload/center_library/2022/8/29/建库流程1.pdf', '2022-08-29 18:40:46.507705', 4);
+INSERT INTO `center_library_centerwarehousingfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (2, 'upload/center_library/2022/9/1/防疫物品.xlsx', '2022-09-01 20:25:46.965452', 9);
 COMMIT;
 
 -- ----------------------------
@@ -683,7 +742,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of django_admin_log
@@ -743,6 +802,69 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (52, '2022-08-28 18:14:39.989211', '1', '20220827001', 2, '[{\"changed\": {\"fields\": [\"\\u662f\\u5426\\u51fa\\u5e93\"]}}]', 7, 5);
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (53, '2022-08-28 18:16:31.159757', '1', '20220827001', 2, '[{\"changed\": {\"fields\": [\"\\u662f\\u5426\\u51fa\\u5e93\"]}}]', 7, 5);
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (54, '2022-08-28 18:21:23.000551', '1', '20220827001', 2, '[{\"changed\": {\"fields\": [\"\\u662f\\u5426\\u51fa\\u5e93\"]}}]', 7, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (55, '2022-08-29 10:38:34.828627', '4', '20220829001——0829物资申请', 1, '[{\"added\": {}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (56, '2022-08-29 13:14:54.495981', '3', '20220829002', 1, '[{\"added\": {}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (57, '2022-08-29 18:38:18.654083', '1', '中央库1', 1, '[{\"added\": {}}]', 15, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (58, '2022-08-29 18:40:46.534143', '4', '20220829003', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"(\\u91c7\\u8d2d\\u8ba1\\u5212\\u3001\\u653f\\u5e9c\\u91c7\\u8d2d\\u6279\\u590d\\u3001\\u6295\\u6807\\u624b\\u7eed)\\u7b49\\u9644\\u4ef6\", \"object\": \"CenterWarehousingFile object (1)\"}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"1\"}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"2\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (59, '2022-08-29 19:14:01.490498', '21', 'Accounts object (21)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (60, '2022-08-29 19:14:01.493951', '20', 'Accounts object (20)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (61, '2022-08-29 19:14:01.495937', '19', 'Accounts object (19)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (62, '2022-08-29 19:14:01.497927', '18', 'Accounts object (18)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (63, '2022-08-29 19:14:01.499436', '16', 'Accounts object (16)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (64, '2022-08-29 19:14:01.500886', '15', 'Accounts object (15)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (65, '2022-08-29 19:14:01.501871', '10', 'Accounts object (10)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (66, '2022-08-29 19:14:01.502788', '9', 'Accounts object (9)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (67, '2022-08-29 19:14:01.504614', '8', 'Accounts object (8)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (68, '2022-08-29 19:14:01.506646', '7', 'Accounts object (7)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (69, '2022-08-29 19:14:01.508125', '6', 'Accounts object (6)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (70, '2022-08-29 19:14:01.509092', '5', 'Accounts object (5)', 3, '', 30, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (71, '2022-08-29 19:14:59.800926', '2', '核酸清除剂剩余：40000', 3, '', 14, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (72, '2022-08-29 19:14:59.802975', '1', '新型冠状病毒抗原检测试剂剩余：20000', 3, '', 14, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (73, '2022-08-29 19:15:11.866867', '4', '20220829003', 3, '', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (74, '2022-08-29 19:15:11.868674', '3', '20220829002', 3, '', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (75, '2022-08-29 19:27:21.014943', '5', '20220829004', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"3\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (76, '2022-08-29 19:39:35.471569', '6', '20220829005', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"4\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (77, '2022-08-29 19:49:31.397689', '7', '20220829006', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"5\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (78, '2022-08-29 19:56:32.089975', '5', '20220829002——消防局申请', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u6838\\u9178\\u6e05\\u9664\\u5242_30\"}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (79, '2022-08-29 20:26:51.867960', '5', '20220829002——消防局申请', 2, '[]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (80, '2022-08-29 20:28:26.990451', '5', '20220829002——消防局申请', 2, '[]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (81, '2022-08-29 20:30:56.550964', '5', '20220829002——消防局申请', 2, '[]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (82, '2022-08-29 20:38:43.300320', '6', '20220829003——测试申请1', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_200\"}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (83, '2022-08-29 20:39:45.181981', '6', '20220829003——测试申请1', 2, '[{\"changed\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_2000\", \"fields\": [\"\\u9886\\u7528\\u6570\\u91cf\"]}}]', 24, 3);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (84, '2022-08-29 20:50:20.835136', '5', '20220829002——消防局申请', 2, '[{\"changed\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u6838\\u9178\\u6e05\\u9664\\u5242_50\", \"fields\": [\"\\u9886\\u7528\\u6570\\u91cf\"]}}]', 24, 3);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (85, '2022-08-29 21:15:37.886182', '6', '20220829003——测试申请1', 2, '[]', 24, 4);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (86, '2022-08-29 21:19:57.014968', '6', '20220829003——测试申请1', 2, '[{\"added\": {\"name\": \"\\u5730\\u65b9\\u5e93\\u7814\\u5224\", \"object\": \"\\u6d4b\\u8bd5\\u9879\\u76ee1_\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_10ul\\uff08\\u52a0\\u957f\\uff09\\uff0c96\\u4e2a/\\u76d2_\\u76d2\"}}]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (87, '2022-08-29 22:06:45.319989', '6', '20220829003——测试申请1', 2, '[{\"added\": {\"name\": \"\\u4e2d\\u592e\\u5e93\\u7814\\u5224\", \"object\": \"1\"}}]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (88, '2022-08-29 22:13:31.398409', '6', '20220829003——测试申请1', 2, '[]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (89, '2022-08-29 22:14:00.972492', '6', '20220829003——测试申请1', 2, '[]', 24, 3);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (90, '2022-08-29 22:14:43.061892', '6', '20220829003——测试申请1', 2, '[]', 24, 4);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (91, '2022-08-29 22:20:35.699764', '6', '20220829003——测试申请1', 2, '[]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (92, '2022-08-29 22:56:06.756549', '5', '20220829002——消防局申请', 2, '[]', 24, 4);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (93, '2022-08-29 22:56:52.480378', '5', '20220829002——消防局申请', 2, '[{\"added\": {\"name\": \"\\u4e2d\\u592e\\u5e93\\u7814\\u5224\", \"object\": \"2\"}}]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (94, '2022-08-31 22:06:43.821436', '8', 'jj', 1, '[{\"added\": {}}]', 3, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (95, '2022-09-01 20:19:00.946889', '8', '2022091002', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"6\"}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"7\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (96, '2022-09-01 20:25:47.004440', '9', '20220901002', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"(\\u91c7\\u8d2d\\u8ba1\\u5212\\u3001\\u653f\\u5e9c\\u91c7\\u8d2d\\u6279\\u590d\\u3001\\u6295\\u6807\\u624b\\u7eed)\\u7b49\\u9644\\u4ef6\", \"object\": \"CenterWarehousingFile object (2)\"}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"8\"}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"9\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (97, '2022-09-01 20:26:35.802844', '10', '20220901003', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u5165\\u5e93\\u660e\\u7ec6\", \"object\": \"10\"}}]', 19, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (98, '2022-09-01 20:46:39.670430', '7', '20220901001——测试原因1001', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_100\"}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_300\"}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u6838\\u9178\\u63d0\\u53d6\\u8bd5\\u5242_40\"}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (99, '2022-09-01 21:13:10.048613', '9', 'gongyingshang1', 1, '[{\"added\": {}}]', 3, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (100, '2022-09-01 21:14:17.411618', '9', 'gongyingshang1', 2, '[{\"changed\": {\"fields\": [\"Staff status\", \"Groups\"]}}]', 3, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (101, '2022-09-01 21:14:44.965354', '2', '供应商1公司', 2, '[{\"changed\": {\"fields\": [\"\\u516c\\u53f8\\u540d\\u79f0\"]}}, {\"added\": {\"name\": \"(\\u4f9b\\u5e94\\u5546\\u9644\\u4ef6)\", \"object\": \"SupplierFile object (2)\"}}]', 9, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (102, '2022-09-01 21:21:28.155782', '5', '测试项目10', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"(\\u91c7\\u8d2d\\u8ba1\\u5212\\u3001\\u653f\\u5e9c\\u91c7\\u8d2d\\u6279\\u590d\\u3001\\u6295\\u6807\\u624b\\u7eed)\", \"object\": \"2\"}}]', 6, 9);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (103, '2022-09-01 21:21:37.606814', '5', '测试项目10', 2, '[]', 6, 9);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (104, '2022-09-01 21:24:37.963152', '1', 'admin', 2, '[{\"changed\": {\"fields\": [\"User permissions\", \"Last login\"]}}]', 3, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (105, '2022-09-01 21:31:26.665189', '5', '测试项目10', 2, '[{\"changed\": {\"fields\": [\"\\u5ba1\\u6838\\u901a\\u8fc7\"]}}]', 6, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (106, '2022-09-01 21:35:07.711182', '8', '20220901002——测试申请5', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_10\"}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u65b0\\u578b\\u51a0\\u72b6\\u75c5\\u6bd2\\u6297\\u539f\\u68c0\\u6d4b\\u8bd5\\u5242_20\"}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (107, '2022-09-01 21:35:33.310693', '8', '20220901002——测试申请5', 2, '[]', 24, 3);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (108, '2022-09-01 21:39:39.234285', '8', '20220901002——测试申请5', 2, '[{\"changed\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u65b0\\u578b\\u51a0\\u72b6\\u75c5\\u6bd2\\u6297\\u539f\\u68c0\\u6d4b\\u8bd5\\u5242_10\", \"fields\": [\"\\u9886\\u7528\\u6570\\u91cf\"]}}]', 24, 4);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (109, '2022-09-01 21:53:34.023057', '8', '20220901002——测试申请5', 2, '[{\"added\": {\"name\": \"\\u5730\\u65b9\\u5e93\\u7814\\u5224\", \"object\": \"\\u6d4b\\u8bd5\\u9879\\u76ee10_\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_10ul\\uff0c96\\u4e2a/\\u76d2_\\u76d2\"}}, {\"added\": {\"name\": \"\\u5730\\u65b9\\u5e93\\u7814\\u5224\", \"object\": \"\\u6d4b\\u8bd5\\u9879\\u76ee10_\\u6837\\u672c\\u91ca\\u653e\\u5242_1\\u4eba\\u4efd\\u3002\\u6837\\u672c\\u7c7b\\u578b\\uff1a\\u62ed\\u5b50\\u7c7b\\u6837\\u672c\\uff08\\u54bd/\\u9f3b/\\u773c\\u7ed3\\u819c\\uff09_\\u4efd\"}}]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (110, '2022-09-01 22:02:17.491130', '4', '20220901002', 2, '[{\"changed\": {\"fields\": [\"\\u662f\\u5426\\u51fa\\u5e93\"]}}]', 7, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (111, '2022-09-01 22:11:27.180850', '6', 'ybkb4', 2, '[{\"changed\": {\"fields\": [\"password\"]}}]', 3, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (112, '2022-09-01 22:13:23.659967', '3', '仓库管理员', 2, '[{\"changed\": {\"fields\": [\"Permissions\"]}}]', 2, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (113, '2022-09-01 22:23:59.246597', '10', '20220901003——ceshi1', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_10\"}}]', 24, 1);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (114, '2022-09-01 22:29:06.830491', '10', '20220901003——ceshi1', 2, '[]', 24, 3);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (115, '2022-09-01 22:29:37.709333', '10', '20220901003——ceshi1', 2, '[]', 24, 4);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (116, '2022-09-01 22:30:36.244871', '10', '20220901003——ceshi1', 2, '[{\"added\": {\"name\": \"\\u4e2d\\u592e\\u5e93\\u7814\\u5224\", \"object\": \"3\"}}]', 24, 5);
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES (117, '2022-09-01 22:35:30.030439', '12', '20220901004——测试申请主题', 1, '[{\"added\": {}}, {\"added\": {\"name\": \"\\u7533\\u8bf7\\u8d44\\u6599\", \"object\": \"ExApplicationFile object (1)\"}}, {\"added\": {\"name\": \"\\u9886\\u7528\\u8be6\\u60c5\", \"object\": \"\\u76d2\\u88c5\\u5e26\\u6ee4\\u82af\\u5438\\u5634_10\"}}]', 24, 1);
 COMMIT;
 
 -- ----------------------------
@@ -805,7 +927,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of django_migrations
@@ -851,6 +973,20 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (37, 'lo
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (38, 'local_library', '0008_localoutboundorderdetail_number', '2022-08-28 17:36:33.709618');
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (39, 'center_library', '0005_remove_centeroutboundorderdetail_library_name_and_more', '2022-08-28 22:00:56.711160');
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (40, 'material_application', '0008_alter_applicationhistory_add_time', '2022-08-28 22:49:48.779686');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (41, 'center_library', '0006_auto_20220829_2202', '2022-08-29 22:02:07.933686');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (42, 'local_library', '0009_auto_20220829_2202', '2022-08-29 22:02:08.006960');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (43, 'material_application', '0009_auto_20220829_2202', '2022-08-29 22:02:08.069421');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (44, 'center_library', '0007_auto_20220830_1306', '2022-08-30 13:06:42.864739');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (45, 'local_library', '0010_auto_20220830_1306', '2022-08-30 13:06:42.892040');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (46, 'material_application', '0010_auto_20220830_1306', '2022-08-30 13:06:43.186141');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (47, 'material_application', '0011_auto_20220830_2319', '2022-08-30 23:19:30.080275');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (48, 'center_library', '0008_auto_20220831_2129', '2022-08-31 21:30:04.741587');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (49, 'local_library', '0011_auto_20220831_2129', '2022-08-31 21:30:04.781646');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (50, 'material_application', '0012_alter_exapplicationfile_file', '2022-08-31 21:30:04.794705');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (51, 'center_library', '0009_auto_20220901_2046', '2022-09-01 20:46:14.577668');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (52, 'local_library', '0012_auto_20220901_2046', '2022-09-01 20:46:14.632894');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (53, 'material_application', '0013_auto_20220901_2046', '2022-09-01 20:46:15.362150');
+INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES (54, 'local_library', '0013_alter_localoutboundorder_user', '2022-09-01 21:52:50.962032');
 COMMIT;
 
 -- ----------------------------
@@ -869,7 +1005,7 @@ CREATE TABLE `django_session` (
 -- Records of django_session
 -- ----------------------------
 BEGIN;
-INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES ('rhxuq374i7gcfc5jqfbdact1bydelij8', '.eJzFV0tzmzAQ_isZzokDCCGUY-899lRnPHqsbFoeLoJpMxn_9yJwUkeVY2Hj5KSRdtnHt5-W1XOwYl27WXUamlUug4cgCm4PzzgTP6EyAvmDVet6IeqqbXK-MCqLvVQvvtYSii973TcGNkxvjNmMI8hwGikqUEixiDMuiIgQJ1SFTBGCSIqk4MAlUA4s61XDSCVxpFSMuDFaQtXp3tb352VQsRKWwcPNMlguuwRi2S-YxmAWoGgZ3PaivA92VFKsuVHsTuSNKGAUliZkbcQ-9volUuxghzD2cNI1xSi7F1C1PRxFzhvWPO23ddfyuqtk3Uho7sdPmJTfxq-qrijMCW-ASdF0JfcO9_3Idrc310l592jEkEsjjcIw9vZEBk8piYVRURCZXZiqyzF-2dnontLvNffffB7-Z6JilwE5HOIoxXPT-TdrYFN3Oq_WbLstcsHavK68kT_y-ccWYjIuNtiJwyiJU2pKhyk9sM1xNgO92bD71bGqzdv_af6RTeTcNG0IsX0QuQpFUDg449Qv4BNN_8ILUdSCFa-1GXbvdJ53tP3pPhmBa9CdXI3uLoxGspesJ37OCn022-eAbi62Z3OR-xh0ujPdFJoStGZrOM1H-4MPpuRkGxag1M_oXJOdg6fzzHVXAnO28S4KbeRTVwQHF6O_NJyZIYYkYXppuz4MnmBklowrMql2L51kdThwwB__QWaagQkX6UzUnC3-PKTsaruGeYyUoVcmY59ynsCdCdFfmvaCrj4jaN6J2TAh-8A1vGScJcMiTIg4ycyAn6IsG8b9xHHRtfGpNzkU8o4V7cn7QXA8GIvRsTqb57ldF_NuvzcCF9f_Cf15PEOirl-vZ3J2KbDLFojkSBTGiL4T9doJ07p_vm-P4jRKPx0or-RsmFL7wPWmoVFiHgxEpTBnX387VREqBieC8En9ZVOX8NpkdPu0dU49Di3_gp2b_8lJ0j9nu0yZfUB2j8HuL4P6Qio:1oSK0v:PKaI_GBcqlqcFsQEdIf8uQhN_XR-UN5TwX-PPrMiYr0', '2022-09-11 23:15:53.481517');
+INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES ('fp5hohi6ci1oj2i21d6t54f12pz696c1', '.eJzFV0tzmzAQ_isZzokDQkKQY-899lRnPKuXTcvDRTBtJuP_XgRO6qhyLGycnBhpV_v49tOyeg5W0LWbVadls8pF8BBEwe3hHgP-U1ZGIH5Ata4XvK7aJmcLo7LYS_Xiay1k8WWv-8bABvSmP80xyySgGMkkpIoSHqFYUUWEgAhnSSK46DcZl4QAQokiCihmCtMUeMoibIyWsup0b-v78zKooJTL4OFmGSyXHZZI9B-SIWk-MouXwW0vyvtgRyUFzY2CO543vJCjsDQhayP2sdd_IgUHq5gQDyddU4yyey6rtoejyFkDzdN-WXctq7tK1I2Qzf14BIT4Np6quqIwO6yRIHjTlcw73Pcj293eXCfl3aMRy1wYaRSGyNsTHTwlFHGjomRkVmGiLsf4ZWWje0q_19yf-Tz8z0TFLkPscEiihMxN59_QyE3d6bxaw3Zb5BzavK68kT9y_GMLMRkXG2zsMEpRkpnSkSw7sM1IOgO9YVj96qBq8_Z_mn9kEzk3TRtCYm9ErkLROBycscwv4BNN_8ILUdQcitfaDKt3Os872v50n4zANehOr0Z3F0Yj2UvoiZ9Doc9m-xzQzcX2dC5yH4NOd6abyqaUWsNanuajfeCDKTnZhgVo5md0rsnOwdN55rorgTnbeBeFNvKJK4KDi9FfGgZmiKE4TC5t14fBUxKbT8oUnVS7l06yOhw45B__QWaagQkX6UzUnC3-PKTsaruGeRIrQ69UIJ9ynsAdOO8vTXtBV58RNO_EbJhie8M1vKQM8PDhJkSCUzPgJ3GaDuM-dlx0bXzqTS4LcQdFe_J-UIIGYyg-VmfzPLfrYt7t90bg4vo_oT-PZ0jU9ev1TM4uBXHZkhwficIY0Xe8XjthWvfP9-1RnEbppwPllZwNU2JvuN40WYTNg4GqRM7Z199OVTTjgxNO2aT-sqlL-dpkdPu0dU49Di3_gp2b_8lJ0j9nu0ypvUF3j8HuL0R4Qls:1oTlEp:C_kygVtfP6ahOefF5p8GUzux7_A6fJN4wnrbqxcrNjs', '2022-09-15 22:32:11.019520');
 COMMIT;
 
 -- ----------------------------
@@ -882,7 +1018,7 @@ CREATE TABLE `home_codenumber` (
   `date_str` varchar(100) NOT NULL,
   `number` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of home_codenumber
@@ -890,6 +1026,12 @@ CREATE TABLE `home_codenumber` (
 BEGIN;
 INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (4, 'LocalWarehousingApplication', '20220827', 2);
 INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (7, 'ExWarehousingApplication', '20220827', 1);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (8, 'ExWarehousingApplication', '20220829', 3);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (12, 'CenterWarehousingApplication', '20220829', 5);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (13, 'CenterWarehousingApplication', '2022091', 1);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (14, 'CenterWarehousingApplication', '20220901', 2);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (15, 'ExWarehousingApplication', '20220901', 4);
+INSERT INTO `home_codenumber` (`id`, `db_name`, `date_str`, `number`) VALUES (16, 'LocalWarehousingApplication', '20220901', 1);
 COMMIT;
 
 -- ----------------------------
@@ -960,7 +1102,7 @@ CREATE TABLE `local_library_locallabrarymaterials` (
   KEY `local_library_locall_type_name_id_0ae855a7_fk_home_mate` (`type_name_id`),
   CONSTRAINT `local_library_locall_library_name_id_fbba985e_fk_local_lib` FOREIGN KEY (`library_name_id`) REFERENCES `local_library_locallibrary` (`id`),
   CONSTRAINT `local_library_locall_type_name_id_0ae855a7_fk_home_mate` FOREIGN KEY (`type_name_id`) REFERENCES `home_materialstype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_locallabrarymaterials
@@ -978,6 +1120,18 @@ INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price
 INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (11, 0, 20, '2022-08-27 19:04:17.198434', '2022-08-27', '2022-08-27 19:04:17.198499', 4, 10);
 INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (12, 0, 21, '2022-08-27 19:04:17.201085', '2022-08-27', '2022-08-27 19:04:17.201154', 4, 11);
 INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (13, 0, 23, '2022-08-27 19:04:17.204139', '2022-08-27', '2022-08-27 19:04:17.204233', 4, 12);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (14, 0, 10, '2022-09-01 21:31:26.563943', '2022-09-01', '2022-09-01 21:31:26.564136', 5, 1);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (15, 0, 20, '2022-09-01 21:31:26.569968', '2022-09-01', '2022-09-01 21:31:26.570071', 5, 2);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (16, 0, 12, '2022-09-01 21:31:26.573985', '2022-09-01', '2022-09-01 21:31:26.574083', 5, 3);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (17, 0, 12, '2022-09-01 21:31:26.578439', '2022-09-01', '2022-09-01 21:31:26.578537', 5, 4);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (18, 0, 15, '2022-09-01 21:31:26.582321', '2022-09-01', '2022-09-01 21:31:26.582445', 5, 5);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (19, 10, 14, '2022-09-01 21:31:26.587247', '2022-09-01', '2022-09-01 22:02:17.486187', 5, 6);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (20, 10, 13, '2022-09-01 21:31:26.590433', '2022-09-01', '2022-09-01 22:02:17.471548', 5, 7);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (21, 0, 17, '2022-09-01 21:31:26.594022', '2022-09-01', '2022-09-01 21:31:26.594111', 5, 8);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (22, 0, 19, '2022-09-01 21:31:26.597336', '2022-09-01', '2022-09-01 21:31:26.597423', 5, 9);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (23, 0, 20, '2022-09-01 21:31:26.600426', '2022-09-01', '2022-09-01 21:31:26.600508', 5, 10);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (24, 0, 21, '2022-09-01 21:31:26.604094', '2022-09-01', '2022-09-01 21:31:26.604179', 5, 11);
+INSERT INTO `local_library_locallabrarymaterials` (`id`, `push_num`, `unit_price`, `add_time`, `add_date`, `modify_time`, `library_name_id`, `type_name_id`) VALUES (25, 0, 23, '2022-09-01 21:31:26.607299', '2022-09-01', '2022-09-01 21:31:26.607387', 5, 12);
 COMMIT;
 
 -- ----------------------------
@@ -1005,13 +1159,14 @@ CREATE TABLE `local_library_locallibrary` (
   KEY `local_library_locall_supplier_name_id_6fae86af_fk_local_lib` (`supplier_name_id`),
   CONSTRAINT `local_library_locall_create_user_id_97b28b3d_fk_auth_user` FOREIGN KEY (`create_user_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `local_library_locall_supplier_name_id_6fae86af_fk_local_lib` FOREIGN KEY (`supplier_name_id`) REFERENCES `local_library_suppliermessage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_locallibrary
 -- ----------------------------
 BEGIN;
 INSERT INTO `local_library_locallibrary` (`id`, `app_code`, `entry_name`, `budget`, `less_budget`, `des`, `add_time`, `add_date`, `modify_time`, `file`, `is_approve`, `create_user_id`, `supplier_name_id`) VALUES (4, '20220827002', '测试项目1', 500, 499.992, '100', '2022-08-27 18:27:22.845523', '2022-08-27', '2022-08-28 18:21:22.999613', 'upload/local_library/2022/8/27/测试物料明细文件_rlK0T9K.xlsx', 1, 2, 1);
+INSERT INTO `local_library_locallibrary` (`id`, `app_code`, `entry_name`, `budget`, `less_budget`, `des`, `add_time`, `add_date`, `modify_time`, `file`, `is_approve`, `create_user_id`, `supplier_name_id`) VALUES (5, '20220901001', '测试项目10', 1000, 999.973, '', '2022-09-01 21:21:28.109926', '2022-09-01', '2022-09-01 22:02:17.488515', 'upload/local_library/2022/9/1/测试物料明细文件.xlsx', 1, 9, 2);
 COMMIT;
 
 -- ----------------------------
@@ -1029,7 +1184,7 @@ CREATE TABLE `local_library_localoutboundorder` (
   `add_time` datetime(6) NOT NULL,
   `add_date` date NOT NULL,
   `app_code_id` int NOT NULL,
-  `user_id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `applicant_user` (`applicant_user`),
   UNIQUE KEY `app_code_id` (`app_code_id`),
@@ -1037,13 +1192,15 @@ CREATE TABLE `local_library_localoutboundorder` (
   KEY `local_library_localo_user_id_1d4fd30d_fk_auth_user` (`user_id`),
   CONSTRAINT `local_library_localo_app_code_id_34ac709f_fk_material_` FOREIGN KEY (`app_code_id`) REFERENCES `material_application_exwarehousingapplication` (`id`),
   CONSTRAINT `local_library_localo_user_id_1d4fd30d_fk_auth_user` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_localoutboundorder
 -- ----------------------------
 BEGIN;
 INSERT INTO `local_library_localoutboundorder` (`id`, `title`, `applicant`, `applicant_user`, `des`, `total_price`, `is_ex`, `add_time`, `add_date`, `app_code_id`, `user_id`) VALUES (1, '2', '申请单位1', '申请人', '', 80, 1, '2022-08-27 19:25:00.000000', '2022-08-27', 3, 2);
+INSERT INTO `local_library_localoutboundorder` (`id`, `title`, `applicant`, `applicant_user`, `des`, `total_price`, `is_ex`, `add_time`, `add_date`, `app_code_id`, `user_id`) VALUES (3, '测试申请1', '申请单位1', '领用人1', '', 10000, 0, '2022-08-29 20:38:00.000000', '2022-08-29', 6, 2);
+INSERT INTO `local_library_localoutboundorder` (`id`, `title`, `applicant`, `applicant_user`, `des`, `total_price`, `is_ex`, `add_time`, `add_date`, `app_code_id`, `user_id`) VALUES (4, '测试申请5', '测试申请5', '测试申请5', '', 0, 1, '2022-09-01 21:34:00.000000', '2022-09-01', 8, 2);
 COMMIT;
 
 -- ----------------------------
@@ -1061,7 +1218,7 @@ CREATE TABLE `local_library_localoutboundorderdetail` (
   UNIQUE KEY `local_library_localoutbo_app_code_id_assessment_d_72fb67a5_uniq` (`app_code_id`,`assessment_detail_id`),
   CONSTRAINT `local_library_localo_app_code_id_86ff16eb_fk_local_lib` FOREIGN KEY (`app_code_id`) REFERENCES `local_library_localoutboundorder` (`id`),
   CONSTRAINT `local_library_localo_assessment_detail_id_6119b528_fk_material_` FOREIGN KEY (`assessment_detail_id`) REFERENCES `material_application_localassessmentdetail` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_localoutboundorderdetail
@@ -1069,6 +1226,9 @@ CREATE TABLE `local_library_localoutboundorderdetail` (
 BEGIN;
 INSERT INTO `local_library_localoutboundorderdetail` (`id`, `app_code_id`, `assessment_detail_id`, `total_price`, `number`) VALUES (1, 1, 1, 30, 10);
 INSERT INTO `local_library_localoutboundorderdetail` (`id`, `app_code_id`, `assessment_detail_id`, `total_price`, `number`) VALUES (2, 1, 2, 50, 20);
+INSERT INTO `local_library_localoutboundorderdetail` (`id`, `app_code_id`, `assessment_detail_id`, `total_price`, `number`) VALUES (4, 3, 3, 5000, 500);
+INSERT INTO `local_library_localoutboundorderdetail` (`id`, `app_code_id`, `assessment_detail_id`, `total_price`, `number`) VALUES (5, 4, 8, 130, 10);
+INSERT INTO `local_library_localoutboundorderdetail` (`id`, `app_code_id`, `assessment_detail_id`, `total_price`, `number`) VALUES (6, 4, 9, 140, 10);
 COMMIT;
 
 -- ----------------------------
@@ -1087,7 +1247,7 @@ CREATE TABLE `local_library_localoutboundorderhistory` (
   UNIQUE KEY `local_library_localoutbo_application_id_history_d_c83965c5_uniq` (`application_id`,`history_detail_id`),
   CONSTRAINT `local_library_localo_application_id_f096b815_fk_local_lib` FOREIGN KEY (`application_id`) REFERENCES `local_library_localoutboundorder` (`id`),
   CONSTRAINT `local_library_localo_history_detail_id_41a754e5_fk_material_` FOREIGN KEY (`history_detail_id`) REFERENCES `material_application_applicationhistory` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_localoutboundorderhistory
@@ -1109,6 +1269,15 @@ INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`,
 INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (14, '', '发起审批', '2022-08-27', 1, 3);
 INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (15, '', '发起审批', '2022-08-27', 1, 2);
 INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (16, '', '发起审批', '2022-08-27', 1, 1);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (17, 'ybkb3', '研判完成', '2022-08-29', 3, 47);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (18, 'ybkb3', '研判完成', '2022-08-29', 3, 45);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (19, 'ybkb2', '通过', '2022-08-29', 3, 44);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (20, 'ybkb1', '通过', '2022-08-29', 3, 38);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (21, 'admin', '发起申请', '2022-08-29', 3, 37);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (22, 'ybkb3', '研判完成', '2022-08-29', 3, 51);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (23, 'ybkb2', '通过', '2022-08-29', 3, 50);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (24, 'ybkb1', '通过', '2022-08-29', 3, 49);
+INSERT INTO `local_library_localoutboundorderhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`, `history_detail_id`) VALUES (25, 'admin', '发起申请', '2022-08-29', 3, 48);
 COMMIT;
 
 -- ----------------------------
@@ -1123,13 +1292,14 @@ CREATE TABLE `local_library_localwarehousingfile` (
   PRIMARY KEY (`id`),
   KEY `local_library_localw_library_name_id_7344daf9_fk_local_lib` (`library_name_id`),
   CONSTRAINT `local_library_localw_library_name_id_7344daf9_fk_local_lib` FOREIGN KEY (`library_name_id`) REFERENCES `local_library_locallibrary` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_localwarehousingfile
 -- ----------------------------
 BEGIN;
 INSERT INTO `local_library_localwarehousingfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (1, 'upload/local_library/2022/8/27/测试物料明细文件_6AN7byY.xlsx', '2022-08-27 18:27:22.907908', 4);
+INSERT INTO `local_library_localwarehousingfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (2, 'upload/local_library/2022/9/1/建库流程_3mGChfE.pdf', '2022-09-01 21:21:28.147897', 5);
 COMMIT;
 
 -- ----------------------------
@@ -1144,13 +1314,14 @@ CREATE TABLE `local_library_supplierfile` (
   PRIMARY KEY (`id`),
   KEY `local_library_suppli_library_name_id_5eaeeb6f_fk_local_lib` (`library_name_id`),
   CONSTRAINT `local_library_suppli_library_name_id_5eaeeb6f_fk_local_lib` FOREIGN KEY (`library_name_id`) REFERENCES `local_library_suppliermessage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_supplierfile
 -- ----------------------------
 BEGIN;
 INSERT INTO `local_library_supplierfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (1, 'upload/local_library/2022/8/27/尚硅谷大数据项目之电商数仓4可视化报表.doc', '2022-08-27 18:09:48.328495', 1);
+INSERT INTO `local_library_supplierfile` (`id`, `file`, `add_time`, `library_name_id`) VALUES (2, 'upload/local_library/2022/9/1/建库流程.pdf', '2022-09-01 21:14:44.961096', 2);
 COMMIT;
 
 -- ----------------------------
@@ -1168,13 +1339,14 @@ CREATE TABLE `local_library_suppliermessage` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`),
   CONSTRAINT `local_library_suppliermessage_user_id_ae8b6a2c_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of local_library_suppliermessage
 -- ----------------------------
 BEGIN;
 INSERT INTO `local_library_suppliermessage` (`id`, `company_name`, `supplier_des`, `add_time`, `modify_time`, `add_date`, `user_id`) VALUES (1, '供应商1', '这是一个供应商1', '2022-08-27 18:05:35.400029', '2022-08-27 18:09:48.326294', '2022-08-27', 2);
+INSERT INTO `local_library_suppliermessage` (`id`, `company_name`, `supplier_des`, `add_time`, `modify_time`, `add_date`, `user_id`) VALUES (2, '供应商1公司', '', '2022-09-01 21:14:17.423993', '2022-09-01 21:14:44.955456', '2022-09-01', 9);
 COMMIT;
 
 -- ----------------------------
@@ -1195,24 +1367,37 @@ CREATE TABLE `material_application_accounts` (
   `add_date` date NOT NULL,
   `specifications` varchar(100) NOT NULL,
   `unit` varchar(100) NOT NULL,
+  `applicant` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `material_application_acc_app_code_entry_name_type_e12c48a0_uniq` (`app_code`,`entry_name`,`type_name`,`specifications`,`unit`,`db_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_accounts
 -- ----------------------------
 BEGIN;
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (5, '20220827002', '1', '测试项目1', '微量离心管（EP管）', '1', 0, 0, 21, '2022-08-27 19:04:17.208068', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (6, '20220827002', '1', '测试项目1', '8连管（含盖）', '1', 0, 0, 20, '2022-08-27 19:04:17.212407', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (7, '20220827002', '1', '测试项目1', '盒装带滤芯吸嘴', '1', 0, 0, 10, '2022-08-27 19:04:17.214830', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (8, '20220827002', '1', '测试项目1', '样本释放剂', '1', 0, 0, 14, '2022-08-27 19:04:17.221650', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (9, '20220827002', '1', '测试项目1', '新型冠状病毒抗原检测试剂', '1', 0, 0, 12, '2022-08-27 19:04:17.223862', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (10, '20220827002', '1', '测试项目1', '核酸清除剂', '1', 0, 0, 12, '2022-08-27 19:04:17.228160', '2022-08-27', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (15, '20220827001', '1', '', '盒装带滤芯吸嘴', '2', 10, 30, 20, '2022-08-28 18:14:39.976009', '2022-08-28', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (16, '20220827001', '1', '', '核酸清除剂', '2', 20, 50, 12, '2022-08-28 18:14:39.984769', '2022-08-28', '', '');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (18, '20220827001', '1', '', '盒装带滤芯吸嘴', '2', 10, 30, 20, '2022-08-28 18:21:22.986087', '2022-08-28', '1250ul，96个/盒', '盒');
-INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`) VALUES (19, '20220827001', '1', '', '核酸清除剂', '2', 20, 50, 12, '2022-08-28 18:21:22.996158', '2022-08-28', '≥500 mL/瓶', '瓶');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (22, '20220829004', '2', '', '核酸清除剂', '1', 10000, 1000000, 100, '2022-08-29 19:27:21.012718', '2022-08-29', '≥500 mL/瓶', '瓶', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (23, '20220829005', '2', '', '盒装带滤芯吸嘴', '1', 20000, 100000, 5, '2022-08-29 19:39:35.469006', '2022-08-29', '10ul（加长），96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (24, '20220829006', '2', '', '新型冠病毒核酸检测质控品', '1', 1000, 10000, 10, '2022-08-29 19:49:31.396130', '2022-08-29', '装量不得小于1ml/支', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (25, '2022091002', '2', '', '盒装带滤芯吸嘴', '1', 100, 2400, 24, '2022-09-01 20:19:00.927162', '2022-09-01', '10ul（加长），96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (26, '2022091002', '2', '', '盒装带滤芯吸嘴', '1', 2000, 68000, 34, '2022-09-01 20:19:00.933005', '2022-09-01', '1250ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (27, '20220901002', '2', '', '核酸清除剂', '1', 200, 8000, 40, '2022-09-01 20:25:46.977815', '2022-09-01', '≥500 mL/瓶', '瓶', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (28, '20220901002', '2', '', '新型冠状病毒抗原检测试剂', '1', 500, 1000, 2, '2022-09-01 20:25:46.986351', '2022-09-01', '1人份/袋。样本类型：鼻拭子', '袋', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (29, '20220901003', '2', '', '盒装带滤芯吸嘴', '1', 300, 1500, 5, '2022-09-01 20:26:35.798859', '2022-09-01', '100ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (30, '20220901001', '1', '测试项目10', '微量离心管（EP管）', '1', 0, 0, 23, '2022-09-01 21:31:26.614207', '2022-09-01', '2.0ml', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (31, '20220901001', '1', '测试项目10', '微量离心管（EP管）', '1', 0, 0, 21, '2022-09-01 21:31:26.619544', '2022-09-01', '1.5ml', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (32, '20220901001', '1', '测试项目10', '8连管（含盖）', '1', 0, 0, 20, '2022-09-01 21:31:26.623309', '2022-09-01', '125排/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (33, '20220901001', '1', '测试项目10', '盒装带滤芯吸嘴', '1', 0, 0, 19, '2022-09-01 21:31:26.627748', '2022-09-01', '100ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (34, '20220901001', '1', '测试项目10', '盒装带滤芯吸嘴', '1', 0, 0, 17, '2022-09-01 21:31:26.631695', '2022-09-01', '200ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (35, '20220901001', '1', '测试项目10', '盒装带滤芯吸嘴', '1', 0, 0, 13, '2022-09-01 21:31:26.635079', '2022-09-01', '10ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (36, '20220901001', '1', '测试项目10', '样本释放剂', '1', 0, 0, 14, '2022-09-01 21:31:26.638280', '2022-09-01', '1人份。样本类型：拭子类样本（咽/鼻/眼结膜）', '份', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (37, '20220901001', '1', '测试项目10', '新型冠状病毒抗原检测试剂', '1', 0, 0, 15, '2022-09-01 21:31:26.641533', '2022-09-01', '40人份/盒。样本类型：鼻拭子', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (38, '20220901001', '1', '测试项目10', '新型冠状病毒抗原检测试剂', '1', 0, 0, 12, '2022-09-01 21:31:26.644867', '2022-09-01', '1人份/袋。样本类型：鼻拭子', '袋', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (39, '20220901001', '1', '测试项目10', '核酸清除剂', '1', 0, 0, 12, '2022-09-01 21:31:26.648594', '2022-09-01', '≥500 mL/瓶', '瓶', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (40, '20220901001', '1', '测试项目10', '盒装带滤芯吸嘴', '1', 0, 0, 20, '2022-09-01 21:31:26.654842', '2022-09-01', '1250ul，96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (41, '20220901001', '1', '测试项目10', '盒装带滤芯吸嘴', '1', 0, 0, 10, '2022-09-01 21:31:26.660123', '2022-09-01', '10ul（加长），96个/盒', '盒', '');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (42, '20220901002', '1', '', '盒装带滤芯吸嘴', '2', 10, 130, 13, '2022-09-01 22:02:17.467774', '2022-09-01', '10ul，96个/盒', '盒', '测试申请5');
+INSERT INTO `material_application_accounts` (`id`, `app_code`, `db_type`, `entry_name`, `type_name`, `action`, `number`, `price`, `unit_price`, `add_time`, `add_date`, `specifications`, `unit`, `applicant`) VALUES (43, '20220901002', '1', '', '样本释放剂', '2', 10, 140, 14, '2022-09-01 22:02:17.484046', '2022-09-01', '1人份。样本类型：拭子类样本（咽/鼻/眼结膜）', '份', '测试申请5');
 COMMIT;
 
 -- ----------------------------
@@ -1225,11 +1410,11 @@ CREATE TABLE `material_application_applicationdetail` (
   `application_id` int NOT NULL,
   `type_name_id` int NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `material_application_app_type_name_id_application_44be8973_uniq` (`type_name_id`,`application_id`),
   KEY `material_application_application_id_046e806f_fk_material_` (`application_id`),
-  KEY `material_application_type_name_id_12038058_fk_home_mate` (`type_name_id`),
   CONSTRAINT `material_application_application_id_046e806f_fk_material_` FOREIGN KEY (`application_id`) REFERENCES `material_application_exwarehousingapplication` (`id`),
   CONSTRAINT `material_application_type_name_id_12038058_fk_home_mate` FOREIGN KEY (`type_name_id`) REFERENCES `home_materialstype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_applicationdetail
@@ -1237,6 +1422,15 @@ CREATE TABLE `material_application_applicationdetail` (
 BEGIN;
 INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (1, 3, 3, 2);
 INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (2, 20, 3, 3);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (3, 50, 5, 3);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (4, 2000, 6, 1);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (5, 100, 7, 2);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (6, 300, 7, 7);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (7, 40, 7, 14);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (8, 10, 8, 1);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (9, 10, 8, 4);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (10, 10, 10, 1);
+INSERT INTO `material_application_applicationdetail` (`id`, `number`, `application_id`, `type_name_id`) VALUES (11, 10, 12, 1);
 COMMIT;
 
 -- ----------------------------
@@ -1252,7 +1446,7 @@ CREATE TABLE `material_application_applicationhistory` (
   PRIMARY KEY (`id`),
   KEY `material_application_application_id_b651c639_fk_material_` (`application_id`),
   CONSTRAINT `material_application_application_id_b651c639_fk_material_` FOREIGN KEY (`application_id`) REFERENCES `material_application_exwarehousingapplication` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_applicationhistory
@@ -1274,6 +1468,33 @@ INSERT INTO `material_application_applicationhistory` (`id`, `application_user`,
 INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (28, 'ybkb3', '', '2022-08-28', 3);
 INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (30, 'ybkb3', '', '2022-08-28', 3);
 INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (31, 'ybkb4', '研判完成', '2022-08-28', 3);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (32, 'admin', '', '2022-08-29', 4);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (33, 'admin', '', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (34, 'admin', '', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (35, 'admin', '发起申请', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (36, 'admin', '发起申请', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (37, 'admin', '发起申请', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (38, 'ybkb1', '通过', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (39, 'ybkb1', '通过', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (44, 'ybkb2', '通过', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (45, 'ybkb3', '研判完成', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (47, 'ybkb3', '研判完成', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (48, 'admin', '发起申请', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (49, 'ybkb1', '通过', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (50, 'ybkb2', '通过', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (51, 'ybkb3', '研判完成', '2022-08-29', 6);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (52, 'ybkb2', '通过', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (53, 'ybkb3', '研判完成', '2022-08-29', 5);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (54, 'admin', '发起申请', '2022-09-01', 7);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (55, 'admin', '发起申请', '2022-09-01', 8);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (56, 'ybkb1', '通过', '2022-09-01', 8);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (57, 'ybkb2', '通过', '2022-09-01', 8);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (62, 'ybkb3', '研判完成', '2022-09-01', 8);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (63, 'admin', '发起申请', '2022-09-01', 10);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (64, 'ybkb1', '通过', '2022-09-01', 10);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (65, 'ybkb2', '通过', '2022-09-01', 10);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (66, 'ybkb3', '研判完成', '2022-09-01', 10);
+INSERT INTO `material_application_applicationhistory` (`id`, `application_user`, `action`, `add_time`, `application_id`) VALUES (67, 'admin', '发起申请', '2022-09-01', 12);
 COMMIT;
 
 -- ----------------------------
@@ -1292,12 +1513,15 @@ CREATE TABLE `material_application_centerassessmentdetail` (
   KEY `material_application_library_name_id_d4f35c67_fk_center_li` (`library_name_id`),
   CONSTRAINT `material_application_application_id_c38fe88f_fk_material_` FOREIGN KEY (`application_id`) REFERENCES `material_application_exwarehousingapplication` (`id`),
   CONSTRAINT `material_application_library_name_id_d4f35c67_fk_center_li` FOREIGN KEY (`library_name_id`) REFERENCES `center_library_centerlabraryquantity` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_centerassessmentdetail
 -- ----------------------------
 BEGIN;
+INSERT INTO `material_application_centerassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`) VALUES (1, 10, 0, '2022-08-29 22:06:45.236990', 6, 3);
+INSERT INTO `material_application_centerassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`) VALUES (2, 30, 0, '2022-08-29 22:56:52.457759', 5, 3);
+INSERT INTO `material_application_centerassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`) VALUES (3, 10, 0, '2022-09-01 22:30:36.189366', 10, 4);
 COMMIT;
 
 -- ----------------------------
@@ -1308,16 +1532,17 @@ CREATE TABLE `material_application_exapplicationfile` (
   `id` int NOT NULL AUTO_INCREMENT,
   `file` varchar(100) NOT NULL,
   `add_time` datetime(6) NOT NULL,
-  `library_name_id` int NOT NULL,
+  `application_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `material_application_library_name_id_5c4d2f66_fk_material_` (`library_name_id`),
-  CONSTRAINT `material_application_library_name_id_5c4d2f66_fk_material_` FOREIGN KEY (`library_name_id`) REFERENCES `material_application_exwarehousingapplication` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  KEY `material_application_application_id_e3614025_fk_material_` (`application_id`),
+  CONSTRAINT `material_application_application_id_e3614025_fk_material_` FOREIGN KEY (`application_id`) REFERENCES `material_application_exwarehousingapplication` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_exapplicationfile
 -- ----------------------------
 BEGIN;
+INSERT INTO `material_application_exapplicationfile` (`id`, `file`, `add_time`, `application_id`) VALUES (1, 'upload/center_library/2022/9/1/地方财政资金诚仁堂物资储备库物资台账.xls', '2022-09-01 22:35:30.025401', 12);
 COMMIT;
 
 -- ----------------------------
@@ -1340,16 +1565,22 @@ CREATE TABLE `material_application_exwarehousingapplication` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_code` (`app_code`),
   UNIQUE KEY `title` (`title`),
-  UNIQUE KEY `applicant_user` (`applicant_user`),
   KEY `material_application_create_user_id_0a49daf9_fk_auth_user` (`create_user_id`),
   CONSTRAINT `material_application_create_user_id_0a49daf9_fk_auth_user` FOREIGN KEY (`create_user_id`) REFERENCES `auth_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_exwarehousingapplication
 -- ----------------------------
 BEGIN;
-INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (3, '20220827001', '2', '申请单位1', '申请人', '', '2022-08-27 19:25:00.000000', '2022-08-27', '2022-08-28 11:32:09.228670', '4', '6', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (3, '20220827001', '2', '申请单位1', '申请人', '', '2022-08-27 19:25:00.000000', '2022-08-27', '2022-08-28 11:32:09.228670', '3', '5', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (4, '20220829001', '0829物资申请', '消防局', '消防局1', '', '2022-08-29 10:38:00.000000', '2022-08-29', '2022-08-29 10:38:34.827623', '1', '3', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (5, '20220829002', '消防局申请', '消防局', '消防局局长', '', '2022-08-29 19:55:00.000000', '2022-08-29', '2022-08-29 22:56:52.470727', '4', '6', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (6, '20220829003', '测试申请1', '申请单位1', '领用人1', '', '2022-08-29 20:38:00.000000', '2022-08-29', '2022-08-29 22:20:35.697990', '4', '6', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (7, '20220901001', '测试原因1001', '测试申请单位1', '测试领用人1', '', '2022-09-01 20:44:00.000000', '2022-09-01', '2022-09-01 20:46:39.664012', '1', '3', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (8, '20220901002', '测试申请5', '测试申请5', '测试申请5', '', '2022-09-01 21:34:00.000000', '2022-09-01', '2022-09-01 21:53:33.958646', '4', '6', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (10, '20220901003', 'ceshi1', '申请单位1', '1', '', '2022-09-01 22:23:00.000000', '2022-09-01', '2022-09-01 22:30:36.220092', '4', '6', 1);
+INSERT INTO `material_application_exwarehousingapplication` (`id`, `app_code`, `title`, `applicant`, `applicant_user`, `des`, `add_time`, `add_date`, `modify_time`, `status`, `next_node`, `create_user_id`) VALUES (12, '20220901004', '测试申请主题', '申请单位1', '领用人1', '', '2022-09-01 22:35:00.000000', '2022-09-01', '2022-09-01 22:35:30.022075', '1', '3', 1);
 COMMIT;
 
 -- ----------------------------
@@ -1369,7 +1600,7 @@ CREATE TABLE `material_application_localassessmentdetail` (
   KEY `material_application_library_name_id_bf277ba0_fk_local_lib` (`library_name_id`),
   CONSTRAINT `material_application_application_id_1436add9_fk_material_` FOREIGN KEY (`application_id`) REFERENCES `material_application_exwarehousingapplication` (`id`),
   CONSTRAINT `material_application_library_name_id_bf277ba0_fk_local_lib` FOREIGN KEY (`library_name_id`) REFERENCES `local_library_locallabrarymaterials` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of material_application_localassessmentdetail
@@ -1377,6 +1608,9 @@ CREATE TABLE `material_application_localassessmentdetail` (
 BEGIN;
 INSERT INTO `material_application_localassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`, `total_price`) VALUES (1, 3, 0, '2022-08-27 20:57:17.938096', 3, 3, 0);
 INSERT INTO `material_application_localassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`, `total_price`) VALUES (2, 20, 0, '2022-08-28 11:31:29.533092', 3, 4, 0);
+INSERT INTO `material_application_localassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`, `total_price`) VALUES (3, 500, 0, '2022-08-29 21:19:56.981996', 6, 2, 0);
+INSERT INTO `material_application_localassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`, `total_price`) VALUES (8, 10, 0, '2022-09-01 21:53:33.942872', 8, 20, 0);
+INSERT INTO `material_application_localassessmentdetail` (`id`, `number`, `is_ex`, `add_time`, `application_id`, `library_name_id`, `total_price`) VALUES (9, 10, 0, '2022-09-01 21:53:33.943465', 8, 19, 0);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

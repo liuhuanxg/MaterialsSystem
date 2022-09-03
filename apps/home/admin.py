@@ -79,7 +79,6 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
         }
         zh = list(zh_en.keys())
         zh.extend(["单价(元)"])
-        #  转换数据格式，以方便openpyxl批量写入
         records_list = [zh]
         for r in records:
             data = [r[zh_en[k]] for k in zh if k in zh_en]
@@ -102,11 +101,17 @@ admin.site.unregister(User)
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-    list_display = ["username", "first_name", "email", "is_staff", "is_active", "is_superuser"]
+    list_display = ["username", "first_name", "email", "is_staff", "is_active", "is_superuser", "user_groups"]
 
-    # def save_model(self, request, obj, form, change):
-    #     obj.create_user = request.user
-    #     super(LocalMaterialsTypeAdmin, self).save_model(request, obj, form, change)
+    def user_groups(self, obj):
+        groups = obj.groups.all()
+        groups_name = ""
+        for group in groups:
+            groups_name = groups_name + "," if groups_name else groups_name
+            groups_name = groups_name + group.name
+        return groups_name
+
+    user_groups.short_description = u'角色'
 
     def response_add(self, request, obj, post_url_continue=None):
         if "_addanother" not in request.POST and auth_admin.IS_POPUP_VAR not in request.POST:

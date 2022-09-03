@@ -211,12 +211,12 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'logs/latest.log',
+            'filename': 'logs/default.log',
             'formatter': 'verbose',
             # 每分钟切割一次日志
-            'when': 'M',
+            'when': 'D',
             # 时间间隔
-            'interval': 5,
+            'interval': 1,
             # 保留15份日志
             'backupCount': 15,
             'encoding': 'utf-8'

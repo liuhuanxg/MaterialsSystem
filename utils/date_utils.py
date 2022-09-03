@@ -8,11 +8,7 @@ from MaterialsSystem.settings import base_path
 
 
 def get_date_str():
-    now = datetime.datetime.now()
-    month = now.month
-    if now.month < 10:
-        month = "0{}".format(now.month)
-    date_str = str(now.year) + str(month) + str(now.day)
+    date_str = "".join(datetime.datetime.now().strftime("%Y-%m-%d").split("-"))
     return date_str
 
 
