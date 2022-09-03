@@ -9,6 +9,7 @@ class MaterialsType(models.Model):
         verbose_name = "物料种类"
         verbose_name_plural = "物料种类"
         unique_together = ("materials_name", "specifications", "unit")
+        ordering = ["-add_date"]
 
     materials_name = models.CharField("物料名称", max_length=100)
     specifications = models.CharField("规格", max_length=100, default="", blank=True)

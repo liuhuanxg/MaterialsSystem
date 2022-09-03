@@ -65,7 +65,7 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
     list_filter = ["materials_name"]
     date_hierarchy = "add_date"
     fields = ["materials_name", "specifications", "unit", "warning_quantity"]
-
+    search_fields = ["materials_name"]
     actions = ['make_published']
 
     # @admin.action(description='下载模板')

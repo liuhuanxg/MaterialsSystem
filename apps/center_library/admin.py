@@ -1,3 +1,4 @@
+import logging
 import traceback
 
 from django.contrib import admin
@@ -7,6 +8,8 @@ from material_application.models import Accounts
 
 from utils.utils import parse_center_excel_data
 from .models import *
+
+logger = logging.getLogger("django")
 
 
 # 中央库基本信息
@@ -28,6 +31,7 @@ class MaterialsDetailInline(admin.TabularInline):
     model = CenterLabraryMaterials
     extra = 0
     fields = ["type_name", "put_num", "unit_price", "total_price"]
+    autocomplete_fields = ["type_name"]
 
 
 # 申请文件
@@ -102,7 +106,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         # 解析上传的文件
-        print("file_path:{}".format(obj.file))
+        logger.info("file_path:{}".format(obj.file))
         if obj.file:
             file_path = obj.file.path
             # 解析上传的附件
@@ -113,20 +117,20 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                         unit=row_data[1],
                         specifications=row_data[2],
                     )
-                    local_labrary_materials, err = CenterLabraryMaterials.objects.get_or_create(
+                    center_labrary_materials, err = CenterLabraryMaterials.objects.get_or_create(
                         ware_app_id=obj.id,
                         type_name_id=materials_type.id,
                     )
                     unit_price = row_data[3]
                     put_num = row_data[4]
                     total_price = float(unit_price) * float(put_num)
-                    local_labrary_materials.unit_price = row_data[3]
-                    local_labrary_materials.put_num = row_data[4]
-                    local_labrary_materials.total_price = total_price
-                    local_labrary_materials.add_time = timezone.now()
-                    local_labrary_materials.add_date = timezone.now()
-                    local_labrary_materials.modify_time = timezone.now()
-                    local_labrary_materials.save()
+                    center_labrary_materials.unit_price = row_data[3]
+                    center_labrary_materials.put_num = row_data[4]
+                    center_labrary_materials.total_price = total_price
+                    center_labrary_materials.add_time = timezone.now()
+                    center_labrary_materials.add_date = timezone.now()
+                    center_labrary_materials.modify_time = timezone.now()
+                    center_labrary_materials.save()
                     # 增加台账记录
                     Accounts.save_one(
                         obj.app_code,
@@ -141,7 +145,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                         "2"
                     )
                 except:
-                    print("save data error:{}, error:{}".format(row_data, traceback.format_exc()))
+                    logger.error("save data error:{}, error:{}".format(row_data, traceback.format_exc()))
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -167,7 +171,8 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
     list_filter = [
         "type_name__materials_name",
     ]
-    search_fields = ["balance_num"]
+    search_fields = ["type_name", "balance_num"]
+
 
     def colored_balance_num(self, obj):
         mater_type = MaterialsType.objects.filter(materials_name=obj.type_name)
@@ -190,7 +195,6 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
 
     def get_search_results(self, request, queryset, search_term):
         searchs = search_term.split('-')
-        # print("range:{}".format(range))
         number1 = None
         number2 = None
         try:
@@ -299,9 +303,10 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                 # 申请单位
                 applicant = obj.applicant
                 action = "2"
-                print("app_code:{},type_name:{},specifications:{},unit:{},unit_price:{},number:{},price:{}".format(
-                    app_code, type_name, specifications, unit, unit_price, number, price,
-                ))
+                logger.info(
+                    "app_code:{},type_name:{},specifications:{},unit:{},unit_price:{},number:{},price:{}".format(
+                        app_code, type_name, specifications, unit, unit_price, number, price,
+                    ))
                 # 出库记录+1
                 Accounts.save_one(
                     app_code,

@@ -10,6 +10,7 @@ class CenterLibrary(models.Model):
     class Meta:
         verbose_name = "中央库基本信息"
         verbose_name_plural = "中央库基本信息"
+        ordering = ["-add_date"]
 
     library_name = models.CharField("中央库名称", unique=True, max_length=100)
     total_budget = models.FloatField(verbose_name="总预算(万元)", default=0)
@@ -38,6 +39,7 @@ class CenterWarehousingApplication(models.Model):
     class Meta:
         verbose_name = "入库单"
         verbose_name_plural = "入库单"
+        ordering = ["-add_date"]
 
     app_code = models.CharField("入库单号", unique=True, max_length=15)
     total_price = models.FloatField(verbose_name="入库总金额(万元)", default=0)
@@ -58,6 +60,7 @@ class CenterLabraryMaterials(models.Model):
         verbose_name = "入库明细"
         verbose_name_plural = "入库明细"
         unique_together = ("ware_app", "type_name")
+        ordering = ["-add_time"]
 
     type_name = models.ForeignKey("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="类型名称")
     ware_app = models.ForeignKey(CenterWarehousingApplication, on_delete=models.DO_NOTHING, verbose_name="入库单")

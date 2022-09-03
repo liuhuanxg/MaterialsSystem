@@ -1,5 +1,3 @@
-import logging
-
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter
@@ -8,14 +6,12 @@ from django.utils.decorators import method_decorator
 from django.utils.html import format_html
 from django.views.decorators.csrf import csrf_protect
 from home.models import CodeNumber
-from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail, LocalOutboundOrderHistory, \
-    LocalLabraryMaterials
+from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail, LocalLabraryMaterials
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
 
 from MaterialsSystem.settings import status_choices_dict
-from utils.date_utils import get_date_str
 from .models import *
 
 logger = logging.getLogger("django")
@@ -43,25 +39,16 @@ class ApplicationDetailInline(admin.TabularInline):
     fields = ["type_name", "number"]
 
     def has_change_permission(self, request, obj=None):
-        # print("has_change_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super(ApplicationDetailInline, self).has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        # print("has_add_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super(ApplicationDetailInline, self).has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        # print("has_delete_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super().has_delete_permission(request, obj)
@@ -74,25 +61,16 @@ class ApplicationFileInline(admin.TabularInline):
     fields = ["file"]
 
     def has_change_permission(self, request, obj=None):
-        # print("has_change_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super().has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        # print("has_add_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super().has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        # print("has_delete_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "3":
             return False
         return super().has_delete_permission(request, obj)
@@ -103,8 +81,9 @@ class LocalAssessmentDetailInline(admin.TabularInline):
     model = LocalAssessmentDetail
     extra = 0
     fields = ["library_name", "number"]
+    autocomplete_fields = ["library_name"]
 
-    # 地方库研判，只能选择数量大于0的
+    # 地方库研判，只能选已经审核过的
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "library_name":
             local_labrary_materials = LocalLabraryMaterials.objects.filter(library_name__is_approve=1)
@@ -113,25 +92,16 @@ class LocalAssessmentDetailInline(admin.TabularInline):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def has_change_permission(self, request, obj=None):
-        # print("has_change_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        # print("has_add_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        # print("has_delete_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_delete_permission(request, obj)
@@ -142,27 +112,19 @@ class CenterAssessmentDetailInline(admin.TabularInline):
     model = CenterAssessmentDetail
     extra = 0
     fields = ["library_name", "number"]
+    autocomplete_fields = ["type_name"]
 
     def has_change_permission(self, request, obj=None):
-        # print("has_change_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        # print("has_add_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        # print("has_delete_permission self:{},obj:{},obj.status:{}".format(
-        #     self, obj, obj.status
-        # ))
         if obj and obj.status == "4":
             return False
         return super().has_delete_permission(request, obj)
@@ -194,7 +156,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                     inlines.append(CenterAssessmentDetailInline)
             if obj.next_node != "" and ApplicationHistoryInline not in inlines:
                 inlines.append(ApplicationHistoryInline)
-            print("obj:{}, obj.status:{}, obj.next_node:{}, inlines:{}".format(
+            logger.info("obj:{}, obj.status:{}, obj.next_node:{}, inlines:{}".format(
                 obj, obj.status, obj.next_node, inlines
             ))
         new_lines = []
@@ -220,6 +182,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         return ""
 
     next_node_short.short_description = u'待审批人'
+
     def app_status_short(self, obj):
         return format_html(
             '<a href="{}?_id={}">{}</a>'.format("/material_application/do_approval/", obj.id, "点击审批", )
@@ -232,7 +195,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         application_id = form.instance.id
         application_status = form.instance.status
         user = request.user
-        print("form.instance.status:{}, self_id:{}".format(application_status, application_id))
+        logger.info("form.instance.status:{}, self_id:{}".format(application_status, application_id))
         if change:
             if application_status == "3":
                 # 判断研判的数据结果与真实申请是否相等
@@ -243,7 +206,8 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                     type_name_id = application_detail.type_name_id
                     all_applications_details[type_name_id] = all_applications_details.get(type_name_id,
                                                                                           0) + application_detail.number
-                print("application_id:{},all_applications_details:{}".format(application_id, all_applications_details))
+                logger.info(
+                    "application_id:{},all_applications_details:{}".format(application_id, all_applications_details))
 
                 all_assessment_details = {}
                 for inline_form in formset.forms:
@@ -258,7 +222,8 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                             type_name_id = inline_form.instance.library_name.type_name_id
                             number = inline_form.instance.number
                             all_assessment_details[type_name_id] = all_assessment_details.get(type_name_id, 0) + number
-                print("application_id:{},all_assessment_details:{}".format(application_id, all_assessment_details))
+                logger.info(
+                    "application_id:{},all_assessment_details:{}".format(application_id, all_assessment_details))
                 # if flag and all_assessment_details != all_applications_details:
                 #     raise ValidationError({"error_dict": "研判数量和申请数量不符。"})
             # 审批过程中校验数据是否变化
@@ -272,7 +237,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
             #                     return ValidationError({"error_dict": "申请数量不能增大。"})
             #             else:
             #                 return ValidationError({"error_dict": "不能新添加物资。"})
-            #     print("user.id:{},form.instance.create_user_id:{}".format(user.id, form.instance.create_user_id))
+            #     logger.info("user.id:{},form.instance.create_user_id:{}".format(user.id, form.instance.create_user_id))
         super(ExWarehousingApplicationAdmin, self).save_formset(request, form, formset, change)
 
     def save_model(self, request, obj, form, change):
@@ -280,7 +245,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         application_id = obj.id
         application_user = user.first_name
         action = ""
-        print("obj_id:{}, status:{}, next_node:{}, user_id:{}".format(
+        logger.info("obj_id:{}, status:{}, next_node:{}, user_id:{}".format(
             obj.id, obj.status, obj.next_node, user.id
         ))
 
@@ -330,7 +295,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                 #         application_user = user.first_name,
                 #         action = "通过"
             super(ExWarehousingApplicationAdmin, self).save_model(request, obj, form, change)
-            print(application_id, application_user, action)
+            logger.info(application_id, application_user, action)
             ApplicationHistory.objects.create(
                 application_id=obj.id,
                 application_user=application_user,
@@ -340,7 +305,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
             if obj.status == "4":
                 # 1.生成中央库出库单
                 center_assement_details = CenterAssessmentDetail.objects.filter(application_id=obj.id)
-                print("center_assement_details", center_assement_details)
+                logger.info("center_assement_details:{}".format(center_assement_details))
                 if center_assement_details.exists():
                     # (1) 创建大的出库单子
                     center_outbound_order, err = CenterOutboundOrder.objects.get_or_create(
@@ -439,7 +404,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         if object_id:
             user = request.user
             obj = self.model.objects.get(id=object_id)
-            print("changeform_view self:{}, object_id:{} user_id:{}, next_node:{}, status:{}".format(
+            logger.info("changeform_view self:{}, object_id:{} user_id:{}, next_node:{}, status:{}".format(
                 self, object_id, user.id, obj.next_node, obj.status)
             )
             if str(user.id) == obj.next_node:
@@ -455,13 +420,13 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
 
     def get_formsets_with_inlines(self, request, obj=None):
         for inline in self.get_inline_instances(request, obj):
-            # print("get_formsets_with_inlines", inline, inline.get_formset(request, obj))
+            # logger.info("get_formsets_with_inlines", inline, inline.get_formset(request, obj))
             yield inline.get_formset(request, obj), inline
 
     def has_change_permission(self, request, obj=None):
         user = request.user
         if obj:
-            # print("has_change_permission obj:{}, next_node:{}. user_id:{}, opts:{}".format(
+            # logger.info("has_change_permission obj:{}, next_node:{}. user_id:{}, opts:{}".format(
             #     obj, obj.next_node, user.id, self.opts
             # ))
             if obj.next_node == str(user.id) or obj.create_user == user:
@@ -480,19 +445,22 @@ class AccountsaAdmin(admin.ModelAdmin):
         ("add_date", DateFieldListFilter)
     ]
 
-    list_display = ["app_code", "db_type", "entry_name", "action", "type_name",
-                    "specifications", "unit", "number", "price", "applicant",
-                    "unit_price", "add_date"]
+    list_display = ["app_code", "db_type", "supplier_name", "entry_name", "type_name",
+                    "specifications", "unit_des", "number", "price", "applicant",
+                    "unit_price", "add_date", "action", ]
     change_list_template = "material_application/accounts_change_list.html"
 
     actions = ['download_accounts']
     list_per_page = 50
     date_hierarchy = "add_date"
 
+    def unit_des(self, obj):
+        return obj.unit[0:10]
+
+    unit_des.short_description = u'规格'
+
     def download_accounts(self, request, queryset):
-
         # TODO 中央库和地方库在一起时要分开导出，或者导出一个压缩包？直接只允许导出一种，多种时就只导出地方库。
-
         #  开始批量写入数据
         wb = Workbook()
 
@@ -610,7 +578,7 @@ class AccountsaAdmin(admin.ModelAdmin):
 
         # 创建各个类型的分类台账
         for type_name, items in total_type_datas.items():
-            # print(type_name)
+            # logger.info(type_name)
             wb.create_sheet(type_name)
             ws = wb[type_name]
             ws.merge_cells("A1:F1")
@@ -647,7 +615,7 @@ class AccountsaAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context if extra_context else {}
         response = super().changelist_view(request, extra_context)
-        # print(hasattr(response, "context_data"))
+        # logger.info(hasattr(response, "context_data"))
         if hasattr(response, "context_data") and "cl" in response.context_data:
             cl = response.context_data["cl"]
             filtered_query_set = cl.get_queryset(request)

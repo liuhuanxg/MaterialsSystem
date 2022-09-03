@@ -11,6 +11,7 @@ class LocalLibrary(models.Model):
         verbose_name = "入库单"
         verbose_name_plural = "入库单"
         permissions = [("can_approve", "是否可以审核入库单")]
+        ordering = ["-add_time"]
 
     app_code = models.CharField("入库单号", unique=True, max_length=100)
     entry_name = models.CharField("项目名称", unique=True, max_length=100)
@@ -34,6 +35,7 @@ class SupplierMessage(models.Model):
     class Meta:
         verbose_name = "地方库"
         verbose_name_plural = "地方库"
+        ordering = ["-add_time"]
 
     company_name = models.CharField(verbose_name="公司名称", max_length=100, default="")
     user = models.OneToOneField(User, verbose_name="用户", on_delete=models.DO_NOTHING)
@@ -50,6 +52,7 @@ class SupplierFile(models.Model):
     class Meta:
         verbose_name = "(供应商附件)"
         verbose_name_plural = "(供应商附件)"
+        ordering = ["-add_time"]
 
     file = models.FileField(verbose_name="(供应商附件)", upload_to=upload_path_handler("local_library"))
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
@@ -82,6 +85,7 @@ class LocalWarehousingFile(models.Model):
     class Meta:
         verbose_name = "(采购计划、政府采购批复、投标手续)"
         verbose_name_plural = "(采购计划、政府采购批复、投标手续)"
+        ordering = ["-add_time"]
 
     file = models.FileField(verbose_name="(采购计划、政府采购批复、投标手续)", upload_to=upload_path_handler("local_library"))
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)

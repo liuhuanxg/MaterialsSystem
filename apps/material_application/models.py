@@ -7,7 +7,8 @@ from django.utils import timezone
 
 from MaterialsSystem.settings import status_choices
 from utils.date_utils import upload_path_handler
-
+import logging
+logger = logging.getLogger("django")
 
 class ExWarehousingApplication(models.Model):
     class Meta:
@@ -101,7 +102,6 @@ class ApplicationHistory(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
-        # 待出库时表示审批完成，则同步出库单到对应的审批记录中
 
 
 class LocalAssessmentDetail(models.Model):
@@ -128,7 +128,7 @@ class LocalAssessmentDetail(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        print("LocalOutboundOrder self:", self.id, force_insert, force_insert, using, update_fields)
+        logger.info("LocalOutboundOrder self:{}, force_insert:{}, force_insert:{}, using:{}, update_fields:{}".format(self.id, force_insert, force_insert, using, update_fields))
         super().save(force_insert, force_update, using, update_fields)
         # 生成地方出库单
         local_outbound_order, err = LocalOutboundOrder.objects.get_or_create(
@@ -225,6 +225,7 @@ class Accounts(models.Model):
     applicant = models.CharField("申请单位", max_length=100, default="")
     db_type = models.CharField(verbose_name="库类型", choices=type_choice, max_length=10)
     entry_name = models.CharField(verbose_name="项目名称", max_length=100)
+    supplier_name = models.CharField(verbose_name="供应商名称", max_length=100, default="")
     type_name = models.CharField(verbose_name="物料名称", max_length=100)
     specifications = models.CharField(verbose_name="规格", max_length=100, default="")
     unit = models.CharField(verbose_name="物料单位", max_length=100, default="")

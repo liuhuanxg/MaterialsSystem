@@ -3,23 +3,30 @@ from django.utils.html import format_html
 from home.models import CodeNumber, MaterialsType
 from material_application.models import Accounts
 
-from utils.date_utils import get_date_str
 from utils.utils import parse_excel_data
 from .models import *
-
+import logging
+logger = logging.getLogger("django")
 
 class LocalWarehousingFileInline(admin.TabularInline):
     model = LocalWarehousingFile
     extra = 0
 
 
+# 物料详情
 @admin.register(LocalLabraryMaterials)
 class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
-    list_display = ["library_name", "type_name", "push_num", "push_total_price", "add_date", "library_name__is_approve"]
+    list_display = ["library_name", "type_name", "push_num", "supplier_name", "push_total_price", "add_date",
+                    "library_name__is_approve"]
     list_filter = ["library_name__entry_name", "type_name__materials_name"]
     search_fields = ["library_name__entry_name", "balance_quantity"]
     date_hierarchy = "add_date"
     readonly_fields = ["library_name", "type_name", "push_num", "unit_price", "add_time"]
+
+    def supplier_name(self, obj):
+        return obj.library_name.supplier_name
+
+    supplier_name.short_description = u'供应商'
 
     def push_total_price(self, obj):
         return str(obj.unit_price * obj.push_num)
@@ -60,16 +67,18 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
         supplier_messages = SupplierMessage.objects.filter(user_id=request.user.id)
         if supplier_messages.exists():
             supplier_messages = supplier_messages[0]
-            qs.filter(library_name__supplier_name=supplier_messages.id)
+            qs = qs.filter(library_name__supplier_name=supplier_messages.id)
         return qs
 
 
+# 物料详情inline
 class MaterialsDetailInline(admin.TabularInline):
     model = LocalLabraryMaterials
     extra = 0
     fields = ["type_name", "unit_price"]
     exclude = ["id"]
     readonly_fields = ["id"]
+    autocomplete_fields = ["type_name"]
 
 
 # 入库单申请
@@ -83,7 +92,6 @@ class LocalLibraryAdmin(admin.ModelAdmin):
     db_name = "LocalWarehousingApplication"
     readonly_fields = ["app_code", "create_user", "less_budget"]
     fields = [("entry_name", "supplier_name"), ("budget", "less_budget"), ("add_date", "file"), "des"]
-
 
     def get_fields(self, request, obj=None):
         fields = self.fields
@@ -177,16 +185,15 @@ class LocalLibraryAdmin(admin.ModelAdmin):
         qs = super(LocalLibraryAdmin, self).get_queryset(request)
         user = request.user
         supplier_messages = SupplierMessage.objects.filter(user_id=user.id)
-        print("supplier_messages", supplier_messages)
         if supplier_messages.exists():
             supplier_messages = supplier_messages[0]
-            qs.filter(supplier_name_id=supplier_messages.id)
+            qs = qs.filter(supplier_name_id=supplier_messages.id)
         return qs
 
     # 不能选择其他供应商
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        print('request.user.has_perm("can_approve":{}'.format(request.user.has_perm("can_approve")))
         user = request.user
+        print('request.user.has_perm("can_approve":{}'.format(user.has_perm("can_approve")))
         supplier_messages = SupplierMessage.objects.filter(user_id=user.id)
         if supplier_messages and db_field.name == "supplier_name":
             kwargs["queryset"] = supplier_messages
@@ -286,7 +293,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
         user = request.user
         qs = super(LocalOutboundOrderAdmin, self).get_queryset(request)
         if user.groups.filter(name="供应商").exists():
-            qs.filter(user_id=user.id)
+            qs = qs.filter(user_id=user.id)
         return qs
 
     def has_delete_permission(self, request, obj=None):
