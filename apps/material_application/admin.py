@@ -113,7 +113,7 @@ class CenterAssessmentDetailInline(admin.TabularInline):
     model = CenterAssessmentDetail
     extra = 0
     fields = ["library_name", "number"]
-    autocomplete_fields = ["type_name"]
+    autocomplete_fields = ["library_name"]
 
     def has_change_permission(self, request, obj=None):
         if obj and obj.status == "4":
@@ -183,7 +183,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     def next_node_short(self, obj):
         next_user = User.objects.filter(id=obj.next_node).first()
         if next_user:
-            return next_user.username
+            return next_user.first_name
         return ""
 
     next_node_short.short_description = u'待审批人'
@@ -292,8 +292,8 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         obj.status = "4"
                         obj.next_node = next_user.id
                         action = "研判完成"
-                # elif obj.status == "5":
-                #     obj.status = "6"
+                # elif obj.status == "4":
+                #     obj.status = "5"
                 #     user = User.objects.filter(groups__name__contains="仓库管理员").first()
                 #     if user:
                 #         obj.next_node = user.id

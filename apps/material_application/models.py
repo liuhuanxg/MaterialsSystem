@@ -1,5 +1,5 @@
 import logging
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -72,7 +72,7 @@ class ApplicationDetail(models.Model):
 
     type_name = models.ForeignKey("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
-    number = models.IntegerField(verbose_name="领用数量", default=0)
+    number = models.IntegerField(verbose_name="领用数量", default=0, validators=[MinValueValidator(1)])
 
     def clean(self):
         app = ApplicationDetail.objects.filter(id=self.id).first()
@@ -117,15 +117,15 @@ class LocalAssessmentDetail(models.Model):
     library_name = models.ForeignKey("local_library.LocalLabraryMaterials", on_delete=models.DO_NOTHING,
                                      verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
-    number = models.IntegerField(verbose_name="领用数量", default=0)
+    number = models.IntegerField(verbose_name="领用数量", default=0,validators=[MinValueValidator(1)] )
     total_price = models.FloatField(verbose_name="领用金额(元)", default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=0)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
 
     def __str__(self):
-        # return (self.library_name.library_name.entry_name + "_" + self.library_name.type_name.materials_name
-        #         + "_" + self.library_name.type_name.specifications + "_" + self.library_name.type_name.unit
-        #         )
+        return (self.library_name.library_name.entry_name + "_" + self.library_name.type_name.materials_name
+                + "_" + self.library_name.type_name.specifications + "_" + self.library_name.type_name.unit
+                )
         return ""
 
     def clean(self):
@@ -178,12 +178,12 @@ class CenterAssessmentDetail(models.Model):
     library_name = models.ForeignKey("center_library.CenterLabraryQuantity", on_delete=models.DO_NOTHING,
                                      verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
-    number = models.IntegerField(verbose_name="领用数量", default=0)
+    number = models.IntegerField(verbose_name="领用数量", default=0, validators=[MinValueValidator(1)])
     is_ex = models.BooleanField(verbose_name="是否出库", default=0)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
 
     def __str__(self):
-        return ""
+        return self.library_name.type_name.materials_name
 
     def clean(self):
         if self.number <= 0:

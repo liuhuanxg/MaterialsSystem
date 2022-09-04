@@ -179,3 +179,10 @@ class UserAdmin(auth_admin.UserAdmin):
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if object_id:
             return super(UserAdmin, self).change_view(request, object_id, form_url, extra_context)
+    
+    def get_queryset(self, request):
+        user = request.user
+        qs = super(UserAdmin, self).get_queryset(request)
+        if not user.is_superuser:
+            qs = qs.filter(id=user.id)
+        return qs

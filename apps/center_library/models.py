@@ -117,8 +117,8 @@ class CenterOutboundOrder(models.Model):
         verbose_name = "中央库出库单"
         verbose_name_plural = "中央库出库单"
         permissions = [
-            ("chaneg_is_ex", "是否可以出库"),
-            ("chaneg_is_check", "是否可以核销"),
+            ("chaneg_is_ex", "是否可以中央库出库"),
+            ("chaneg_is_check", "是否可以中央库核销"),
         ]
 
     app_code = models.OneToOneField("material_application.ExWarehousingApplication", on_delete=models.DO_NOTHING,
@@ -126,7 +126,7 @@ class CenterOutboundOrder(models.Model):
     title = models.CharField("申请主题", max_length=100, default="")
     total_price = models.FloatField("出库金额", default=0)
     applicant = models.CharField("申请单位", max_length=100, default="")
-    applicant_user = models.CharField("领用人", unique=True, max_length=100, default="")
+    applicant_user = models.CharField("领用人", max_length=100, default="")
     des = models.CharField("申请说明", blank=True, max_length=100, default="")
     is_ex = models.BooleanField(verbose_name="是否出库", default=False, blank=True)
     is_check = models.BooleanField(verbose_name="是否核销", default=False, blank=True)

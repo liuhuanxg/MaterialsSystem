@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from utils.date_utils import upload_path_handler
 
 
@@ -102,8 +102,8 @@ class LocalOutboundOrder(models.Model):
         verbose_name_plural = "地方库出库单"
         unique_together = ["app_code", "user"]
         permissions = [
-            ("chaneg_is_ex", "是否可以出库"),
-            ("chaneg_is_check", "是否可以核销"),
+            ("chaneg_is_ex", "是否可以地方库出库"),
+            ("chaneg_is_check", "是否可以地方库核销"),
         ]
 
     app_code = models.OneToOneField("material_application.ExWarehousingApplication", on_delete=models.DO_NOTHING,
@@ -111,7 +111,7 @@ class LocalOutboundOrder(models.Model):
     user = models.ForeignKey(User, verbose_name="供应商", on_delete=models.CASCADE, null=True)
     title = models.CharField("申请主题", max_length=100, default="")
     applicant = models.CharField("申请单位", max_length=100, default="")
-    applicant_user = models.CharField("领用人", unique=True, max_length=100, default="")
+    applicant_user = models.CharField("领用人", max_length=100, default="")
     des = models.CharField("申请说明", blank=True, max_length=100, default="")
     total_price = models.FloatField("总金额(元)", blank=True, default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=False, blank=True)

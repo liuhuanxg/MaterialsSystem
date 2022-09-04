@@ -173,8 +173,7 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
     list_filter = [
         "type_name__materials_name",
     ]
-    search_fields = ["type_name", "balance_num"]
-
+    search_fields = ["type_name__materials_name", "balance_num"]
 
     def colored_balance_num(self, obj):
         mater_type = MaterialsType.objects.filter(materials_name=obj.type_name)
@@ -273,7 +272,8 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
 
     def html_short(self, obj):
         return format_html(
-            '<a href="{}?object_id={}" target="_blank">{}</a>'.format("/material_application/center_order_html/", obj.id, "点击查看", )
+            '<a href="{}?object_id={}" target="_blank">{}</a>'.format("/material_application/center_order_html/",
+                                                                      obj.id, "点击查看", )
         )
 
     html_short.short_description = u'查看电子单'
@@ -291,7 +291,9 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
         # 核销之后不允许修改
         if obj and obj.is_check:
             return None
-        return super().has_change_permission(request, obj)
+        ret = super().has_change_permission(request, obj)
+        logger.info("has_change_permission:{}".format(ret))
+        return ret
 
     def has_delete_permission(self, request, obj=None):
         return None
@@ -347,15 +349,21 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         user = request.user
+
+        warehouse_manage = user.groups.filter(name="仓库管理员").first()
+        suplier_manage = user.groups.filter(name="供应商").first()
+
         # 没有出库权限，则修改出库为只读
-        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+        if not warehouse_manage and "is_ex" not in self.readonly_fields:
             self.readonly_fields.append("is_ex")
-        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+        elif warehouse_manage and "is_ex" in self.readonly_fields:
             self.readonly_fields.remove("is_ex")
         # 没有核销权限，则修改核销为只读
-        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
-            self.readonly_fields.append("is_ex")
-        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
-            self.readonly_fields.remove("is_ex")
-
+        if not warehouse_manage and "is_check" not in self.readonly_fields:
+            self.readonly_fields.append("is_check")
+        elif warehouse_manage and "is_check" in self.readonly_fields:
+            self.readonly_fields.remove("is_check")
+        logger.info("仓库管理员:{}, 供应商:{}, readonly_fields:{}".format(
+            warehouse_manage, suplier_manage, self.readonly_fields)
+        )
         return self.readonly_fields

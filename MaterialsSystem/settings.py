@@ -87,7 +87,7 @@ if DEBUG:
     PASSWORD = "root123456"
 else:
     BASE_URL = "https://fywzgl.oilhb.com/"
-    pdfkit_path = "/usr/local/bin/wkhtmltopdf"
+    pdfkit_path = r"C:\Softwares\wkhtmltopdf\bin\wkhtmltopdf.exe"
     PASSWORD = "hh@200196"
 
 
@@ -151,8 +151,6 @@ STATICFILES_DIRS = [
 # 用户上传文件的存储路径
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-base_url = "http://127.0.0.1:8000/"
 
 SIMPLEUI_HOME_INFO = False
 SIMPLEUI_ANALYSIS = False

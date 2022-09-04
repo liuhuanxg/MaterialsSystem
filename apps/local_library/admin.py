@@ -22,7 +22,8 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
     list_display = ["library_name", "type_name", "push_num", "supplier_name", "push_total_price", "add_date",
                     "library_name__is_approve"]
     list_filter = ["library_name__entry_name", "type_name__materials_name"]
-    search_fields = ["library_name__entry_name", "balance_quantity"]
+    search_fields = ["library_name__entry_name", "type_name__materials_name", "type_name__specifications",
+                     "type_name__unit"]
     date_hierarchy = "add_date"
     readonly_fields = ["library_name", "type_name", "push_num", "unit_price", "add_time"]
 
@@ -267,20 +268,6 @@ class LocalOutboundOrderDetailInline(admin.TabularInline):
         return False
 
 
-# class LocalOutboundOrderHistorylInline(admin.TabularInline):
-#     model = LocalOutboundOrderHistory
-#     extra = 0
-#
-#     def has_change_permission(self, request, obj=None):
-#         return False
-#
-#     def has_add_permission(self, request, obj):
-#         return False
-#
-#     def has_delete_permission(self, request, obj=None):
-#         return False
-
-
 # 出库单
 @admin.register(LocalOutboundOrder)
 class LocalOutboundOrderAdmin(admin.ModelAdmin):
@@ -392,15 +379,21 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         user = request.user
+
+        warehouse_manage = user.groups.filter(name="仓库管理员").first()
+        suplier_manage = user.groups.filter(name="供应商").first()
+
         # 没有出库权限，则修改出库为只读
-        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
+        if not warehouse_manage and "is_ex" not in self.readonly_fields:
             self.readonly_fields.append("is_ex")
-        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
+        elif warehouse_manage and "is_ex" in self.readonly_fields:
             self.readonly_fields.remove("is_ex")
         # 没有核销权限，则修改核销为只读
-        if not user.has_perm("chaneg_is_ex") and "is_ex" not in self.readonly_fields:
-            self.readonly_fields.append("is_ex")
-        elif user.has_perm("chaneg_is_ex") and "is_ex" in self.readonly_fields:
-            self.readonly_fields.remove("is_ex")
-
+        if not suplier_manage and "is_check" not in self.readonly_fields:
+            self.readonly_fields.append("is_check")
+        elif suplier_manage and "is_check" in self.readonly_fields:
+            self.readonly_fields.remove("is_check")
+        logger.info("仓库管理员:{}, 供应商:{}, readonly_fields:{}".format(
+            warehouse_manage, suplier_manage, self.readonly_fields)
+        )
         return self.readonly_fields
