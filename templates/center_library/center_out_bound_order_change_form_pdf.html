@@ -6,7 +6,6 @@
     <title>任丘市防疫物资出库单</title>
     <style>
         table {
-
             width: 100%;
             border-collapse: collapse;
         }
@@ -27,14 +26,17 @@
 </head>
 <body>
 <div style="margin: 0 auto; width: 1000px">
+    {% if request.user.username %}
+        <a href="/material_application/download_order_pdf/?object_id={{ order.object_id }}&db_type=center">点击下载</a>
+    {% endif %}
     <table>
         <tr>
             <th colspan="4" style="font-size: 25px">任丘市防疫物资出库单</th>
         </tr>
-        <tr>
-            <td>供应商</td>
-            <td colspan="3">{{ order.user }}</td>
-        </tr>
+        {#        <tr>#}
+        {#            <td>供应商</td>#}
+        {#            <td colspan="3">{{ order.user }}</td>#}
+        {#        </tr>#}
         <tr>
             <td>出库单号</td>
             <td>{{ order.app_code }}</td>
@@ -81,13 +83,13 @@
         </tr>
         <tr>
             {% for foo in approval_historys %}
-            <td width="120px">
-                审批人：{{ foo.first_name }}
-                <br>
-                <img src="{{ foo.path }}" alt="" style="width: 200px; height: 50px">
-                <br>
-                <div style="float: right">日期：{{ foo.date }}</div>
-            </td>
+                <td width="120px">
+                    审批人：{{ foo.first_name }}
+                    <br>
+                    <img src="{{ foo.path }}" alt="" style="width: 200px; height: 50px">
+                    <br>
+                    <div style="float: right">日期：{{ foo.date }}</div>
+                </td>
             {% endfor %}
 
 

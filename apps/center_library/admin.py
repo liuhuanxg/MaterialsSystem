@@ -262,7 +262,7 @@ class CenterOutboundOrderHistoryInline(admin.TabularInline):
 # 中央库出库单
 @admin.register(CenterOutboundOrder)
 class CenterOutboundOrderAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "title", "applicant", "is_ex", "is_check", "pdf_short"]
+    list_display = ["app_code", "title", "applicant", "is_ex", "is_check", "html_short", "pdf_short"]
     inlines = [CenterOutboundOrderDetailInline]
     readonly_fields = ["app_code", "title", "applicant", "applicant_user",
                        "des", "total_price", "add_date", "add_time"]
@@ -271,15 +271,24 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
         ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex", "is_check")}),
     ]
 
-    def pdf_short(self, obj):
+    def html_short(self, obj):
         return format_html(
-            '<a href="{}?object_id={}">{}</a>'.format("/material_application/center_order_pdf/", obj.id, "点击查看", )
+            '<a href="{}?object_id={}" target="_blank">{}</a>'.format("/material_application/center_order_html/", obj.id, "点击查看", )
         )
 
-    pdf_short.short_description = u'电子单'
+    html_short.short_description = u'查看电子单'
+
+    def pdf_short(self, obj):
+        return format_html(
+            '<a href="{}?object_id={}&db_type={}">{}</a>'.format(
+                "/material_application/download_order_pdf/", obj.id, "center", "点击下载"
+            )
+        )
+
+    pdf_short.short_description = u'电子单下载'
 
     def has_change_permission(self, request, obj=None):
-        # 出库之后不允许再修改
+        # 核销之后不允许修改
         if obj and obj.is_check:
             return None
         return super().has_change_permission(request, obj)

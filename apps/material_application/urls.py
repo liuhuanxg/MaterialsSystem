@@ -11,9 +11,10 @@ urlpatterns = [
     path("do_approval/", do_approval),
 
     # 出库单
-    path("local_order_pdf/", local_order_pdf),
-    path("center_order_pdf/", center_order_pdf),
-    # path('pdf/', HelloPDFView.as_view(), name='pdf'),
+    path("test_download_pdf/", test_download_pdf),
+    path("center_order_html/", center_order_html),
+    path("local_order_html/", local_order_html),
+    path("download_order_pdf/", download_order_pdf),
 ]
 
 app_name = "material_application"

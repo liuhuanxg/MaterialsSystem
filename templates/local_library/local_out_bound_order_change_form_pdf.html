@@ -27,6 +27,10 @@
 </head>
 <body>
 <div style="margin: 0 auto; width: 1000px">
+    {% if request.user.username %}
+        <a href="/material_application/download_order_pdf/?object_id={{ order.object_id }}&db_type=local">点击下载</a>
+    {% endif %}
+
     <table>
         <tr>
             <th colspan="4" style="font-size: 25px">任丘市防疫物资出库单</th>
@@ -80,15 +84,17 @@
             <th colspan="4">审批意见</th>
         </tr>
         <tr>
-            <td>
-                申报人：{{ approval_historys.user1.first_name }}
-{#                <img src="Users/liuhuan/workspace/PythonSpace/py3projects/MaterialsSystem/media/user_font/申报人手签.jpg" alt="">#}
-{#                <img src="" alt="">#}
-                日期：{{ approval_historys.user1.date }}
-            </td>
-            <td>分管领导：</td>
-            <td>局长：</td>
-            <td>出库员：</td>
+            {% for foo in approval_historys %}
+                <td width="120px">
+                    审批人：{{ foo.first_name }}
+                    <br>
+                    <img src="{{ foo.path }}" alt="" style="width: 200px; height: 50px">
+                    <br>
+                    <div style="float: right">日期：{{ foo.date }}</div>
+                </td>
+            {% endfor %}
+
+
         </tr>
     </table>
 </div>

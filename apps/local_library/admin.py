@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import admin
 from django.utils.html import format_html
 from home.models import CodeNumber, MaterialsType
@@ -5,8 +7,9 @@ from material_application.models import Accounts
 
 from utils.utils import parse_excel_data
 from .models import *
-import logging
+
 logger = logging.getLogger("django")
+
 
 class LocalWarehousingFileInline(admin.TabularInline):
     model = LocalWarehousingFile
@@ -271,7 +274,7 @@ class LocalOutboundOrderDetailInline(admin.TabularInline):
 # 出库单
 @admin.register(LocalOutboundOrder)
 class LocalOutboundOrderAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "user", "title", "applicant", "is_ex", "is_check", "pdf_short"]
+    list_display = ["app_code", "user", "title", "applicant", "is_ex", "is_check", "html_short", "pdf_short"]
     readonly_fields = ["app_code", "user", "title", "applicant", "applicant_user",
                        "des", "total_price", "add_date", "add_time"
                        ]
@@ -281,12 +284,23 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
         ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex", "is_check")}),
     ]
 
-    def pdf_short(self, obj):
+    def html_short(self, obj):
         return format_html(
-            '<a href="{}?object_id={}">{}</a>'.format("/material_application/local_order_pdf/", obj.id, "点击查看", )
+            '<a href="{}?object_id={}" target="_blank">{}</a>'.format(
+                "/material_application/local_order_html/", obj.id, "点击查看"
+            )
         )
 
-    pdf_short.short_description = u'电子单'
+    html_short.short_description = u'查看电子单'
+
+    def pdf_short(self, obj):
+        return format_html(
+            '<a href="{}?object_id={}&db_type={}">{}</a>'.format(
+                "/material_application/download_order_pdf/", obj.id, "local", "点击下载"
+            )
+        )
+
+    pdf_short.short_description = u'电子单下载'
     inlines = [LocalOutboundOrderDetailInline]
 
     # 供应商只能看到自己的出库单

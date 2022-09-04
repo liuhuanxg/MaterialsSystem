@@ -1,16 +1,14 @@
-import logging
 import os
 import traceback
-from django.contrib.auth.decorators import login_required
+from urllib.parse import unquote
+
+import pdfkit
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib.auth import login as Auth_Login, authenticate, logout as Auth_Logout
-from django.http import HttpResponse
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, FileResponse
 from django.shortcuts import render
-from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
-from local_library.models import LocalOutboundOrder, LocalOutboundOrderHistory, LocalOutboundOrderDetail
-from xhtml2pdf import pisa
+from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail
 
 from MaterialsSystem import settings
 from .models import *
@@ -18,13 +16,7 @@ from .models import *
 logger = logging.getLogger("django")
 
 
-# logger.debug("This is an debug msg")
-# logger.info("This is an info msg")
-# logger.warning("This is an warning msg")
-# logger.error("This is an error msg")
-
 # 用于手机端登录
-@login_required
 @csrf_exempt
 def login(request):
     resp = {"status": 0, "data": {}, "msg": ""}
@@ -168,20 +160,17 @@ def font_patch():
     DEFAULT_FONT['helvetica'] = 'yh'
 
 
-# 本地库出库单pdf文件
-def local_order_pdf(request):
+def local_order_html(request):
     object_id = request.GET.get("object_id")
-
     order = LocalOutboundOrder.objects.filter(id=object_id).first()
+    logger.info("order:{}, object_id:{}".format(order, object_id))
+
     if not order:
-        raise Http404
-    response = HttpResponse(content_type="application/pdf")
-    html_path = "local_library/local_out_bound_order_change_form_pdf.html"
-    template = get_template(html_path)
+        return Http404
     order_details = LocalOutboundOrderDetail.objects.filter(app_code_id=object_id)
-    historys_details = LocalOutboundOrderHistory.objects.filter(application_id=object_id)
     context = {
         "order": {
+            "object_id": order.id,
             "user": order.user.suppliermessage.company_name,
             "app_code": order.app_code,
             "applicant": order.applicant,
@@ -204,43 +193,41 @@ def local_order_pdf(request):
             }
         )
 
-    for historys_detail in historys_details:
-        context["historys_details"].append(
-            {
-                "application_user": historys_detail.application_user,
-                "action": historys_detail.action,
-                "add_time": historys_detail.add_time,
-                "font": "签字",
-            }
-        )
-    font_patch()
-    html = template.render(context)
-    status = pisa.CreatePDF(html,
-                            dest=response,
-                            link_callback=os.path.join(settings.BASE_DIR, "docs", "建库流程1.pdf"))
+    context["approval_historys"] = [
+        {
+            "first_name": "刘红军",
+            "path": "/media/user_font/申报人手签.jpg",
+            "date": order.add_date
+        },
+        {
+            "first_name": "李晓江",
+            "path": "/media/user_font/分管领导手签.jpg",
+            "date": order.add_date
+        },
+        {
+            "first_name": "王彦民",
+            "path": "/media/user_font/局长手签.jpg",
+            "date": order.add_date
+        },
+        {
+            "first_name": "出库员",
+            "path": "/media/user_font/出库员手签.png",
+            "date": order.add_date
+        },
+    ]
+    return render(request, "local_library/local_out_bound_order_change_form_pdf.html", context=context)
 
-    if status.err:
-        response = render(request, html_path, {
-            "order": context["order"],
-            "order_details": context["order_details"],
-            "historys_details": context["historys_details"],
-        })
-    return response
 
-
-# 中央库出库单pdf文件
-def center_order_pdf(request):
+def center_order_html(request):
     object_id = request.GET.get("object_id")
-
     order = CenterOutboundOrder.objects.filter(id=object_id).first()
     if not order:
-        raise Http404
-    response = HttpResponse(content_type="application/pdf")
-    html_path = "local_library/local_out_bound_order_change_form_pdf.html"
-    template = get_template(html_path)
+        return Http404
+    html_path = "center_library/center_out_bound_order_change_form_pdf.html"
     order_details = CenterOutboundOrderDetail.objects.filter(app_code_id=object_id)
     context = {
         "order": {
+            "object_id": order.id,
             "app_code": order.app_code,
             "applicant": order.applicant,
             "applicant_user": order.applicant_user,
@@ -251,7 +238,6 @@ def center_order_pdf(request):
         },
         "order_details": [],
         "historys_details": [],
-
     }
     for order_detail in order_details:
         context["order_details"].append(
@@ -262,24 +248,71 @@ def center_order_pdf(request):
             }
         )
 
-    context["approval_historys"] = {
-        "user1": {
-            "first_name": "申报人手签",
+    context["approval_historys"] = [
+        {
+            "first_name": "刘红军",
             "path": "/media/user_font/申报人手签.jpg",
-            "date": "2022-08-30"
-        }
-    }
-    font_patch()
-    html = template.render(context)
-    status = pisa.CreatePDF(html,
-                            dest=response,
-                            link_callback=os.path.join(settings.BASE_DIR, "docs", "建库流程1.pdf"))
+            "date": order.add_date
+        },
+        {
+            "first_name": "李晓江",
+            "path": "/media/user_font/分管领导手签.jpg",
+            "date": order.add_date
+        },
+        {
+            "first_name": "王彦民",
+            "path": "/media/user_font/局长手签.jpg",
+            "date": order.add_date
+        },
+        {
+            "first_name": "出库员",
+            "path": "/media/user_font/出库员手签.png",
+            "date": order.add_date
+        },
+    ]
+    return render(request, html_path, context=context)
 
-    if status.err:
-        logger.error("center_order_pdf status:{}".format(status.err))
-        response = render(request, html_path, {
-            "order": context["order"],
-            "order_details": context["order_details"],
-            "historys_details": context["historys_details"],
-        })
+
+# 出库单pdf文件下载
+def download_order_pdf(request):
+    object_id = request.GET.get("object_id")
+    db_type = request.GET.get("db_type")
+    logger.info("download_order_pdf db_type:{}".format(db_type))
+    if db_type == "local":
+        url = settings.BASE_URL + 'material_application/local_order_html/?object_id={}'.format(object_id)
+    else:
+        url = settings.BASE_URL + 'material_application/center_order_html/?object_id={}'.format(object_id)
+    pdf_path = os.path.join(settings.BASE_DIR, 'docs/建库流程1.pdf')  # pdf路径可以自己修改
+    options = {
+        'encoding': "utf-8",
+        # 'javascript-delay': '1000',  # 添加页面延时js执行时间段 echarts
+    }
+    config = pdfkit.configuration(wkhtmltopdf=settings.pdfkit_path)
+
+    logger.info("pdf_path:{}".format(pdf_path))
+    pdfkit.from_url(url, pdf_path, options=options, configuration=config)
+    file = open(pdf_path, 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    download_file_name = 'download.pdf'  # 如果取中文名，需要urlquote()编码转换
+    response['Content-Disposition'] = 'attachment;filename="' + unquote(download_file_name) + '"'
+    return response
+
+
+# 测试导出pdf
+def test_download_pdf(request):
+    pdf_path = os.path.join(settings.BASE_DIR, 'docs/建库流程1.pdf')  # pdf路径可以自己修改
+    options = {
+        'encoding': "utf-8",
+        # 'javascript-delay': '1000',  # 添加页面延时js执行时间段 echarts
+    }
+    config = pdfkit.configuration(wkhtmltopdf=settings.pdfkit_path)
+    url = settings.BASE_URL + 'material_application/center_order_html/?object_id=3'
+    print("pdf_path:{}".format(pdf_path))
+    pdfkit.from_url(url, pdf_path, options=options, configuration=config)
+    file = open(pdf_path, 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    download_file_name = 'download.pdf'  # 如果取中文名，需要urlquote()编码转换
+    response['Content-Disposition'] = 'attachment;filename="' + unquote(download_file_name) + '"'
     return response

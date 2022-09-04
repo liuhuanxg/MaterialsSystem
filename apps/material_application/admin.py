@@ -334,19 +334,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         center_outbound_oerder_detail.save()
                         center_outbound_order.total_price = center_outbound_order.total_price + center_outbound_oerder_detail.total_price
                     center_outbound_order.save()
-                    # (3) 同步审批记录
-                    # application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
-                    # for application_history in application_historys:
-                    #     center_outbound_order_detail, err = CenterOutboundOrderHistory.objects.get_or_create(
-                    #         application_id=center_outbound_order.id,
-                    #         history_detail_id=application_history.id,
-                    #     )
-                    #     center_outbound_order_detail.action = application_history.action
-                    #     center_outbound_order_detail.add_time = application_history.add_time
-                    #     center_outbound_order_detail.application_user = application_history.application_user
-                    #     # TODO(保存对应的签字)
-                    #     # center_outbound_order_detail.application_user = application_history.application_user
-                    #     center_outbound_order_detail.save()
+
                 # 2.生成地方库出库单
                 local_assement_details = LocalAssessmentDetail.objects.filter(application_id=obj.id)
                 if local_assement_details.exists():
@@ -376,20 +364,6 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         local_outbound_order.total_price = local_outbound_order.total_price + price
                         local_outbound_oerder_detail.save()
                         local_outbound_order.save()
-
-                        # (3) 同步审批记录
-                        # application_historys = ApplicationHistory.objects.filter(application_id=obj.id)
-                        # for application_history in application_historys:
-                        #     local_outbound_order_history_detail, err = LocalOutboundOrderHistory.objects.get_or_create(
-                        #         application_id=local_outbound_order.id,
-                        #         history_detail_id=application_history.id,
-                        #     )
-                        #     local_outbound_order_history_detail.action = application_history.action
-                        #     local_outbound_order_history_detail.application_user = application_history.application_user
-                        #     local_outbound_order_history_detail.add_time = application_history.add_time
-                        #     # TODO(保存对应的签字)
-                        #     # local_outbound_order_history_detail.add_time = application_history.add_time
-                        #     local_outbound_order_history_detail.save()
 
         super(ExWarehousingApplicationAdmin, self).save_model(request, obj, form, change)
 
@@ -430,14 +404,21 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         user = request.user
         if obj:
-            # logger.info("has_change_permission obj:{}, next_node:{}. user_id:{}, opts:{}".format(
-            #     obj, obj.next_node, user.id, self.opts
-            # ))
             if (obj.next_node == str(user.id) or obj.create_user == user) and obj.status and int(obj.status) <= 3:
                 return True
             return False
         return super(ExWarehousingApplicationAdmin, self).has_change_permission(request, obj)
 
+    def get_changelist(self, request, **kwargs):
+        return super(ExWarehousingApplicationAdmin, self).get_changelist(request, **kwargs)
+
+    def get_changelist_form(self, request, **kwargs):
+        return super(ExWarehousingApplicationAdmin, self).get_changelist_form(request, **kwargs)
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context if extra_context else {}
+        response = super().changelist_view(request, extra_context)
+        return response
 
 csrf_protect_m = method_decorator(csrf_protect)
 

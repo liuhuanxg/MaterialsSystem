@@ -81,6 +81,16 @@ WSGI_APPLICATION = 'MaterialsSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+if DEBUG:
+    BASE_URL = "http://127.0.0.1:8000/"
+    pdfkit_path = "/usr/local/bin/wkhtmltopdf"
+    PASSWORD = "root123456"
+else:
+    BASE_URL = "https://fywzgl.oilhb.com/"
+    pdfkit_path = "/usr/local/bin/wkhtmltopdf"
+    PASSWORD = "hh@200196"
+
+
 DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
@@ -147,6 +157,7 @@ base_url = "http://127.0.0.1:8000/"
 SIMPLEUI_HOME_INFO = False
 SIMPLEUI_ANALYSIS = False
 SIMPLEUI_HOME_ACTION = False # 不显示最近动作
+SIMPLEUI_HOME_QUICK = True  # 不显示快速导航栏
 base_path = "upload/"
 
 status_choices_dict = {
@@ -232,5 +243,4 @@ LOGGING = {
     }
 }
 LOGIN_URL = '/login/'
-# LOGIN_REDIRECT_URL = '/home/my_index/'
-
+LOGIN_REDIRECT_URL = '/home/index/'
