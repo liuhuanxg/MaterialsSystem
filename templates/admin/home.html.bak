@@ -1,0 +1,70 @@
+{% load i18n static simpletags %}
+<script type="text/javascript" src="{% static 'admin/simpleui-x/js/axios.min.js' %}"></script>
+<div id="home" style="background-color: white">
+    <el-row class="info-card">
+        <div class="results" style="width: 1200px;margin: 0 auto;">
+            <div class="info-card">
+                <div slot="header" class="clearfix" style="height: 30px">
+                    <span>我的待办</span>
+                    <br>
+                </div>
+                {% if is_supplier %}
+                {% else %}
+                    <table style="width: 100%; border-collapse: collapse;text-align: center;" class="table-bordered ">
+                        <thead>
+                        <tr>
+                            {% for foo in to_do_list_headers %}
+                                <th scope="col" style="border:1px solid black;">{{ foo }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for foo in to_do_list %}
+                            {% for _k,value in foo.items %}
+                                <td style="border:1px solid black;">{{ value }}</td>
+                            {% endfor %}
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+
+    </el-row>
+
+    {% if "SIMPLEUI_HOME_ACTION"|get_config != False %}
+        <el-card class="timeline">
+            <div slot="header" class="clearfix">
+                <span>{% trans 'Recent actions' %}</span>
+                <el-button v-waves style="float: right; padding: 3px 0" type="text"
+                           :icon="timeline?'el-icon-arrow-up':'el-icon-arrow-down'"
+                           @click="displayTimeline()"></el-button>
+            </div>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if admin_log %}
+                <transition name="el-zoom-in-top">
+                    <div class="block" v-if="timeline">
+                        <el-timeline>
+                            {% for entry in admin_log %}
+                                <el-timeline-item timestamp="{{ entry.action_time }}" placement="top">
+                                    <el-card>
+                                        <p>{{ entry.user }} {{ entry.action_time }}</p>
+                                        <h4 v-pre="true">{{ entry.content_type }}: {{ entry }}</h4>
+                                    </el-card>
+                                </el-timeline-item>
+                            {% endfor %}
+                        </el-timeline>
+                    </div>
+                </transition>
+            {% endif %}
+        </el-card>
+    {% endif %}
+</div>
+<script>
+    axios.post('').then(res => {
+        res.data
+    })
+</script>
+</el-dialog>
