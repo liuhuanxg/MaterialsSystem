@@ -59,7 +59,11 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return False
+        user = request.user
+        if user.groups.filter(name="供应商"):
+            return False
+        else:
+            return True
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -107,13 +111,19 @@ class LocalLibraryAdmin(admin.ModelAdmin):
         return fields
 
     def has_change_permission(self, request, obj=None):
+        user = request.user
         if obj and obj.is_approve:
+            # if user.groups.filter(name="供应商"):
+            #     return False
+            # else:
+            #     return True
             return False
         if obj:
             if not request.user.has_perm('can_approve') and "is_approve" not in self.readonly_fields:
                 self.readonly_fields.append("is_approve")
             elif request.user.has_perm('can_approve') and "is_approve" in self.readonly_fields:
                 self.readonly_fields.remove("can_approve")
+
         self.readonly_fields = list(set(self.readonly_fields))
         return super(LocalLibraryAdmin, self).has_change_permission(request, obj)
 
@@ -197,7 +207,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
     # 不能选择其他供应商
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         user = request.user
-        print('request.user.has_perm("can_approve":{}'.format(user.has_perm("can_approve")))
+        logger.info('request.user.has_perm_can_approve:{}'.format(user.has_perm("can_approve")))
         supplier_messages = SupplierMessage.objects.filter(user_id=user.id)
         if supplier_messages and db_field.name == "supplier_name":
             kwargs["queryset"] = supplier_messages

@@ -10,6 +10,7 @@ from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail, L
 from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 
 from MaterialsSystem.settings import status_choices_dict
 from .models import *
@@ -420,18 +421,19 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
         response = super().changelist_view(request, extra_context)
         return response
 
+
 csrf_protect_m = method_decorator(csrf_protect)
 
 
 @admin.register(Accounts)
 class AccountsaAdmin(admin.ModelAdmin):
     list_filter = [
-        "db_type", "action", "type_name", "applicant",
+        "db_type", "supplier_name", "action", "type_name", "applicant",
         ("add_date", DateFieldListFilter)
     ]
 
     list_display = ["app_code", "db_type", "supplier_name", "entry_name", "type_name",
-                    "specifications", "unit_des", "number", "price", "applicant",
+                    "specifications_des", "unit", "number", "price", "applicant",
                     "unit_price", "add_date", "action", ]
     change_list_template = "material_application/accounts_change_list.html"
 
@@ -439,10 +441,10 @@ class AccountsaAdmin(admin.ModelAdmin):
     list_per_page = 50
     date_hierarchy = "add_date"
 
-    def unit_des(self, obj):
-        return obj.unit[0:10]
+    def specifications_des(self, obj):
+        return obj.specifications[0:5] + "..."
 
-    unit_des.short_description = u'物料规格'
+    specifications_des.short_description = u'物料规格'
 
     def download_accounts(self, request, queryset):
         # TODO 中央库和地方库在一起时要分开导出，或者导出一个压缩包？直接只允许导出一种，多种时就只导出地方库。
@@ -453,12 +455,20 @@ class AccountsaAdmin(admin.ModelAdmin):
         sheet1 = wb.active
         wb.remove(sheet1)
 
+        # 所有库类型的总计
+        db_all_datas = {}
         all_datas = {}
         sheet1_titles = ["日期", "单号", "性质", "单位"]
         total_type_datas = {}
-        material_sum_count = {}
+        all_material_sum_count = {}
         col_index = 4
         for record in queryset.values():
+            db_type = record["db_type"]
+            if db_type not in db_all_datas:
+                db_all_datas[db_type] = {}
+                all_material_sum_count[db_type] = {}
+            all_datas = db_all_datas[db_type]
+            material_sum_count = all_material_sum_count[db_type]
             _key = record["type_name"] + "_" + record["specifications"] + "_" + record["unit"]
             _key = _key.replace("/", "")
             date_key = str(record["add_date"]) + "_" + str(record["app_code"])
@@ -468,9 +478,7 @@ class AccountsaAdmin(admin.ModelAdmin):
                 all_datas[action] = {}
             if date_key not in all_datas[action]:
                 all_datas[action][date_key] = {}
-
             all_datas[action][date_key][_key] = all_datas[action][date_key].get(_key, 0) + number
-
             if _key not in sheet1_titles:
                 sheet1_titles.append(_key)
 
@@ -485,10 +493,17 @@ class AccountsaAdmin(admin.ModelAdmin):
                 material_sum_count[_key] = {}
             material_sum_count[_key][action] = material_sum_count[_key].get(action, 0) + number
 
+        if "1" in db_all_datas:
+            all_datas = db_all_datas["1"]
+            material_sum_count = all_material_sum_count["1"]
+        else:
+            all_datas = db_all_datas["2"]
+            material_sum_count = all_material_sum_count["2"]
         # 组装入库单sheet，前三个固定，后边的一些按照typename生成
         insert = "物资入库"
         out = "物资出库"
         insert_and_out = "物资结存汇总表"
+        all_sheets = [insert, out, insert_and_out]
         wb.create_sheet(insert)
         wb.create_sheet(out)
         wb.create_sheet(insert_and_out)
@@ -502,7 +517,7 @@ class AccountsaAdmin(admin.ModelAdmin):
         for action, items in all_datas.items():
             for _key, data in items.items():
                 date, app_code = _key.split("_")
-                row = [date, app_code]
+                row = [date, app_code, "", ""]
                 for title in sheet1_titles[col_index:]:
                     row.append(data.get(title, ""))
                 if action == "1":
@@ -510,8 +525,8 @@ class AccountsaAdmin(admin.ModelAdmin):
                 else:
                     out_sheet_data.append(row)
 
-        # 修改表头
-        insert_sheet.merge_cells("A1:F1")
+        # 修改表头，合并若干列
+        insert_sheet.merge_cells("A1:K1")
         insert_sheet.cell(row=1, column=1, value='入库记录').alignment = Alignment(
             horizontal='center', vertical='center'
         )
@@ -520,12 +535,11 @@ class AccountsaAdmin(admin.ModelAdmin):
         for insert_data in insert_sheet_data:
             insert_sheet.append(insert_data)
         insert_sheet.merge_cells('A{}:D{}'.format(len(insert_sheet_data) + 5, len(insert_sheet_data) + 5))
-        # 入库总计数量
-        for title in sheet1_titles[col_index:]:
-            insert_sheet.cell(row=len(insert_sheet_data) + 5, column=col_index + 1,
-                              value=material_sum_count.get(title, {}).get("1", ""))
+        insert_sheet.cell(row=len(insert_sheet_data) + 5, column=1, value='本期累计').alignment = Alignment(
+            horizontal='center', vertical='center'
+        )
 
-        out_sheet.merge_cells("A1:F1")
+        out_sheet.merge_cells("A1:K1")
         out_sheet.cell(row=1, column=1, value='出库记录').alignment = Alignment(
             horizontal='center', vertical='center'
         )
@@ -533,10 +547,23 @@ class AccountsaAdmin(admin.ModelAdmin):
         for out_data in out_sheet_data:
             out_sheet.append(out_data)
         out_sheet.merge_cells('A{}:D{}'.format(len(out_sheet_data) + 5, len(out_sheet_data) + 5))
-        # 补充出库总计数量
-        for title in sheet1_titles[col_index:]:
-            out_sheet.cell(row=len(out_sheet_data) + 5, column=col_index + 1,
-                           value=material_sum_count.get(title, {}).get("2", ""))
+        out_sheet.cell(row=len(out_sheet_data) + 5, column=1, value='出库记录').alignment = Alignment(
+            horizontal='center', vertical='center'
+        )
+
+        # 补充入库和出库总计数量
+        for index in range(col_index, len(sheet1_titles[col_index:])):
+            title = sheet1_titles[index]
+            insert_value = material_sum_count.get(title, {}).get("1", "")
+            insert_sheet.cell(row=len(insert_sheet_data) + 5, column=index + 1,
+                              value=insert_value)
+            out_value = material_sum_count.get(title, {}).get("2", "")
+            logger.info(
+                "title:{},insert_value:{},out_value:{}, row:{}, column:{}".format(
+                    title, insert_value, out_value, len(out_sheet_data) + 5, index + 1)
+            )
+            out_sheet.cell(row=len(out_sheet_data) + 5, column=index + 1,
+                           value=out_value)
 
         # 创建物资汇总sheet
         total_titles = ["序号", "物资名称", "规格", "单位", "入库数量", "出库数量", "结存数量"]
@@ -545,14 +572,14 @@ class AccountsaAdmin(admin.ModelAdmin):
         logger.info("insert_and_out_datas:{}".format(insert_and_out_datas))
         material_id = 1
         for materials, counts in material_sum_count.items():
-            logger.info("materials:{}".format(materials))
+            # logger.info("materials:{}".format(materials))
             type_name, specifications, unit = materials.split("_")
             insert_and_out_datas.append(
                 [material_id, type_name, specifications, unit, counts.get("1", ""), counts.get("2", ""),
                  counts.get("1", 0) - counts.get("2", 0)]
             )
             material_id += 1
-        out_and_insert.merge_cells("A1:F1")
+        out_and_insert.merge_cells("A1:G1")
         out_and_insert.cell(row=1, column=1, value='汇总记录').alignment = Alignment(
             horizontal='center', vertical='center'
         )
@@ -563,10 +590,10 @@ class AccountsaAdmin(admin.ModelAdmin):
 
         # 创建各个类型的分类台账
         for type_name, items in total_type_datas.items():
-            # logger.info(type_name)
+            all_sheets.append(type_name)
             wb.create_sheet(type_name)
             ws = wb[type_name]
-            ws.merge_cells("A1:F1")
+            ws.merge_cells("A1:S1")
             ws.cell(row=1, column=1, value=type_name).alignment = Alignment(
                 horizontal='center', vertical='center'
             )
@@ -585,11 +612,39 @@ class AccountsaAdmin(admin.ModelAdmin):
                         row.extend(["", type_names[1], record["number"], record["unit_price"], record["price"], "", ""])
                 ws.append(row)
             ws.append([
-                "", "", "本期累计",
+                "", "", "本期累计", "",
                 material_sum_count.get(type_name, {}).get("1", ""),
+                "",
+                "",
                 material_sum_count.get(type_name, {}).get("2", ""),
                 material_sum_count.get(type_name, {}).get("1", 0) - material_sum_count.get(type_name, {}).get("2", 0),
             ])
+        # 自动调整列宽
+        lks = []
+        for sheet in all_sheets:
+            ws = wb[sheet]
+            for i in range(1, ws.max_column + 1):  # 每列循环
+                lk = 1  # 定义初始列宽，并在每个行循环完成后重置
+                cell = ws.cell(row=2, column=i)
+                cell.alignment = Alignment(
+                    horizontal='center', vertical='center', text_rotation=0, wrap_text=True
+                )
+                sz = cell.value  # 每个单元格内容
+                if isinstance(sz, str):  # 中文占用多个字节，需要分开处理
+                    lk1 = len(sz.encode('gbk'))  # gbk解码一个中文两字节，utf-8一个中文三字节，gbk合适
+                else:
+                    lk1 = len(str(sz))
+                if lk < lk1:
+                    lk = lk1  # 借助每行循环将最大值存入lk中
+                lks.append(lk)  # 将每列最大宽度加入列表。（犯了一个错，用lks = lks.append(lk)报错，append会修改列表变量，返回值none，而none不能继续用append方法）
+
+            # 第二步：设置列宽
+            for i in range(1, ws.max_column + 1):
+                # 将数字转化为列名,26个字母以内也可以用[chr(i).upper() for i in range(97, 123)]，不用导入模块
+                k = get_column_letter(i)
+                # 设置列宽，一般加两个字节宽度，可以根据实际情况灵活调整
+                ws.column_dimensions[k].width = lks[i - 1] + 2 if lks[i - 1] < 10 else lks[i - 1] / 2
+                ws.column_dimensions[k].height = 108
         response = HttpResponse(content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = f'attachment; filename="台账记录.xlsx"'
         wb.save(response)
