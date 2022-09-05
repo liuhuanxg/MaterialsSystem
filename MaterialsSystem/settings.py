@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -85,11 +86,14 @@ if DEBUG:
     BASE_URL = "http://127.0.0.1:8000/"
     pdfkit_path = "/usr/local/bin/wkhtmltopdf"
     PASSWORD = "root123456"
-else:
-    BASE_URL = "https://fywzgl.oilhb.com/"
-    pdfkit_path = r"C:\Softwares\wkhtmltopdf\bin\wkhtmltopdf.exe"
-    PASSWORD = "hh@200196"
+# else:
+#     BASE_URL = "https://fywzgl.oilhb.com/"
+#     pdfkit_path = r"C:\Softwares\wkhtmltopdf\bin\wkhtmltopdf.exe"
+#     PASSWORD = "hh@200196"
 
+BASE_URL = "http://127.0.0.1:8000/"
+pdfkit_path = "/usr/local/bin/wkhtmltopdf"
+PASSWORD = "root123456"
 
 DATABASES = {
     'default': {
@@ -99,7 +103,7 @@ DATABASES = {
         'NAME': 'materials_system',  # 要连接的数据库名称
         'HOST': '127.0.0.1',  # 数据库的ip地址
         'USER': 'root',  # 数据库的用户名
-        'PASSWORD': 'root123456',  # 数据库密码
+        'PASSWORD': PASSWORD,  # 数据库密码
     }
 }
 
@@ -141,11 +145,12 @@ USE_L10N = True
 USE_TZ = False
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+
 ]
 
 # 用户上传文件的存储路径

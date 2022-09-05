@@ -123,7 +123,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
             if not request.user.has_perm('can_approve') and "is_approve" not in self.readonly_fields:
                 self.readonly_fields.append("is_approve")
             elif request.user.has_perm('can_approve') and "is_approve" in self.readonly_fields:
-                self.readonly_fields.remove("can_approve")
+                self.readonly_fields.remove("is_approve")
 
         self.readonly_fields = list(set(self.readonly_fields))
         return super(LocalLibraryAdmin, self).has_change_permission(request, obj)
@@ -132,7 +132,9 @@ class LocalLibraryAdmin(admin.ModelAdmin):
         if not obj.app_code:
             obj.create_user = request.user
             obj.app_code = CodeNumber.get_app_code(self.db_name)
+        super(LocalLibraryAdmin, self).save_model(request, obj, form, change)
         is_approve = obj.is_approve
+        logger.info("obj.file:{}".format(obj.file))
         if obj.file:
             file_path = obj.file.path
             # 解析上传的附件

@@ -97,6 +97,7 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
 
         # 转换为万元
         form.instance.total_price = all_total_price / 10000
+        form.instance.save()
         super().save_formset(request, form, formset, change)
 
     def save_model(self, request, obj, form, change):

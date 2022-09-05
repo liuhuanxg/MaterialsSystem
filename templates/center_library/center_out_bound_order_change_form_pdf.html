@@ -20,7 +20,7 @@
         }
 
         td {
-            font-size: 14px;
+            font-size: 18.6px;
         }
     </style>
 </head>
@@ -86,13 +86,11 @@
                 <td width="120px">
                     审批人：{{ foo.first_name }}
                     <br>
-                    <img src="{{ foo.path }}" alt="" style="width: 200px; height: 50px">
+                    <img src="{{ foo.path }}" alt="" style="width: 200px; height: 90px">
                     <br>
                     <div style="float: right">日期：{{ foo.date }}</div>
                 </td>
             {% endfor %}
-
-
         </tr>
     </table>
 </div>

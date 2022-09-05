@@ -196,25 +196,28 @@ def local_order_html(request):
     context["approval_historys"] = [
         {
             "first_name": "刘红军",
-            "path": "/media/user_font/申报人手签.jpg",
+            "path": "/media/user_font/申报人刘红军.jpeg",
             "date": order.add_date
         },
         {
             "first_name": "李晓江",
-            "path": "/media/user_font/分管领导手签.jpg",
+            "path": "/media/user_font/分管领导李晓江.jpeg",
             "date": order.add_date
         },
         {
             "first_name": "王彦民",
-            "path": "/media/user_font/局长手签.jpg",
+            "path": "/media/user_font/局长王彦民.jpeg",
             "date": order.add_date
-        },
-        {
-            "first_name": "出库员",
-            "path": "/media/user_font/出库员手签.png",
-            "date": order.add_date
-        },
+        }
     ]
+    if order.is_ex:
+        context["approval_historys"].append(
+            {
+                "first_name": "出库员",
+                "path": "/media/user_font/出库员任.jpeg",
+                "date": order.add_date
+            }
+        )
     return render(request, "local_library/local_out_bound_order_change_form_pdf.html", context=context)
 
 
@@ -251,25 +254,29 @@ def center_order_html(request):
     context["approval_historys"] = [
         {
             "first_name": "刘红军",
-            "path": "/media/user_font/申报人手签.jpg",
+            "path": "/media/user_font/申报人刘红军.jpeg",
             "date": order.add_date
         },
         {
             "first_name": "李晓江",
-            "path": "/media/user_font/分管领导手签.jpg",
+            "path": "/media/user_font/分管领导李晓江.jpeg",
             "date": order.add_date
         },
         {
             "first_name": "王彦民",
-            "path": "/media/user_font/局长手签.jpg",
+            "path": "/media/user_font/局长王彦民.jpeg",
             "date": order.add_date
-        },
-        {
-            "first_name": "出库员",
-            "path": "/media/user_font/出库员手签.png",
-            "date": order.add_date
-        },
+        }
     ]
+    if order.is_ex:
+        context["approval_historys"].append(
+            {
+                "first_name": "出库员",
+                "path": "/media/user_font/出库员任.jpeg",
+                "date": order.add_date
+            }
+        )
+
     return render(request, html_path, context=context)
 
 
