@@ -67,12 +67,14 @@
         </tr>
         <tr>
             <td>物资种类</td>
+            <td>规格</td>
             <td>数量</td>
             <td>金额</td>
         </tr>
         {% for order_detail in order_details %}
             <tr>
                 <td>{{ order_detail.library_name }}</td>
+                <td>{{ order_detail.specifications }}</td>
                 <td>{{ order_detail.number }}</td>
                 <td>{{ order_detail.total_price }}</td>
             </tr>
