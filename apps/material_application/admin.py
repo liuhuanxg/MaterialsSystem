@@ -38,19 +38,20 @@ class ApplicationDetailInline(admin.TabularInline):
     model = ApplicationDetail
     extra = 0
     fields = ["type_name", "number"]
+    autocomplete_fields = ["type_name"]
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super(ApplicationDetailInline, self).has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super(ApplicationDetailInline, self).has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super().has_delete_permission(request, obj)
 
@@ -62,17 +63,17 @@ class ApplicationFileInline(admin.TabularInline):
     fields = ["file"]
 
     def has_change_permission(self, request, obj=None):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super().has_change_permission(request, obj)
 
     def has_add_permission(self, request, obj):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super().has_add_permission(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        if obj and obj.status == "3":
+        if obj and obj.status >= "3":
             return False
         return super().has_delete_permission(request, obj)
 
@@ -136,7 +137,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     list_display = ["app_code", "title", "applicant", "applicant_user", "add_time",
                     "status_short", "next_node_short"]
     list_filter = [
-        "title", "create_user", "applicant_user",
+        "title", "create_user", "applicant_user", "status",
         ("add_date", DateFieldListFilter)
     ]
     date_hierarchy = "add_date"
@@ -145,6 +146,13 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     fields = [("title", "des"), ("applicant", "applicant_user"), ("add_time")]
     db_name = "ExWarehousingApplication"
     change_form_template = "material_application/ex_app_change_form.html"
+
+    def get_readonly_fields(self, request, obj=None):
+        if not obj or obj and int(obj.status) < 4:
+            self.readonly_fields = ["create_user"]
+        if obj and int(obj.status) == 4:
+            self.readonly_fields = ["app_code", "title", "applicant", "applicant_user", "add_time", "status", "des"]
+        return self.readonly_fields
 
     def get_inlines(self, request, obj):
         user = request.user
@@ -181,9 +189,10 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     status_short.short_description = u'申请状态'
 
     def next_node_short(self, obj):
-        next_user = User.objects.filter(id=obj.next_node).first()
-        if next_user:
-            return next_user.first_name
+        if obj.next_node:
+            next_user = User.objects.filter(id=obj.next_node).first()
+            if next_user:
+                return next_user.first_name
         return ""
 
     next_node_short.short_description = u'待审批人'
@@ -292,15 +301,13 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         obj.status = "4"
                         obj.next_node = next_user.id
                         action = "研判完成"
-                # elif obj.status == "4":
-                #     obj.status = "5"
-                #     user = User.objects.filter(groups__name__contains="仓库管理员").first()
-                #     if user:
-                #         obj.next_node = user.id
-                #         application_user = user.first_name,
-                #         action = "通过"
+                elif obj.status == "4":
+                    obj.status = "5"
+                    obj.next_node = ""
+                    application_user = user.first_name,
+                    action = "通过"
             super(ExWarehousingApplicationAdmin, self).save_model(request, obj, form, change)
-            logger.info(application_id, application_user, action)
+            logger.info("application_id:{}, application_user:{}, action:{}".format(application_id, application_user, action))
             ApplicationHistory.objects.create(
                 application_id=obj.id,
                 application_user=application_user,
@@ -405,7 +412,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         user = request.user
         if obj:
-            if (obj.next_node == str(user.id) or obj.create_user == user) and obj.status and int(obj.status) <= 3:
+            if (obj.next_node == str(user.id) or obj.create_user == user) and obj.status and int(obj.status) <= 4:
                 return True
             return False
         return super(ExWarehousingApplicationAdmin, self).has_change_permission(request, obj)

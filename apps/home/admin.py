@@ -80,7 +80,7 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
     list_filter = ["materials_name"]
     date_hierarchy = "add_date"
     fields = ["materials_name", "specifications", "unit", "warning_quantity"]
-    search_fields = ["materials_name"]
+    search_fields = ["materials_name", "specifications"]
     actions = ['make_published']
 
     # @admin.action(description='下载模板')
@@ -179,7 +179,7 @@ class UserAdmin(auth_admin.UserAdmin):
     def change_view(self, request, object_id, form_url="", extra_context=None):
         if object_id:
             return super(UserAdmin, self).change_view(request, object_id, form_url, extra_context)
-    
+
     def get_queryset(self, request):
         user = request.user
         qs = super(UserAdmin, self).get_queryset(request)

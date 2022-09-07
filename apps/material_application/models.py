@@ -1,8 +1,9 @@
 import logging
-from django.core.validators import MaxValueValidator, MinValueValidator
+
 from center_library.models import CenterOutboundOrder, CenterOutboundOrderDetail
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from local_library.models import LocalOutboundOrder, LocalOutboundOrderDetail
@@ -64,6 +65,7 @@ class ExApplicationFile(models.Model):
     def __str__(self):
         return ""
 
+
 class ApplicationDetail(models.Model):
     class Meta:
         verbose_name = "领用详情"
@@ -81,7 +83,7 @@ class ApplicationDetail(models.Model):
                 "clean ApplicationDetail obj_id:{}, obj_status:{}, new_status:{}, obj_number:{}, new_number:{}".format(
                     self.id, app.application.status, self.application.status, app.number, self.number,
                 ))
-        if app and int(self.application.status) != 1 and self.number > app.number:
+        if app and self.number > app.number:
             raise ValidationError("领用数量不能增大")
         if self.number <= 0:
             raise ValidationError("领用数量不能小于1")
@@ -117,7 +119,7 @@ class LocalAssessmentDetail(models.Model):
     library_name = models.ForeignKey("local_library.LocalLabraryMaterials", on_delete=models.DO_NOTHING,
                                      verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
-    number = models.IntegerField(verbose_name="领用数量", default=0,validators=[MinValueValidator(1)] )
+    number = models.IntegerField(verbose_name="领用数量", default=0, validators=[MinValueValidator(1)])
     total_price = models.FloatField(verbose_name="领用金额(元)", default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=0)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
@@ -136,11 +138,11 @@ class LocalAssessmentDetail(models.Model):
              update_fields=None):
         logger.info(
             "LocalOutboundOrder self:{}, force_insert:{}, force_insert:{}, using:{}, update_fields:{}".format(
-            self.id,
-            force_insert,
-            force_insert,
-            using,
-            update_fields)
+                self.id,
+                force_insert,
+                force_insert,
+                using,
+                update_fields)
         )
         super().save(force_insert, force_update, using, update_fields)
         # 生成地方出库单
@@ -191,7 +193,10 @@ class CenterAssessmentDetail(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        print("CenterAssessmentDetail self:", self.id, force_insert, force_insert, using, update_fields)
+        logger.info(
+            "CenterAssessmentDetail self:{}, force_insert:{}, force_update:{}, using:{}, update_fields:{}".format(
+                self.id, force_insert, force_update, using, update_fields)
+        )
         super().save(force_insert, force_update, using, update_fields)
         # 生成中央库出库单
         center_outbound_order, err = CenterOutboundOrder.objects.get_or_create(
