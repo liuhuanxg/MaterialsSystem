@@ -282,10 +282,10 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
     list_display = ["app_code", "title", "applicant", "is_ex", "is_check", "html_short", "pdf_short"]
     inlines = [CenterOutboundOrderDetailInline]
     readonly_fields = ["app_code", "title", "applicant", "applicant_user",
-                       "des", "total_price", "add_date", "add_time"]
+                       "des", "total_price", "add_date", "add_time", "applicant_phone"]
     fieldsets = [
         ("基本信息", {"fields": (("app_code", "total_price"),)}),
-        ("申请信息", {"fields": (("applicant", "applicant_user"), "title", "des", "add_date", "is_ex", "is_check")}),
+        ("申请信息", {"fields": (("applicant", "applicant_user", "applicant_phone"), "title", "des", "add_date", "is_ex", "is_check")}),
     ]
 
     def html_short(self, obj):

@@ -143,7 +143,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
     date_hierarchy = "add_date"
     readonly_fields = ["create_user"]
     inlines = [ApplicationFileInline, ApplicationDetailInline]
-    fields = [("title", "des"), ("applicant", "applicant_user"), ("add_time")]
+    fields = [("title", "des"), ("applicant", "applicant_user"), ("applicant_phone", "add_time")]
     db_name = "ExWarehousingApplication"
     change_form_template = "material_application/ex_app_change_form.html"
 
@@ -330,7 +330,6 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                     center_outbound_order.applicant = obj.applicant
                     center_outbound_order.applicant_user = obj.applicant_user
                     center_outbound_order.applicant_phone = obj.applicant_phone
-
                     center_outbound_order.des = obj.des
                     center_outbound_order.add_time = obj.add_time
                     center_outbound_order.add_date = obj.add_date
@@ -460,7 +459,7 @@ class AccountsaAdmin(admin.ModelAdmin):
         user_group = user.groups.filter(name__contains="供应商").first()
         if user_group:
             if user_group.name == "地方库供应商":
-                company_name = user.company_name
+                company_name = user.suppliermessage.company_name
                 qs = qs.filter(supplier_name=company_name)
             else:
                 qs = qs.filter()

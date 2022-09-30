@@ -91,7 +91,6 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
 
     specifications_short.short_description = u'规格'
 
-    # @admin.action(description='下载模板')
     def make_published(self, request, queryset):
         records = list(queryset.values())
         #  数据库的英文字段和中文字段的映射字典

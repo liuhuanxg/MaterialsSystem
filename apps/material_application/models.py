@@ -24,7 +24,7 @@ class ExWarehousingApplication(models.Model):
     title = models.CharField("申请主题", unique=True, max_length=100)
     applicant = models.CharField("申请单位", max_length=100)
     applicant_user = models.CharField("领用人", max_length=100)
-    applicant_phone = models.CharField("领用人手机号", max_length=100)
+    applicant_phone = models.CharField("领用人手机号", max_length=100, blank=True, default="")
     des = models.CharField("原因描述", blank=True, max_length=100)
     add_time = models.DateTimeField(verbose_name="申请时间", default=timezone.now)
     add_date = models.DateField(verbose_name="申请日期", auto_now_add=True)
@@ -157,6 +157,7 @@ class LocalAssessmentDetail(models.Model):
             local_outbound_order.title = obj.title
             local_outbound_order.applicant = obj.applicant
             local_outbound_order.applicant_user = obj.applicant_user
+            local_outbound_order.applicant_phone = obj.applicant_phone
             local_outbound_order.des = obj.des
             local_outbound_order.add_time = obj.add_time
             local_outbound_order.add_date = obj.add_date
@@ -209,6 +210,7 @@ class CenterAssessmentDetail(models.Model):
             center_outbound_order.title = obj.title
             center_outbound_order.applicant = obj.applicant
             center_outbound_order.applicant_user = obj.applicant_user
+            center_outbound_order.applicant_phone = obj.applicant_phone
             center_outbound_order.des = obj.des
             center_outbound_order.add_time = obj.add_time
             center_outbound_order.add_date = obj.add_date
