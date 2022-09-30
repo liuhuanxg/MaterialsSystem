@@ -1,0 +1,65 @@
+delete from center_library_centerwarehousingfile;
+delete from center_library_centeroutboundorderhistory;
+delete from center_library_centeroutboundorderdetail;
+delete from center_library_centeroutboundorder;
+delete from center_library_centerlibraryfile;
+delete from center_library_centerlabrarymaterials;
+delete from center_library_centerwarehousingapplication;
+
+delete from material_application_accounts;
+delete from material_application_applicationdetail;
+delete from local_library_localoutboundorderhistory;
+delete from material_application_applicationhistory;
+delete from material_application_centerassessmentdetail;
+delete from material_application_exapplicationfile;
+delete from local_library_localoutboundorderdetail;
+
+delete from local_library_localwarehousingfile;
+delete from local_library_supplierfile;
+delete from material_application_localassessmentdetail;
+delete from local_library_locallabrarymaterials;
+delete from local_library_locallibrary;
+delete from center_library_centerlibrary;
+delete from center_library_centerlabraryquantity;
+
+delete from home_materialstype;
+delete from local_library_localoutboundorder;
+delete from material_application_exwarehousingapplication;
+delete from local_library_suppliermessage;
+delete from home_codenumber;
+
+
+
+
+alter table center_library_centerwarehousingfile AUTO_INCREMENT=1;
+alter table center_library_centeroutboundorderhistory AUTO_INCREMENT=1;
+alter table center_library_centeroutboundorderdetail AUTO_INCREMENT=1;
+alter table center_library_centeroutboundorder AUTO_INCREMENT=1;
+alter table center_library_centerlibraryfile AUTO_INCREMENT=1;
+alter table center_library_centerlabrarymaterials AUTO_INCREMENT=1;
+alter table center_library_centerwarehousingapplication AUTO_INCREMENT=1;
+
+alter table material_application_accounts AUTO_INCREMENT=1;
+alter table material_application_applicationdetail AUTO_INCREMENT=1;
+alter table local_library_localoutboundorderhistory AUTO_INCREMENT=1;
+alter table material_application_applicationhistory AUTO_INCREMENT=1;
+alter table material_application_centerassessmentdetail AUTO_INCREMENT=1;
+alter table material_application_exapplicationfile AUTO_INCREMENT=1;
+alter table local_library_localoutboundorderdetail AUTO_INCREMENT=1;
+
+alter table local_library_localwarehousingfile AUTO_INCREMENT=1;
+alter table local_library_supplierfile AUTO_INCREMENT=1;
+alter table material_application_localassessmentdetail AUTO_INCREMENT=1;
+alter table local_library_locallabrarymaterials AUTO_INCREMENT=1;
+alter table local_library_locallibrary AUTO_INCREMENT=1;
+alter table center_library_centerlibrary AUTO_INCREMENT=1;
+alter table center_library_centerlabraryquantity AUTO_INCREMENT=1;
+
+alter table home_materialstype AUTO_INCREMENT=1;
+alter table local_library_localoutboundorder AUTO_INCREMENT=1;
+alter table material_application_exwarehousingapplication AUTO_INCREMENT=1;
+alter table local_library_suppliermessage AUTO_INCREMENT=1;
+alter table home_codenumber AUTO_INCREMENT=1;
+
+
+

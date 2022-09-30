@@ -31,7 +31,7 @@ class MySite(AdminSite):
 @csrf_exempt
 def my_index(request):
     user = request.user
-    is_supplier = user.groups.filter(name="供应商").first()
+    is_supplier = user.groups.filter(name="地方库供应商").first()
     to_do_list = []
     to_do_list_headers = []
     # 查询待处理事项

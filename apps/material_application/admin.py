@@ -134,7 +134,7 @@ class CenterAssessmentDetailInline(admin.TabularInline):
 
 @admin.register(ExWarehousingApplication)
 class ExWarehousingApplicationAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "title", "applicant", "applicant_user", "add_time",
+    list_display = ["app_code", "title", "applicant", "applicant_user", "applicant_phone", "add_time",
                     "status_short", "next_node_short"]
     list_filter = [
         "title", "create_user", "applicant_user", "status",
@@ -296,16 +296,19 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         obj.next_node = next_user.id
                         action = "通过"
                 elif obj.status == "3":
-                    next_user = User.objects.filter(groups__name__contains="仓库管理员").first()
-                    if next_user:
-                        obj.status = "4"
-                        obj.next_node = next_user.id
-                        action = "研判完成"
-                elif obj.status == "4":
-                    obj.status = "5"
+                    # next_user = User.objects.filter(groups__name__contains="仓库管理员").first()
+                    # if next_user:
+                    #     obj.status = "4"
+                    #     obj.next_node = next_user.id
+                    #     action = "研判完成"
+                    obj.status = "4"
                     obj.next_node = ""
-                    application_user = user.first_name,
-                    action = "通过"
+                    action = "研判完成"
+                # elif obj.status == "4":
+                #     obj.status = "5"
+                #     obj.next_node = ""
+                #     application_user = user.first_name
+                #     action = "通过"
             super(ExWarehousingApplicationAdmin, self).save_model(request, obj, form, change)
             logger.info("application_id:{}, application_user:{}, action:{}".format(application_id, application_user, action))
             ApplicationHistory.objects.create(
@@ -326,6 +329,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                     center_outbound_order.title = obj.title
                     center_outbound_order.applicant = obj.applicant
                     center_outbound_order.applicant_user = obj.applicant_user
+                    center_outbound_order.applicant_phone = obj.applicant_phone
 
                     center_outbound_order.des = obj.des
                     center_outbound_order.add_time = obj.add_time
@@ -356,6 +360,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                         local_outbound_order.title = obj.title
                         local_outbound_order.applicant = obj.applicant
                         local_outbound_order.applicant_user = obj.applicant_user
+                        local_outbound_order.applicant_phone = obj.applicant_phone
                         local_outbound_order.des = obj.des
                         local_outbound_order.add_time = obj.add_time
                         local_outbound_order.add_date = obj.add_date
@@ -447,6 +452,19 @@ class AccountsaAdmin(admin.ModelAdmin):
     actions = ['download_accounts']
     list_per_page = 50
     date_hierarchy = "add_date"
+
+    # 供应商只能看到自己的数据
+    def get_queryset(self, request):
+        user = request.user
+        qs = super(AccountsaAdmin, self).get_queryset(request)
+        user_group = user.groups.filter(name__contains="供应商").first()
+        if user_group:
+            if user_group.name == "地方库供应商":
+                company_name = user.company_name
+                qs = qs.filter(supplier_name=company_name)
+            else:
+                qs = qs.filter()
+        return qs
 
     def specifications_des(self, obj):
         return obj.specifications[0:5] + "..."
@@ -643,7 +661,7 @@ class AccountsaAdmin(admin.ModelAdmin):
                     lk1 = len(str(sz))
                 if lk < lk1:
                     lk = lk1  # 借助每行循环将最大值存入lk中
-                lks.append(lk)  # 将每列最大宽度加入列表。（犯了一个错，用lks = lks.append(lk)报错，append会修改列表变量，返回值none，而none不能继续用append方法）
+                lks.append(lk)  # 将每列最大宽度加入列表
 
             # 第二步：设置列宽
             for i in range(1, ws.max_column + 1):

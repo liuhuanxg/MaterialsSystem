@@ -145,12 +145,12 @@ USE_L10N = True
 USE_TZ = False
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 STATICFILES_DIRS = [
-
+    os.path.join(BASE_DIR, "static")
 ]
 
 # 用户上传文件的存储路径
@@ -167,7 +167,7 @@ status_choices_dict = {
     "1": "分管领导审批中",
     "2": "局长审批中",
     "3": "主管科室研判中",
-    "4": "待出库",
+    "4": "研判完成",
     "5": "已出库",
 }
 status_choices = []
@@ -227,10 +227,10 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': 'logs/default.log',
             'formatter': 'verbose',
-            # 每分钟切割一次日志
-            'when': 'D',
+            # 每天切割一次日志
+            'when': 'M',
             # 时间间隔
-            'interval': 1,
+            'interval': 2,
             # 保留15份日志
             'backupCount': 15,
             'encoding': 'utf-8'

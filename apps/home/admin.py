@@ -76,12 +76,20 @@ admin.site.app_index = index_decorator(admin.site.app_index)
 
 @admin.register(MaterialsType)
 class LocalMaterialsTypeAdmin(admin.ModelAdmin):
-    list_display = ["id", "materials_name", "unit", "specifications", "add_time", "add_date", "modify_time"]
-    list_filter = ["materials_name"]
+    list_display = ["id", "materials_name", "unit", "specifications_short", "phone", "add_time", "add_date", "modify_time"]
+    list_filter = ["materials_name", "phone"]
     date_hierarchy = "add_date"
-    fields = ["materials_name", "specifications", "unit", "warning_quantity"]
+    fields = ["materials_name", "specifications", "unit", "warning_quantity", "phone", "des"]
     search_fields = ["materials_name", "specifications"]
     actions = ['make_published']
+
+    def specifications_short(self, obj):
+        specifications = obj.specifications
+        if len(obj.specifications) >= 20:
+            specifications = obj.specifications[:20] + "..."
+        return specifications
+
+    specifications_short.short_description = u'规格'
 
     # @admin.action(description='下载模板')
     def make_published(self, request, queryset):
@@ -141,7 +149,7 @@ class UserAdmin(auth_admin.UserAdmin):
         user = User.objects.filter(id=user_id)
         if user.exists():
             user = user[0]
-            groups = user.groups.filter(name="供应商")
+            groups = user.groups.filter(name="地方库供应商")
             if groups.exists():
                 supplier_message = SupplierMessage.objects.filter(user=obj)
                 if supplier_message.exists():
@@ -164,7 +172,7 @@ class UserAdmin(auth_admin.UserAdmin):
         user = User.objects.filter(id=user_id)
         if user.exists():
             user = user[0]
-            groups = user.groups.filter(name="供应商")
+            groups = user.groups.filter(name="地方库供应商")
             if groups.exists():
                 supplier_message = SupplierMessage.objects.filter(user=obj)
                 if supplier_message.exists():

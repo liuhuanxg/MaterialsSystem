@@ -172,9 +172,11 @@ def local_order_html(request):
         "order": {
             "object_id": order.id,
             "user": order.user.suppliermessage.company_name,
+            "phone_number": order.user.username,
             "app_code": order.app_code,
             "applicant": order.applicant,
             "applicant_user": order.applicant_user,
+            "applicant_phone": order.applicant_phone,
             "des": order.des,
             "total_price": order.total_price,
             "add_time": order.add_time,
@@ -196,17 +198,17 @@ def local_order_html(request):
 
     context["approval_historys"] = [
         {
-            "first_name": "刘红军",
+            "first_name": "",
             "path": "/media/user_font/申报人刘红军.jpeg",
             "date": order.add_date
         },
         {
-            "first_name": "李晓江",
+            "first_name": "",
             "path": "/media/user_font/分管领导李晓江.jpeg",
             "date": order.add_date
         },
         {
-            "first_name": "王彦民",
+            "first_name": "",
             "path": "/media/user_font/局长王彦民.jpeg",
             "date": order.add_date
         }
@@ -214,7 +216,7 @@ def local_order_html(request):
     if order.is_ex:
         context["approval_historys"].append(
             {
-                "first_name": "出库员",
+                "first_name": "",
                 "path": "/media/user_font/出库员任.jpeg",
                 "date": order.add_date
             }
@@ -235,6 +237,7 @@ def center_order_html(request):
             "app_code": order.app_code,
             "applicant": order.applicant,
             "applicant_user": order.applicant_user,
+            "applicant_phone": order.applicant_phone,
             "des": order.des,
             "total_price": order.total_price,
             "add_time": order.add_time,
@@ -255,17 +258,17 @@ def center_order_html(request):
 
     context["approval_historys"] = [
         {
-            "first_name": "刘红军",
+            "first_name": "",
             "path": "/media/user_font/申报人刘红军.jpeg",
             "date": order.add_date
         },
         {
-            "first_name": "李晓江",
+            "first_name": "",
             "path": "/media/user_font/分管领导李晓江.jpeg",
             "date": order.add_date
         },
         {
-            "first_name": "王彦民",
+            "first_name": "",
             "path": "/media/user_font/局长王彦民.jpeg",
             "date": order.add_date
         }
@@ -273,7 +276,7 @@ def center_order_html(request):
     if order.is_ex:
         context["approval_historys"].append(
             {
-                "first_name": "出库员",
+                "first_name": "",
                 "path": "/media/user_font/出库员任.jpeg",
                 "date": order.add_date
             }

@@ -17,7 +17,7 @@ class LocalLibrary(models.Model):
     entry_name = models.CharField("项目名称", unique=True, max_length=100)
     budget = models.FloatField("预算(万元)", default=0)
     less_budget = models.FloatField("剩余预算(万元)", default=0)
-    supplier_name = models.ForeignKey("SupplierMessage", verbose_name="供应商", on_delete=models.DO_NOTHING)
+    supplier_name = models.ForeignKey("SupplierMessage", verbose_name="地方库供应商", on_delete=models.DO_NOTHING)
     des = models.CharField(verbose_name="入库描述", blank=True, max_length=100)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
     add_date = models.DateField(verbose_name="创建日期", default=timezone.now)
@@ -56,7 +56,7 @@ class SupplierFile(models.Model):
 
     file = models.FileField(verbose_name="(供应商附件)", upload_to=upload_path_handler("local_library"))
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
-    library_name = models.ForeignKey("SupplierMessage", on_delete=models.DO_NOTHING, verbose_name="供应商")
+    library_name = models.ForeignKey("SupplierMessage", on_delete=models.DO_NOTHING, verbose_name="地方库供应商")
     def __str__(self):
         return ""
 
@@ -108,10 +108,11 @@ class LocalOutboundOrder(models.Model):
 
     app_code = models.OneToOneField("material_application.ExWarehousingApplication", on_delete=models.DO_NOTHING,
                                     verbose_name="出库单")
-    user = models.ForeignKey(User, verbose_name="供应商", on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, verbose_name="地方库供应商", on_delete=models.CASCADE, null=True)
     title = models.CharField("申请主题", max_length=100, default="")
     applicant = models.CharField("申请单位", max_length=100, default="")
     applicant_user = models.CharField("领用人", max_length=100, default="")
+    applicant_phone = models.CharField("领用人手机号", max_length=100)
     des = models.CharField("申请说明", blank=True, max_length=100, default="")
     total_price = models.FloatField("总金额(元)", blank=True, default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=False, blank=True)

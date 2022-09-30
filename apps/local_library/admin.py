@@ -61,7 +61,7 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         user = request.user
-        if user.groups.filter(name="供应商"):
+        if user.groups.filter(name="地方库供应商"):
             return False
         else:
             return True
@@ -92,7 +92,7 @@ class MaterialsDetailInline(admin.TabularInline):
 # 入库单申请
 @admin.register(LocalLibrary)
 class LocalLibraryAdmin(admin.ModelAdmin):
-    list_display = ["app_code", "entry_name", "supplier_name", "budget", "less_budget", "is_approve", "add_date"]
+    list_display = ["app_code", "entry_name", "supplier_name", "budget", "less_budget_status", "is_approve", "add_date"]
     search_fields = ["app_code", "create_user"]
     list_filter = ["is_approve"]
     date_hierarchy = "add_time"
@@ -100,6 +100,19 @@ class LocalLibraryAdmin(admin.ModelAdmin):
     db_name = "LocalWarehousingApplication"
     readonly_fields = ["app_code", "create_user", "less_budget"]
     fields = [("entry_name", "supplier_name"), ("budget", "less_budget"), ("add_date", "file"), "des"]
+
+    def less_budget_status(self, obj):
+        if obj.less_budget <= obj.budget * 0.1:
+            msg = obj.less_budget
+            color_code = "red"
+        else:
+            msg = obj.less_budget
+            color_code = "green"
+        return format_html(
+            '<span style="color:{};">{}</span>', color_code, str(msg),
+        )
+
+    less_budget_status.short_description = u'剩余预算'
 
     def get_fields(self, request, obj=None):
         fields = self.fields
@@ -114,7 +127,7 @@ class LocalLibraryAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         user = request.user
         if obj and obj.is_approve:
-            # if user.groups.filter(name="供应商"):
+            # if user.groups.filter(name="地方库供应商"):
             #     return False
             # else:
             #     return True
@@ -248,7 +261,7 @@ class SupplierMessageAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         user = request.user
         qs = super(SupplierMessageAdmin, self).get_queryset(request)
-        if not user.groups.filter(name__contains="供应商"):
+        if not user.groups.filter(name__contains="地方库供应商"):
             return qs
 
         return qs.filter(user=request.user.id)
@@ -306,7 +319,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         user = request.user
         qs = super(LocalOutboundOrderAdmin, self).get_queryset(request)
-        if user.groups.filter(name="供应商").exists():
+        if user.groups.filter(name="地方库供应商").exists():
             qs = qs.filter(user_id=user.id)
         return qs
 
@@ -383,7 +396,7 @@ class LocalOutboundOrderAdmin(admin.ModelAdmin):
         user = request.user
 
         warehouse_manage = user.groups.filter(name="仓库管理员").first()
-        suplier_manage = user.groups.filter(name="供应商").first()
+        suplier_manage = user.groups.filter(name="地方库供应商").first()
 
         # 没有出库权限，则修改出库为只读
         if not warehouse_manage and "is_ex" not in self.readonly_fields:

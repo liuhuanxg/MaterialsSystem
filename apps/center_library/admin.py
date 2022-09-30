@@ -12,6 +12,12 @@ from .models import *
 logger = logging.getLogger("django")
 
 
+
+class CenterLibraryFileInline(admin.TabularInline):
+    model = CenterLibraryFile
+    extra = 0
+    fields = ["file"]
+
 # 中央库基本信息
 @admin.register(CenterLibrary)
 class CenterLibraryAdmin(admin.ModelAdmin):
@@ -20,6 +26,7 @@ class CenterLibraryAdmin(admin.ModelAdmin):
     save_as_continue = False
     save_as = False
     date_hierarchy = "add_date"
+    inlines = [CenterLibraryFileInline]
 
     def save_model(self, request, obj, form, change):
         obj.create_user = request.user
@@ -80,9 +87,13 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                         total_price=total_price
                     )
                 # 入库增加台账记录
+                center_library = CenterLibrary.objects.first()
+                supplier_name = ""
+                if center_library:
+                    supplier_name = center_library.library_name
                 Accounts.save_one(
                     inline_form.instance.ware_app.app_code,
-                    "",
+                    supplier_name,
                     "",
                     inline_form.instance.type_name.materials_name,
                     inline_form.instance.type_name.specifications,
@@ -111,6 +122,11 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
         logger.info("file_path:{}".format(obj.file))
         if obj.file:
             file_path = obj.file.path
+            # 入库增加台账记录
+            center_library = CenterLibrary.objects.first()
+            supplier_name = ""
+            if center_library:
+                supplier_name = center_library.library_name
             # 解析上传的附件
             for row_data in parse_center_excel_data(file_path):
                 try:
@@ -134,9 +150,10 @@ class CenterWarehousingApplicationAdmin(admin.ModelAdmin):
                     center_labrary_materials.modify_time = timezone.now()
                     center_labrary_materials.save()
                     # 增加台账记录
+
                     Accounts.save_one(
                         obj.app_code,
-                        "",
+                        supplier_name,
                         "",
                         materials_type.materials_name,
                         materials_type.specifications,
@@ -174,7 +191,7 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
     list_filter = [
         "type_name__materials_name",
     ]
-    search_fields = ["type_name__materials_name", "balance_num"]
+    search_fields = ["type_name__materials_name", "balance_num", "type_name__specifications", "type_name__unit"]
 
     def colored_balance_num(self, obj):
         mater_type = MaterialsType.objects.filter(materials_name=obj.type_name)
@@ -306,6 +323,11 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         if change and obj and obj.is_check:
             order_details = CenterOutboundOrderDetail.objects.filter(app_code_id=obj.id)
+            # 入库增加台账记录
+            center_library = CenterLibrary.objects.first()
+            supplier_name = ""
+            if center_library:
+                supplier_name = center_library.library_name
             for order_detail in order_details:
                 app_code = order_detail.app_code.app_code.app_code
                 type_name = order_detail.assessment_detail.library_name.type_name.materials_name
@@ -324,7 +346,7 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
                 # 出库记录+1
                 Accounts.save_one(
                     app_code,
-                    "",
+                    supplier_name,
                     "",
                     type_name,
                     specifications,
@@ -352,7 +374,7 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
         user = request.user
 
         warehouse_manage = user.groups.filter(name="仓库管理员").first()
-        suplier_manage = user.groups.filter(name="供应商").first()
+        center_suplier_manage = user.groups.filter(name="中央库供应商").first()
 
         # 没有出库权限，则修改出库为只读
         if not warehouse_manage and "is_ex" not in self.readonly_fields:
@@ -360,11 +382,11 @@ class CenterOutboundOrderAdmin(admin.ModelAdmin):
         elif warehouse_manage and "is_ex" in self.readonly_fields:
             self.readonly_fields.remove("is_ex")
         # 没有核销权限，则修改核销为只读
-        if not warehouse_manage and "is_check" not in self.readonly_fields:
+        if not center_suplier_manage and "is_check" not in self.readonly_fields:
             self.readonly_fields.append("is_check")
-        elif warehouse_manage and "is_check" in self.readonly_fields:
-            self.readonly_fields.remove("is_check")
+        elif center_suplier_manage and "is_check" in self.readonly_fields:
+            self. diff.remove("is_check")
         logger.info("仓库管理员:{}, 供应商:{}, readonly_fields:{}".format(
-            warehouse_manage, suplier_manage, self.readonly_fields)
+            warehouse_manage, center_suplier_manage, self.readonly_fields)
         )
         return self.readonly_fields

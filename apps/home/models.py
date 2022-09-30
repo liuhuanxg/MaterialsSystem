@@ -12,9 +12,11 @@ class MaterialsType(models.Model):
         ordering = ["-add_date"]
 
     materials_name = models.CharField("物料名称", max_length=100)
-    specifications = models.CharField("规格", max_length=100, default="", blank=True)
+    specifications = models.CharField("规格", default="", max_length=512, blank=True)
     unit = models.CharField("单位", max_length=100, default="", blank=True)
     warning_quantity = models.FloatField("预警比例", default=10)
+    des = models.TextField(verbose_name="描述", blank=True, default="")
+    phone = models.CharField(verbose_name="供应商电话", max_length=20, blank=True, default="")
     add_time = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     add_date = models.DateField(verbose_name="创建日期", auto_now_add=True)
     modify_time = models.DateTimeField(verbose_name="修改时间", auto_now=True)

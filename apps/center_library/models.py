@@ -127,6 +127,7 @@ class CenterOutboundOrder(models.Model):
     total_price = models.FloatField("出库金额", default=0)
     applicant = models.CharField("申请单位", max_length=100, default="")
     applicant_user = models.CharField("领用人", max_length=100, default="")
+    applicant_phone = models.CharField("领用人手机号", max_length=100)
     des = models.CharField("申请说明", blank=True, max_length=100, default="")
     is_ex = models.BooleanField(verbose_name="是否出库", default=False, blank=True)
     is_check = models.BooleanField(verbose_name="是否核销", default=False, blank=True)

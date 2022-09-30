@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.DO_NOTHING,
                 to="local_library.suppliermessage",
-                verbose_name="供应商",
+                verbose_name="地方库供应商",
             ),
         ),
     ]

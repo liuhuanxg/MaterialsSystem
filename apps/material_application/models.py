@@ -24,6 +24,7 @@ class ExWarehousingApplication(models.Model):
     title = models.CharField("申请主题", unique=True, max_length=100)
     applicant = models.CharField("申请单位", max_length=100)
     applicant_user = models.CharField("领用人", max_length=100)
+    applicant_phone = models.CharField("领用人手机号", max_length=100)
     des = models.CharField("原因描述", blank=True, max_length=100)
     add_time = models.DateTimeField(verbose_name="申请时间", default=timezone.now)
     add_date = models.DateField(verbose_name="申请日期", auto_now_add=True)
@@ -145,9 +146,11 @@ class LocalAssessmentDetail(models.Model):
                 update_fields)
         )
         super().save(force_insert, force_update, using, update_fields)
+        user = self.library_name.library_name.supplier_name.user
         # 生成地方出库单
         local_outbound_order, err = LocalOutboundOrder.objects.get_or_create(
-            app_code_id=self.application_id
+            app_code_id=self.application_id,
+            user=user
         )
         if err:
             obj = self.application
@@ -167,7 +170,6 @@ class LocalAssessmentDetail(models.Model):
         local_outbound_oerder_detail.total_price = self.number * self.library_name.unit_price
         local_outbound_oerder_detail.save()
         local_outbound_order.total_price = local_outbound_oerder_detail.total_price + local_outbound_oerder_detail.total_price
-        local_outbound_order.user = self.library_name.library_name.supplier_name.user
         local_outbound_oerder_detail.save()
         local_outbound_order.save()
 
@@ -244,7 +246,7 @@ class Accounts(models.Model):
     entry_name = models.CharField(verbose_name="项目名称", max_length=100)
     supplier_name = models.CharField(verbose_name="供应商名称", max_length=100, default="")
     type_name = models.CharField(verbose_name="物料名称", max_length=100)
-    specifications = models.CharField(verbose_name="规格", max_length=100, default="")
+    specifications = models.CharField(verbose_name="规格", max_length=512, default="")
     unit = models.CharField(verbose_name="物料单位", max_length=100, default="")
     action = models.CharField(verbose_name="操作名称", choices=action_choice, max_length=10)
     number = models.IntegerField(verbose_name="数量", default=0)
