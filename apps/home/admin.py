@@ -76,8 +76,8 @@ admin.site.app_index = index_decorator(admin.site.app_index)
 
 @admin.register(MaterialsType)
 class LocalMaterialsTypeAdmin(admin.ModelAdmin):
-    list_display = ["id", "materials_name", "unit", "specifications_short", "phone", "add_time", "add_date", "modify_time"]
-    list_filter = ["materials_name", "phone"]
+    list_display = ["id", "materials_name", "unit", "specifications_short", "des", "add_time", "add_date", "modify_time"]
+    list_filter = ["materials_name", "des"]
     date_hierarchy = "add_date"
     fields = ["materials_name", "specifications", "unit", "warning_quantity", "phone", "des"]
     search_fields = ["materials_name", "specifications"]
@@ -96,8 +96,8 @@ class LocalMaterialsTypeAdmin(admin.ModelAdmin):
         #  数据库的英文字段和中文字段的映射字典
         zh_en = {
             '物料名称': 'materials_name',
-            '规格': 'specifications',
             '单位': 'unit',
+            '规格': 'specifications',
         }
         zh = list(zh_en.keys())
         zh.extend(["单价(元)"])

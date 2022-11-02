@@ -61,7 +61,7 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         user = request.user
-        if user.groups.filter(name="地方库供应商"):
+        if user.groups.filter(name="地方库供应商").exists():
             return False
         else:
             return True
@@ -72,10 +72,12 @@ class LocalLabraryMaterialsAdmin(admin.ModelAdmin):
     # 供应商只能看到自己的数据
     def get_queryset(self, request):
         qs = super(LocalLabraryMaterialsAdmin, self).get_queryset(request)
-        supplier_messages = SupplierMessage.objects.filter(user_id=request.user.id)
-        if supplier_messages.exists():
-            supplier_messages = supplier_messages[0]
-            qs = qs.filter(library_name__supplier_name=supplier_messages.id)
+        user = request.user
+        if user.groups.filter(name="地方库供应商").exists():
+            supplier_messages = SupplierMessage.objects.filter(user_id=user.id)
+            if supplier_messages.exists():
+                supplier_messages = supplier_messages[0]
+                qs = qs.filter(library_name__supplier_name=supplier_messages.id)
         return qs
 
 

@@ -1244,7 +1244,6 @@ CREATE TABLE `local_library_localoutboundorder` (
   `user_id` int DEFAULT NULL,
   `is_check` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `app_code_id` (`app_code_id`),
   UNIQUE KEY `local_library_localoutbo_app_code_id_user_id_b4e989f0_uniq` (`app_code_id`,`user_id`),
   KEY `local_library_localo_user_id_1d4fd30d_fk_auth_user` (`user_id`),
   CONSTRAINT `local_library_localo_app_code_id_34ac709f_fk_material_` FOREIGN KEY (`app_code_id`) REFERENCES `material_application_exwarehousingapplication` (`id`),

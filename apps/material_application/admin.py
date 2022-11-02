@@ -356,6 +356,7 @@ class ExWarehousingApplicationAdmin(admin.ModelAdmin):
                             app_code_id=obj.id,
                             user_id=local_assement_detail.library_name.library_name.supplier_name.user.id,
                         )
+                        logger.info("admin local_outbound_order:{},err:{}".format(local_outbound_order, err))
                         local_outbound_order.title = obj.title
                         local_outbound_order.applicant = obj.applicant
                         local_outbound_order.applicant_user = obj.applicant_user
