@@ -190,6 +190,7 @@ def local_order_html(request):
         context["order_details"].append(
             {
                 "library_name": order_detail.assessment_detail.library_name.type_name.materials_name,
+                "unit": order_detail.assessment_detail.library_name.type_name.unit,
                 "specifications": order_detail.assessment_detail.library_name.type_name.specifications,
                 "number": order_detail.assessment_detail.number,
                 "total_price": order_detail.total_price,
@@ -250,6 +251,7 @@ def center_order_html(request):
         context["order_details"].append(
             {
                 "library_name": order_detail.assessment_detail.library_name.type_name.materials_name,
+                "unit": order_detail.assessment_detail.library_name.type_name.unit,
                 "specifications": order_detail.assessment_detail.library_name.type_name.specifications,
                 "number": order_detail.assessment_detail.number,
                 "total_price": order_detail.total_price,

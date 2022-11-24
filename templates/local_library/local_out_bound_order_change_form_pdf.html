@@ -77,10 +77,11 @@
     </table>
     <table>
         <tr>
-            <th colspan="4">物资明细</th>
+            <th colspan="5">物资明细</th>
         </tr>
         <tr>
             <td>物资种类</td>
+            <td>单位</td>
             <td>规格</td>
             <td>数量</td>
             {% if request.user.username %}
@@ -90,6 +91,7 @@
         {% for order_detail in order_details %}
             <tr>
                 <td>{{ order_detail.library_name }}</td>
+                <td>{{ order_detail.unit }}</td>
                 <td>{{ order_detail.specifications }}</td>
                 <td>{{ order_detail.number }}</td>
                 {% if request.user.username %}
