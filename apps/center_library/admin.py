@@ -249,7 +249,7 @@ class CenterLabraryQuantityAdmin(admin.ModelAdmin):
 
 
 class CenterOutboundOrderDetailInline(admin.TabularInline):
-    fields = ["assessment_detail", "number", "total_price"]
+    fields = ["assessment_detail", "number", "total_price","des"]
     model = CenterOutboundOrderDetail
 
     def has_change_permission(self, request, obj=None):

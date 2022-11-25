@@ -37,7 +37,7 @@ class ApplicationHistoryInline(admin.TabularInline):
 class ApplicationDetailInline(admin.TabularInline):
     model = ApplicationDetail
     extra = 0
-    fields = ["type_name", "number"]
+    fields = ["type_name", "number", "des"]
     autocomplete_fields = ["type_name"]
 
     def has_change_permission(self, request, obj=None):
@@ -82,7 +82,7 @@ class ApplicationFileInline(admin.TabularInline):
 class LocalAssessmentDetailInline(admin.TabularInline):
     model = LocalAssessmentDetail
     extra = 0
-    fields = ["library_name", "number"]
+    fields = ["library_name", "number", "des"]
     autocomplete_fields = ["library_name"]
 
     # 地方库研判，只能选已经审核过的
@@ -113,7 +113,7 @@ class LocalAssessmentDetailInline(admin.TabularInline):
 class CenterAssessmentDetailInline(admin.TabularInline):
     model = CenterAssessmentDetail
     extra = 0
-    fields = ["library_name", "number"]
+    fields = ["library_name", "number", "des"]
     autocomplete_fields = ["library_name"]
 
     def has_change_permission(self, request, obj=None):

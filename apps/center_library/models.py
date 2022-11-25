@@ -146,6 +146,7 @@ class CenterOutboundOrderDetail(models.Model):
                                              verbose_name="研判详情")
     number = models.IntegerField(verbose_name="领用数量", default=0)
     total_price = models.FloatField(verbose_name="金额", default=0)
+    des = models.CharField(verbose_name="描述", default="", blank=True, max_length=100)
 
     def __str__(self):
         return ""

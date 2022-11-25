@@ -70,6 +70,7 @@ def get_ex_applications(request):
                         "number": application_detail.number,
                         "type_name": application_detail.type_name.materials_name + "_" + application_detail.type_name.specifications + "_" + application_detail.type_name.unit,
                         "detail_id": application_detail.id,
+
                     }
                 )
             application_files = ExApplicationFile.objects.filter(application=application.id)
@@ -194,6 +195,7 @@ def local_order_html(request):
                 "specifications": order_detail.assessment_detail.library_name.type_name.specifications,
                 "number": order_detail.assessment_detail.number,
                 "total_price": order_detail.total_price,
+                "des": order_detail.des,
             }
         )
 
@@ -255,6 +257,7 @@ def center_order_html(request):
                 "specifications": order_detail.assessment_detail.library_name.type_name.specifications,
                 "number": order_detail.assessment_detail.number,
                 "total_price": order_detail.total_price,
+                "des": order_detail.des,
             }
         )
 

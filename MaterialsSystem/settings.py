@@ -100,7 +100,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',  # 配置链接mysql数据库
-        'NAME': 'materials_system',  # 要连接的数据库名称
+        'NAME': 'materials_system_bak',  # 要连接的数据库名称
         'HOST': '127.0.0.1',  # 数据库的ip地址
         'USER': 'root',  # 数据库的用户名
         'PASSWORD': PASSWORD,  # 数据库密码

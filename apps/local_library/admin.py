@@ -273,7 +273,7 @@ class SupplierMessageAdmin(admin.ModelAdmin):
 class LocalOutboundOrderDetailInline(admin.TabularInline):
     model = LocalOutboundOrderDetail
     extra = 0
-    fields = ["assessment_detail", "number", "total_price"]
+    fields = ["assessment_detail", "number", "total_price", "des"]
 
     def has_change_permission(self, request, obj=None):
         return False

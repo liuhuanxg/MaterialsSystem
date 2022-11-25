@@ -76,6 +76,7 @@ class ApplicationDetail(models.Model):
     type_name = models.ForeignKey("home.MaterialsType", on_delete=models.DO_NOTHING, verbose_name="物资类型")
     application = models.ForeignKey("ExWarehousingApplication", on_delete=models.DO_NOTHING, verbose_name="申请单")
     number = models.IntegerField(verbose_name="领用数量", default=0, validators=[MinValueValidator(1)])
+    des = models.CharField(verbose_name="描述", default="", blank=True, max_length=100)
 
     def clean(self):
         app = ApplicationDetail.objects.filter(id=self.id).first()
@@ -124,6 +125,7 @@ class LocalAssessmentDetail(models.Model):
     total_price = models.FloatField(verbose_name="领用金额(元)", default=0)
     is_ex = models.BooleanField(verbose_name="是否出库", default=0)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
+    des = models.CharField(verbose_name="描述", default="", blank=True, max_length=100)
 
     def __str__(self):
         return (self.library_name.library_name.entry_name + "_" + self.library_name.type_name.materials_name
@@ -169,8 +171,9 @@ class LocalAssessmentDetail(models.Model):
         )
         local_outbound_oerder_detail.number = self.number
         local_outbound_oerder_detail.total_price = self.number * self.library_name.unit_price
+        local_outbound_oerder_detail.des = self.des
         local_outbound_oerder_detail.save()
-        local_outbound_order.total_price = local_outbound_oerder_detail.total_price + local_outbound_oerder_detail.total_price
+        local_outbound_order.total_price = local_outbound_order.total_price + local_outbound_oerder_detail.total_price
         local_outbound_oerder_detail.save()
         local_outbound_order.save()
 
@@ -186,6 +189,7 @@ class CenterAssessmentDetail(models.Model):
     number = models.IntegerField(verbose_name="领用数量", default=0, validators=[MinValueValidator(1)])
     is_ex = models.BooleanField(verbose_name="是否出库", default=0)
     add_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
+    des = models.CharField(verbose_name="描述", default="", blank=True, max_length=100)
 
     def __str__(self):
         return self.library_name.type_name.materials_name
@@ -222,6 +226,7 @@ class CenterAssessmentDetail(models.Model):
         )
         center_outbound_oerder_detail.number = self.number
         center_outbound_oerder_detail.total_price = self.number * self.library_name.unit_price
+        center_outbound_oerder_detail.des = self.des
         center_outbound_oerder_detail.save()
         center_outbound_order.total_price = center_outbound_order.total_price + center_outbound_oerder_detail.total_price
         center_outbound_order.save()

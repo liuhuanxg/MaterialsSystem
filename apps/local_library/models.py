@@ -134,6 +134,7 @@ class LocalOutboundOrderDetail(models.Model):
                                              verbose_name="物资详情")
     number = models.IntegerField(default=0, verbose_name="数量")
     total_price = models.FloatField(default=0, verbose_name="金额(元)")
+    des = models.CharField(verbose_name="描述", default="", blank=True, max_length=100)
     def __str__(self):
         return ""
 
